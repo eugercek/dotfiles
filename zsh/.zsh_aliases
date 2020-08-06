@@ -1,40 +1,43 @@
-alias cls="clear"
-alias python="python3"
+#Config Files
+##Go to config files
 alias vimconfig="vim ~/.vimrc"
-alias run="./a.out"
 alias awsconfig="vim ~/.config/awesome/rc.lua"
 alias zshconf="nvim ~/.zshrc"
 alias alconf='nvim ~/.zsh_aliases'
-alias sorzsh="source ~/.zshrc"
-alias confi3="vim ~/.config/i3/config" alias dow="cd ~/Downloads"
+alias confi3="vim ~/.config/i3/config"
 alias polconf=" vim ~/.config/polybar/config"
-alias :q="exit"
-alias :wq="exit"
-alias ecl="~/Downloads/eclipse/eclipse"
-alias fun="fortune | cowsay -f $(cowsay -l | tail -n +2 | tr ' ' '\n' | shuf -n 1) | lolcat"
-alias def="sdcv"
-alias m="make"
-alias crepl="cd ~/Desktop/repl/C/ && vim repl.c"
-alias cal="ncal -bM"
 alias nvimconfig="nvim ~/.config/nvim/init.vim"
-alias lay="feh -F ~/Desktop/us_keyboard_layout.jpg"
+alias gi='nvim .gitignore'
+##Other
+alias sorzsh="source ~/.zshrc"
 alias ref="~/.doom.d/bin/doom refresh"
-alias hex='printf "%x\n"'
-alias suden='cd /home/deneme & sudo su deneme'
+
+#Programming Languages
+##Python
+alias python="python3"
+alias p='python'
+alias pi='bpython -i'
+alias pip='pip3'
+##C/C++
+alias m="make"
+alias run="./a.out"
+##Nand2Tetris
 alias vmemu='bash ~/src/nand2Tetris/tools/VMEmulator.sh'
 alias cpuemu='bash ~/src/nand2Tetris/tools/CPUEmulator.sh'
 alias comp='bash ~/src/nand2Tetris/tools/JackCompiler.sh'
+
+alias cls="clear"
+alias dow="cd ~/Downloads"
+alias :q="exit"
+alias :wq="exit"
+alias def="sdcv"
+alias cal="ncal -bM"
+alias lay="feh -F ~/Desktop/us_keyboard_layout.jpg"
+alias hex='printf "%x\n"'
 alias asde='ascii -d'
 alias side='pr -m -t'
-alias p='python'
-alias pi='bpython -i'
-alias gi='nvim .gitignore'
-alias pip='pip3'
-alias wcpu='ps -eo pcpu,pid,user,args | sort -k1 -r -n | head -10'
-alias my='emacs --with-profile mine & disown'
-alias yt='sh ~/src/Bash/youtube_subtitle_translator/yts.sh'
-alias yta='sh ~/src/Bash/youtube_subtitle_translator/yts.sh'
-alias gh='ls -a| fzf | xargs cd' 
+alias wcpu='ps -eo pcpu,pid,user,args | sort -k1 -r -n | head -3'
+alias fun="fortune | cowsay -f $(cowsay -l | tail -n +2 | tr ' ' '\n' | shuf -n 1) | lolcat"
 
 
 function dec(){
@@ -67,9 +70,11 @@ function zth(){
 }
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+
 function inman(){
 'man $(apropos --long . | dmenu -i -l 30 | awk '{print $2, $1}' | tr -d '()')'
 }
+
 function wallp(){
 	feh --bg-fill /usr/share/wallpapers/Mine/Astranout.jpg
 }
