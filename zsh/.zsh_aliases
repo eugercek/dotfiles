@@ -38,6 +38,8 @@ alias asde='ascii -d'
 alias side='pr -m -t'
 alias wcpu='ps -eo pcpu,pid,user,args | sort -k1 -r -n | head -3'
 alias fun="fortune | cowsay -f $(cowsay -l | tail -n +2 | tr ' ' '\n' | shuf -n 1) | lolcat"
+alias serve="python3 -m http.server 8000"
+
 
 
 function dec(){
@@ -80,11 +82,9 @@ function wallp(){
 }
 
 function dowmus(){
-	pushd
-	cd ~/Music
 	url=$(xclip -selection c -o)
-	youtube-dl -x --audio-format mp3 $url
-	popd
+	youtube-dl -ciw -o '%(title)s.%(ext)s'  --extract-audio --yes-playlist  --audio-format mp3 $url
+
 }
 
 function ytsbt(){

@@ -1,3 +1,4 @@
+#+ARCHIVE: deneme.org::
 * No Ugly
     #+BEGIN_SRC emacs-lisp
 	(setq inhibit-startup-message t)
@@ -206,12 +207,12 @@
     (define-key evil-normal-state-map (kbd "H") 'evil-window-left)
     (define-key evil-normal-state-map (kbd "L") 'evil-window-right)
   #+END_SRC
-* Theme
-  #+BEGIN_SRC emacs-lisp
-  (use-package gruvbox-theme
-    :ensure t
-    :init (load-theme 'gruvbox-dark-soft t))
-  #+END_SRC
+* Theme :notused:
+   #+BEGIN_SRC emacs-lisp
+    ;;(use-package gruvbox-theme
+    ;; :ensure t
+    ;:init (load-theme 'gruvbox-dark-soft t))
+   #+END_SRC
 * Org Mode
 ** Org Bullets
    #+BEGIN_SRC emacs-lisp
@@ -225,7 +226,7 @@
     (global-set-key (kbd "C-c a") 'org-agenda)
     (global-set-key (kbd "C-c c") 'org-capture)
    #+END_SRC
-** Default Notes File [/]
+** Default Notes File :notused:
    #+BEGIN_SRC emacs-lisp
    ;;(setq org-default-notes-file (concat org-directory "/notes.org"))
    #+END_SRC
@@ -239,11 +240,4 @@
                          "~/gtd/gtd.org"
                          "~/gtd/tickler.org"))
    #+END_SRC
-** Org Template 
-   #+BEGIN_SRC emacs-lisp
-    (setq org-capture-templates '(
-				("t" "Todo [inbox]" entry (file+headline "~/gtd/inbox.org" "Tasks") "* TODO %i%?")
-				("T" "Tickler" entry (file+headline "~/gtd/tickler.org" "Tickler") "* %i%? \n %U")))
-   #+END_SRC
-
-  
+   
