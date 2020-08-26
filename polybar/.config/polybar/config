@@ -19,7 +19,7 @@ dpi = 192
 background = #1f1f1f
 foreground = #eee
 
-line-color = ${bar/bottom.background}
+line-color = ${colors.background}
 line-size = 1
 
 padding-left = 0
@@ -45,12 +45,15 @@ font-3 = Siji:pixelsize=5;1
 font-4 = FontAwesome:size=5;0
 
 
-modules-left = i3
+;modules-left = i3
+modules-left = bspwm
 ;modules-right = cpu memory temperature filesystem xkeyboard volume wireless-network consumation  battery date
 ;modules-right = cpu2 memory2 temperature2 volume consumation battery date
-modules-right = cpu2 memory2 temperature2 volume date
+modules-right = cpu2 battery memory2 temperature2 volume date 
 
-wm-restack = i3
+
+wm-restack = bspwm
+;wm-restack = i3
 
 tray-position = right 
 tray-scale = 1.0
@@ -60,53 +63,17 @@ tray-maxsize = 64
 
 tray-offset-y = 0
 
-scroll-up = i3wm-wsnext
-scroll-down = i3wm-wsprev
+;scroll-up = i3wm-wsnext
+;scroll-down = i3wm-wsprev
+
+scroll-up = bspwm-desknext
+scroll-down = bspwm-deskprev
 
 overline-size = 10
 overline-color = ${self.background}
 underline-size = 2
 underline-color = ${self.background}
 
-[bar/bottom]
-monitor = HDMI-1
-bottom = true
-width = 100%
-height = 40
-dpi = 192
-
-scroll-up = i3wm-wsnext
-scroll-down = i3wm-wsprev
-
-background = ${bar/top.background}
-foreground = ${bar/top.foreground}
-
-line-color = ${bar/top.background}
-line-size = 2
-
-spacing = 3
-padding-right = 4
-module-margin-left = 0 
-module-margin-right = 6
-
-;font-0 = NotoSans-Regular:size=10;0
-font-0 = NotoSans-Regular:size=9;0
-font-1 = Material\ Icons:size=11;2
-font-2 = xos4\ Terminus:size=14;0
-font-3 = Siji:pixelsize=11;1
-font-4 = FontAwesome:size=11;0
-
-modules-left = i3
-modules-right = cpu memory temperature filesystem xkeyboard volume wireless-network consumation  battery date        
-#modules-right = cpu memory  filesystem volume backlight   battery date
-
-tray-position = right 
-tray-scale = 1.0
-;tray-transparent = true
-tray-background = ${self.background}
-tray-maxsize = 64
-
-tray-offset-y = 0
 [module/backlight]
 type = internal/backlight
 format = <label>
@@ -172,11 +139,7 @@ animation-charging-framerate = 750
 [module/bspwm]
 type = internal/bspwm
 
-ws-icon-0 = term;
-ws-icon-1 = web;
-ws-icon-2 = code;
-ws-icon-3 = music;
-ws-icon-4 = irssi;
+ws-icon-3 = X;
 ws-icon-default = 
 
 format = <label-state> <label-mode>
@@ -435,7 +398,7 @@ ramp-foreground = #66
 type = internal/i3
 
 pin-workspaces = true
-strip-wsnumbers = true
+;strip-wsnumbers = true
 index-sort = true
 
 ; Use fuzzy (partial) matching on labels when assigning 
@@ -547,4 +510,15 @@ ramp-0 = 
 ramp-1 = 
 ramp-2 = 
 ramp-foreground = ${colors.foreground-alt}
+
+[module/cpu-usage]
+type = custom/script
+exec = polycpu
+label = "%output%"
+click-left = $TERMINAL -e htop &
+interval = 10
+format-prefix = "💻 "
+
 ; vim:ft=dosini
+
+

@@ -8,6 +8,8 @@ alias confi3="vim ~/.config/i3/config"
 alias polconf=" vim ~/.config/polybar/config"
 alias nvimconfig="nvim ~/.config/nvim/init.vim"
 alias gi='nvim .gitignore'
+alias albs="nvim ~/.config/bspwm/bspwmrc"
+alias alhd="nvim ~/.config/sxhkd/sxhkdrc"
 ##Other
 alias sorzsh="source ~/.zshrc"
 alias ref="~/.doom.d/bin/doom refresh"
@@ -39,8 +41,8 @@ alias side='pr -m -t'
 alias wcpu='ps -eo pcpu,pid,user,args | sort -k1 -r -n | head -3'
 alias fun="fortune | cowsay -f $(cowsay -l | tail -n +2 | tr ' ' '\n' | shuf -n 1) | lolcat"
 alias serve="python3 -m http.server 8000"
-
-
+alias syngui="firefox http://localhost:8384/"
+alias lt="ls --sort=time"
 
 function dec(){
 	echo "ibase=16; $1"|bc
@@ -87,7 +89,7 @@ function dowmus(){
 
 }
 
-function ytsbt(){
+function sub(){
   url=$(xclip -selection c -o)
   file_name="/tmp/$(echo  $url | cut -d = -f 2)"
   extensioned_file_name="$file_name.en.vtt"
@@ -117,9 +119,18 @@ function ytsbt(){
   fi
 
 
-  cat "$file_name" | fzf | xargs trans en:tr
+  cat "$file_name" | fzf | xargs | pee 'def ' 'trans en:tr'
+
+#  cat "$file_name" | fzf | xargs trans en:tr
 
   echo $file_name > /tmp/prev
 }
 
+
+function kxev(){
+	xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }' 
+}
+function chp(){
+	PS1='>'
+}
 

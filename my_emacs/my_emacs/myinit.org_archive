@@ -1,0 +1,44 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/umut/.dotfiles/my_emacs/my_emacs/myinit.org
+
+
+* Emacs Application Framework :notincluded:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-08-08 Sat 13:44
+  :ARCHIVE_FILE: ~/.dotfiles/my_emacs/my_emacs/myinit.org
+  :ARCHIVE_CATEGORY: myinit
+  :END:
+  (use-package eaf
+  :load-path "~/.eaf" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+  :custom
+  (eaf-find-alternate-file-in-dired t)
+  :config
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding))
+
+  Add entry with C-c C-x C-a
+  Add sub-tree with C-c C-x C-s
+
+Archived entries from file /home/umut/.dotfiles/my_emacs/my_emacs/myinit.org
+
+
+* Emacs Application Framework :notincluded:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-08-08 Sat 13:46
+  :ARCHIVE_FILE: ~/.dotfiles/my_emacs/my_emacs/myinit.org
+  :ARCHIVE_CATEGORY: myinit
+  :END:
+  (use-package eaf
+  :load-path "~/.eaf" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+  :custom
+  (eaf-find-alternate-file-in-dired t)
+  :config
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding))
+
+  Add entry with C-c C-x C-a
+  Add sub-tree with C-c C-x C-s

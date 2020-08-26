@@ -7,6 +7,7 @@
 	(scroll-bar-mode -1)
 	(blink-cursor-mode 0)
 	(setq make-backup-files nil)
+	(setq vc-follow-symlinks nil)
     #+END_SRC
 * Good Features
   #+BEGIN_SRC emacs-lisp
@@ -190,8 +191,18 @@
        :init
        (autopair-global-mode))
    #+END_SRC
-** bbdb
-* Evil State color
+** Webpaste
+   #+BEGIN_SRC emacs-lisp
+   (use-package webpaste
+  :ensure t
+  :bind (("C-c C-p C-b" . webpaste-paste-buffer)
+         ("C-c C-p C-r" . webpaste-paste-region)
+         ("C-c C-p C-p" . webpaste-paste-buffer-or-region))
+  :config
+  (progn
+    (setq webpaste-provider-priority '("ix.io" "dpaste.org"))))
+   #+END_SRC
+ Evil State color
   #+BEGIN_SRC emacs-lisp
     (setq evil-emacs-state-cursor '("red" box))
     (setq evil-normal-state-cursor '("green" box))
@@ -231,7 +242,7 @@
    ;;(setq org-default-notes-file (concat org-directory "/notes.org"))
    #+END_SRC
 ** Org Agenda Files 
-    | inbox   | Where I collect everything                                                     |
+   | inbox   | Where I collect everything                                                     |
     | gtd     | Where I put all my projects                                                    |
     | someday | All inactive tasks that don’t want to see all the time, but oneday             |
     | tickler | Entries are in this file with a timestamp to get reminded at the right moment. |

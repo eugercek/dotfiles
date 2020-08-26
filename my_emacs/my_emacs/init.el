@@ -18,7 +18,7 @@
     ("e61752b5a3af12be08e99d076aedadd76052137560b7e684a8be2f8d2958edc3" "7675ffd2f5cb01a7aab53bcdd702fa019b56c764900f2eea0f74ccfc8e854386" default)))
  '(package-selected-packages
    (quote
-    (org-download Moe-theme paredit flycheck which-key use-package try evil counsel auto-complete ample-theme))))
+    (elfeed org-download Moe-theme paredit flycheck which-key use-package try evil counsel auto-complete ample-theme))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

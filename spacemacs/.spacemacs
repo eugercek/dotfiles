@@ -59,7 +59,11 @@ values."
      git
      pdf
      dap
+     deft
      markdown
+     rust
+     (spacemacs-layouts :variables
+                        spacemacs-layouts-restrict-spc-tab t)
      (c-c++ :variables
             c-c++-backend 'lsp-ccls)
      themes-megapack
@@ -360,14 +364,27 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq org-noter-notes-window-lacation 'other-frame ) ;; Vay be
 
   ;; Keybindings
-  (defun run-make-other-window ()
+  (defun my-run-make-other-window ()
     (interactive)
     (save-buffer)
-    (comint-send-string "*ansi-term*" "make\n")
+    (comint-send-string "*ansi-term*" (concat "clear"
+                                              "\n"
+                                              "gcc "
+                                              (buffer-name)
+                                              ";"
+                                              "./a.out"
+                                              "\n"))
     )
 
-  (spacemacs/set-leader-keys "om" 'run-make-other-window)
+  (spacemacs/set-leader-keys "om" 'my-run-make-other-window)
 
+  (defun my-cargo-run-other-window ()
+    (interactive)
+    (save-buffer)
+    (comint-send-string "*ansi-term*" "clear\n")
+    (comint-send-string "*ansi-term*" "cargo run\n"))
+
+  (spacemacs/set-leader-keys "oc" 'my-cargo-run-other-window)
 
   (defun run-python-other-window ()
     (interactive)
@@ -387,7 +404,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (defun my_woman()
     (interactive)
     (woman))
-  (spacemacs/set-leader-keys "om" 'my_woman)
+  (spacemacs/set-leader-keys "ow" 'my_woman)
 
   (defun my_org_emphasis()
     (interactive)
@@ -399,6 +416,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (org-emphasize 126))
   (spacemacs/set-leader-keys "oh" 'my_org_emphasis)
 
+  (defun my_find_notes()
+    (interactive)
+    ;;(deft)
+    ;(helm-org-rifle-directories "~/Dropbox/org/Notes" t)
+    (helm-org-rifle-org-directory)
+    )
+  (spacemacs/set-leader-keys "on" 'my_find_notes)
+
+  (setq org-directory "~/Dropbox/org")
 
 
   ;; bookmarks stuff--
@@ -407,42 +433,50 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq bookmark-default-file "~/spacemacs/private/bookmarks")  ;;define file to use.
   (setq bookmark-save-flag 1)  ;save bookmarks to .emacs.bmk after each entry
 
-  (unbind-key (kbd "L") evil-motion-state-map)
-  (unbind-key (kbd "H") evil-motion-state-map)
+  ;; (unbind-key (kbd "L") evil-motion-state-map)
+  ;; (unbind-key (kbd "H") evil-motion-state-map)
 
-  (define-key evil-normal-state-map (kbd "H") 'evil-window-left)
-  (define-key evil-normal-state-map (kbd "L") 'evil-window-right)
+  ;;(define-key evil-normal-state-map (kbd "H") 'evil-window-left)
+  ;;(define-key evil-normal-state-map (kbd "L") 'evil-window-right)
 
   ;; (define-key evil-normal-state-map (kbd "L") 'evil-snipe-s)
 
+  ;;Toggles
+  (spacemacs/toggle-highlight-long-lines-globally-off)
+  (spacemacs/toggle-highlight-current-line-globally-off)
 
+  ;;Org
+  ;; (set-face-attribute 'org-block-begin-line :foreground "#384A36")
+  ;; (set-face-attribute 'org-block-end-line nil :foreground "#384A36")
 
-  ;;GTD stuff
-
-  (setq org-agenda-files '("~/gtd/inbox.org"
-                           "~/gtd/gtd.org"
-                           "~/gtd/tickler.org"))
-
-  (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                                 (file+headline "~/gtd/inbox.org" "Tasks")
-                                 "* TODO %i%?")
+  ;;Agenda
+  ;(setq org-log-into-drawer t)
+  (setq org-agenda-files (directory-files-recursively "~/Dropbox/org/gtd/" "\\.org$"))
+  (setq org-capture-templates '(("t" "Todo" entry
+                                 (file+headline "~/Dropbox/org/gtd/inbox.org" "Tasks")
+                                 "* TODO %^{Description}%^g\n  %?")
                                 ("T" "Tickler" entry
-                                 (file+headline "~/gtd/tickler.org" "Tickler")
-                                 "* %i%? \n %U")))
+                                 (file+headline "~/Dropbox/org/gtd/tickler.org" "Tickler")
+                                 "* %i%? \n %U")
+                                ("n" "Simple Notes" entry
+                                 (file+headline "~/Dropbox/org/gtd/inbox.org" "Notes")
+                                 "* %^{Description}%^g\n  %?")
+                                ("j" "Journal" entry
+                                 (file+datetree "~/Dropbox/org/gtd/journal.org")
+                                 "* %U %^{Title}\n  %?" :clock-in t :clock-keep t)
+                                ("r" "Resource")
+                                ("ri" "Internet" entry
+                                 (file+olp "~/Dropbox/org/gtd/inbox.org" "Resources" "Internet")
+                                 "* [[%c][%^{Name of link}]] %^g\n%U\n  %?")))
+  ;;Deft
+  (setq deft-directory "~/Dropbox/org/Notes")
+  (setq deft-extensions '("org" "md" "txt"))
+  (setq deft-recursive t)
+  (setq-default dotspacemacs-enable-server t)
+  ;;(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
 
-  (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
   )
 
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode company-anaconda anaconda-mode pythonic xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit git-commit with-editor transient company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired f evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
@@ -455,6 +489,8 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(calendar-week-start-day 1)
  '(evil-want-Y-yank-to-eol nil)
+ '(global-hi-lock-mode t)
+ ;;'(hybrid-mode t)
  '(org-hide-emphasis-markers t)
  '(org-refile-allow-creating-parent-nodes (quote confirm))
  '(org-refile-targets (quote ((org-agenda-files :level . 1))))
@@ -468,5 +504,6 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:background nil)))))
+ '(org-block-begin-line ((t nil)))
+ '(show-paren-match ((t (:foreground "#8be9fd" :underline t :weight bold :width expanded)))))
 )

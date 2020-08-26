@@ -1,0 +1,16 @@
+
+Archived entries from file /home/umut/.dotfiles/my_emacs/my_emacs/myinit.org
+
+
+* Org Template 
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-08-08 Sat 13:54
+  :ARCHIVE_FILE: ~/.dotfiles/my_emacs/my_emacs/myinit.org
+  :ARCHIVE_OLPATH: Org Mode
+  :ARCHIVE_CATEGORY: myinit
+  :END:
+  #+BEGIN_SRC emacs-lisp
+   (setq org-capture-templates '(
+			       ("t" "Todo [inbox]" entry (file+headline "~/gtd/inbox.org" "Tasks") "* TODO %i%?")
+			       ("T" "Tickler" entry (file+headline "~/gtd/tickler.org" "Tickler") "* %i%? \n %U")))
+  #+END_SRC
