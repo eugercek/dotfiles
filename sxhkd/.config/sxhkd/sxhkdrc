@@ -60,7 +60,7 @@ super + {h,j,k,l}
 	bspc node -f {west,south,north,east}
 
 super + shift + {h,j,k,l}
-    dir={west,east,north,south};  \
+    dir={west,south,north,east};  \
 	bspc node -s "$dir" --follow \
 	|| bspc node -m "$dir" --follow
 
