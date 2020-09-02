@@ -45,10 +45,10 @@ values."
                       auto-completion-minimum-prefix-length 1
                       auto-completion-enable-help-tooltip t
                       auto-completion-idle-delay 0.01
-                      ;; auto-completion-private-snippets-directory nil
+                      auto-completion-private-snippets-directory "~/Dropbox/yasnippet"
                       auto-completion-enable-snippets-in-popup t
                       auto-completion-enable-help-tooltip t
-                      ;; auto-completion-use-company-box t
+                      auto-completion-use-company-box t
                       auto-completion-enable-sort-by-usage t
                       auto-completion-enable-help-tooltip t)
      ;; better-defaults
@@ -60,12 +60,14 @@ values."
      pdf
      dap
      deft
+     semantic
      markdown
      rust
      (spacemacs-layouts :variables
                         spacemacs-layouts-restrict-spc-tab t)
      (c-c++ :variables
-            c-c++-backend 'lsp-ccls)
+            c-c++-backend 'lsp-ccls
+            c-c++-lsp-semantic-highlight-method 'overlay)
      themes-megapack
      colors
      org
@@ -379,6 +381,20 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   (spacemacs/set-leader-keys "om" 'my-run-make-other-window)
 
+  (defun my-run-g-make-other-window ()
+    (interactive)
+    (save-buffer)
+    (comint-send-string "*ansi-term*" (concat "clear"
+                                              "\n"
+                                              "g++ "
+                                              (buffer-name)
+                                              ";"
+                                              "./a.out"
+                                              "\n"))
+    )
+
+  (spacemacs/set-leader-keys "oa" 'my-run-g-make-other-window)
+
   (defun my-cargo-run-other-window ()
     (interactive)
     (save-buffer)
@@ -445,23 +461,30 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;;Toggles
   (spacemacs/toggle-highlight-long-lines-globally-off)
   (spacemacs/toggle-highlight-current-line-globally-off)
+  (spacemacs/toggle-smartparens-globally-on)
 
   ;;Org
-  ;; (set-face-attribute 'org-block-begin-line :foreground "#384A36")
-  ;; (set-face-attribute 'org-block-end-line nil :foreground "#384A36")
+  (setq org-clock-persist t)
+
+  (org-clock-persistence-insinuate)
+  (setq org-clock-persist-query-resume nil)
 
   ;;Agenda
   ;(setq org-log-into-drawer t)
   (setq org-agenda-files (directory-files-recursively "~/Dropbox/org/gtd/" "\\.org$"))
-  (setq org-capture-templates '(("t" "Todo" entry
+  (setq org-capture-templates '(("t" "Todo")
+                                ("tn" "No time" entry
                                  (file+headline "~/Dropbox/org/gtd/inbox.org" "Tasks")
-                                 "* TODO %^{Description}%^g\n  %?")
+                                 "* TODO %^{Description} %^g\n  %?")
+                                ("tt" "With time" entry
+                                 (file+headline "~/Dropbox/org/gtd/inbox.org" "Task with Time")
+                                 "* TODO %^{Description} %^g\n \%^t\n  %?")
                                 ("T" "Tickler" entry
                                  (file+headline "~/Dropbox/org/gtd/tickler.org" "Tickler")
                                  "* %i%? \n %U")
                                 ("n" "Simple Notes" entry
                                  (file+headline "~/Dropbox/org/gtd/inbox.org" "Notes")
-                                 "* %^{Description}%^g\n  %?")
+                                 "* %^{Description} %^g\n  %?")
                                 ("j" "Journal" entry
                                  (file+datetree "~/Dropbox/org/gtd/journal.org")
                                  "* %U %^{Title}\n  %?" :clock-in t :clock-keep t)
@@ -476,7 +499,29 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq-default dotspacemacs-enable-server t)
   ;;(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
 
-  )
+  (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
+  (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
+
+  ;;Hybrid
+  (with-eval-after-load 'org
+    (define-key evil-hybrid-state-map (kbd "M-h") 'org-metaleft)
+    (define-key evil-hybrid-state-map (kbd "M-l") 'org-metaright))
+
+  (defun smart-beginning-of-line ()
+    ;;https://tangjunjie.wordpress.com/2016/10/17/jump-to-first-non-whitespace-character-in-line-in-emacs/
+    "Move point to first non-whitespace character or beginning-of-line.
+    If point was already at that position, move point to beginning of line."
+    (interactive)
+    (let ((oldpos (point)))
+      (back-to-indentation)
+      (and (= oldpos (point))
+           (beginning-of-line))))
+
+  (define-key evil-hybrid-state-map (kbd "C-a") 'smart-beginning-of-line)
+  (define-key evil-normal-state-map (kbd "C-a") 'smart-beginning-of-line)
+  (define-key evil-normal-state-map (kbd "C-e") 'move-end-of-line)
+
+  );;End of user-config
 
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
@@ -491,7 +536,8 @@ This function is called at the very end of Spacemacs initialization."
  '(calendar-week-start-day 1)
  '(evil-want-Y-yank-to-eol nil)
  '(global-hi-lock-mode t)
- ;;'(hybrid-mode t)
+ '(hybrid-mode t)
+ '(org-ellipsis " ▼")
  '(org-hide-emphasis-markers t)
  '(org-refile-allow-creating-parent-nodes (quote confirm))
  '(org-refile-targets (quote ((org-agenda-files :level . 1))))

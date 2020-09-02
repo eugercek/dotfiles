@@ -43,6 +43,7 @@ alias fun="fortune | cowsay -f $(cowsay -l | tail -n +2 | tr ' ' '\n' | shuf -n 
 alias serve="python3 -m http.server 8000"
 alias syngui="firefox http://localhost:8384/"
 alias lt="ls --sort=time"
+alias fuu="setxkbmap -option caps:escape us ; xset r rate 300 25"
 
 function dec(){
 	echo "ibase=16; $1"|bc
@@ -132,5 +133,12 @@ function kxev(){
 }
 function chp(){
 	PS1='>'
+}
+function alit(){
+	alias jk="$1"
+}
+
+function alit2(){
+	alias fd="$1"
 }
 
