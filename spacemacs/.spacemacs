@@ -61,7 +61,6 @@ values."
      dap
      deft
      semantic
-     markdown
      rust
      (spacemacs-layouts :variables
                         spacemacs-layouts-restrict-spc-tab t)
@@ -76,23 +75,25 @@ values."
              python-format-on-save t
              python-backend 'anaconda)
              ;; python-backend 'lsp)
-
-
      (shell :variables
             shell-default-height 30
+            shell-default-term-shell "/bin/zsh"
             shell-default-position 'bottom)
-     spell-checking
+     ;; spell-checking
      shell-scripts
      neotree
      syntax-checking
      (evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t)
+     javascript
      ;; version-control
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(org-noter)
+   dotspacemacs-additional-packages '(
+                                      org-noter
+                                      )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -165,17 +166,17 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(dracula
+   dotspacemacs-themes '(spacemacs-light
+                         dracula
                          doom-solarized-dark
                          gruvbox
-                         spacemacs-dark
-                         spacemacs-light)
+                         spacemacs-dark)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 19
+                               :size 15
                                :weight normal
                                :width normal
                                :powerline-scale 1.3)
@@ -441,7 +442,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
     )
   (spacemacs/set-leader-keys "on" 'my_find_notes)
 
-  (setq org-directory "~/Dropbox/org")
+  (defun my_capitalize_line()
+    (interactive)
+    ;;TODO
+    )
+  (spacemacs/set-leader-keys "ol" 'my_capitalize_line)
+
 
 
   ;; bookmarks stuff--
@@ -464,8 +470,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (spacemacs/toggle-smartparens-globally-on)
 
   ;;Org
+  (setq org-directory "~/Dropbox/org")
   (setq org-clock-persist t)
-
   (org-clock-persistence-insinuate)
   (setq org-clock-persist-query-resume nil)
 
@@ -477,7 +483,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
                                  (file+headline "~/Dropbox/org/gtd/inbox.org" "Tasks")
                                  "* TODO %^{Description} %^g\n  %?")
                                 ("tt" "With time" entry
-                                 (file+headline "~/Dropbox/org/gtd/inbox.org" "Task with Time")
+                                 (file+headline "~/Dropbox/org/gtd/agenda.org" "Tasks")
                                  "* TODO %^{Description} %^g\n \%^t\n  %?")
                                 ("T" "Tickler" entry
                                  (file+headline "~/Dropbox/org/gtd/tickler.org" "Tickler")
@@ -491,7 +497,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
                                 ("r" "Resource")
                                 ("ri" "Internet" entry
                                  (file+olp "~/Dropbox/org/gtd/inbox.org" "Resources" "Internet")
-                                 "* [[%c][%^{Name of link}]] %^g\n%U\n  %?")))
+                                 "* [[%c][%^{Name of link}]] %^g\n%U\n" :immediate-finish t)))
+  (setq org-agenda-custom-commands
+        '(("c" "Simple agenda view"
+           ((agenda "")
+            (alltodo "")))))
   ;;Deft
   (setq deft-directory "~/Dropbox/org/Notes")
   (setq deft-extensions '("org" "md" "txt"))
@@ -554,3 +564,18 @@ This function is called at the very end of Spacemacs initialization."
  '(org-block-begin-line ((t nil)))
  '(show-paren-match ((t (:foreground "#8be9fd" :underline t :weight bold :width expanded)))))
 )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+ '(package-selected-packages
+   '(zenburn-theme zen-and-art-theme yapfify xterm-color white-sand-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stickyfunc-enhance srefactor spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle slime-company slime shell-pop seti-theme reverse-theme rebecca-theme rainbow-mode rainbow-identifiers railscasts-theme racer pyvenv pytest pyenv-mode py-isort purple-haze-theme professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme orgit organic-green-theme org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-noter org-mime org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme multi-term monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc majapahit-theme magit-gitflow magit-popup madhat2r-theme lush-theme live-py-mode light-soap-theme jbeans-theme jazz-theme ir-black-theme insert-shebang inkpot-theme hy-mode dash-functional htmlize heroku-theme hemisu-theme helm-pydoc helm-gitignore helm-company helm-c-yasnippet hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md gandalf-theme fuzzy flyspell-correct-helm flyspell-correct flycheck-rust flycheck-pos-tip flycheck flatui-theme flatland-theme fish-mode farmhouse-theme exotica-theme evil-snipe evil-magit magit git-commit with-editor transient espresso-theme eshell-z eshell-prompt-extras esh-help django-theme disaster deft darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme company-statistics company-shell company-quickhelp pos-tip company-c-headers company-anaconda company common-lisp-snippets color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode cmake-mode clues-theme clang-format cherry-blossom-theme cargo markdown-mode rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet yasnippet auto-dictionary apropospriate-theme anti-zenburn-theme anaconda-mode pythonic ample-zen-theme ample-theme alect-themes afternoon-theme ac-ispell auto-complete dracula-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

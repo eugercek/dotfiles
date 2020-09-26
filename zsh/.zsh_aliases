@@ -2,14 +2,16 @@
 ##Go to config files
 alias vimconfig="vim ~/.vimrc"
 alias awsconfig="vim ~/.config/awesome/rc.lua"
-alias zshconf="nvim ~/.zshrc"
-alias alconf='nvim ~/.zsh_aliases'
+alias zshconf="vim ~/.zshrc"
+alias alconf='vim ~/.zsh_aliases'
 alias confi3="vim ~/.config/i3/config"
 alias polconf=" vim ~/.config/polybar/config"
-alias nvimconfig="nvim ~/.config/nvim/init.vim"
-alias gi='nvim .gitignore'
-alias albs="nvim ~/.config/bspwm/bspwmrc"
-alias alhd="nvim ~/.config/sxhkd/sxhkdrc"
+alias vimconfig="vim ~/.config/vim/init.vim"
+alias gi='vim .gitignore'
+alias albs="vim ~/.config/bspwm/bspwmrc"
+alias alhd="vim ~/.config/sxhkd/sxhkdrc"
+alias ficonf="vim ~/.mozilla/firefox/u01d5cj2.default-release/chrome/userChrome.css"
+
 ##Other
 alias sorzsh="source ~/.zshrc"
 alias ref="~/.doom.d/bin/doom refresh"
@@ -44,6 +46,10 @@ alias serve="python3 -m http.server 8000"
 alias syngui="firefox http://localhost:8384/"
 alias lt="ls --sort=time"
 alias fuu="setxkbmap -option caps:escape us ; xset r rate 300 25"
+alias trel="tree -L 5"
+alias repkde="killall plasmashell && kstart5 plasmashell"
+
+alias opdo="emacs --with-profile doom&disown"
 
 function dec(){
 	echo "ibase=16; $1"|bc
