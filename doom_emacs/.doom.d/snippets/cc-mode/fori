@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: fori
+# key: fori
+# --
+for(int i=${1:0}; i < ${2:5}; ++i){
+    $3
+}

@@ -1,0 +1,6 @@
+* Will add
+  - top
+    - htop
+  - tmux
+  - dnf.conf
+  - resolve.conf
