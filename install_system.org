@@ -63,3 +63,34 @@ disown
 *** Firefox Multi Account Containers
 *** TODO Shortkeys
 *** Snap Links
+* Gnome Extensions
+#+BEGIN_SRC sh  :results verbatim
+gnome-extensions list
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+apps-menu@gnome-shell-extensions.gcampax.github.com
+dash-to-panel@jderose9.github.com
+notes@maestroschan.fr
+alternate-tab@gnome-shell-extensions.gcampax.github.com
+multi-monitors-add-on@spin83
+scroll-workspaces@gfxmonk.net
+remove-alt-tab-delay@tetrafox.pw
+emacsmanager@localvoid.gmail.com
+tray-icons@zhangkaizhao.com
+clipboard-indicator@tudmotu.com
+drive-menu@gnome-shell-extensions.gcampax.github.com
+caffeine@patapon.info
+sound-output-device-chooser@kgshank.net
+remove-dropdown-arrows@mpdeimos.com
+putWindow@clemens.lab21.org
+extensions@abteil.org
+color-picker@tuberry
+user-theme@gnome-shell-extensions.gcampax.github.com
+background-logo@fedorahosted.org
+horizontal-workspaces@gnome-shell-extensions.gcampax.github.com
+launch-new-instance@gnome-shell-extensions.gcampax.github.com
+places-menu@gnome-shell-extensions.gcampax.github.com
+window-list@gnome-shell-extensions.gcampax.github.com
+#+end_example
