@@ -12,9 +12,11 @@ alias albs="vim ~/.config/bspwm/bspwmrc"
 alias alhd="vim ~/.config/sxhkd/sxhkdrc"
 alias ficonf="vim ~/.mozilla/firefox/u01d5cj2.default-release/chrome/userChrome.css"
 
-##Other
+##Source
 alias sorzsh="source ~/.zshrc"
-alias ref="~/.doom.d/bin/doom refresh"
+
+##Doom
+alias dos="doom sync;emacs&disown"
 
 #Programming Languages
 ##Python
@@ -135,7 +137,7 @@ function sub(){
 
 
 function kxev(){
-	xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }' 
+	xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'
 }
 function chp(){
 	PS1='>'
@@ -146,5 +148,48 @@ function alit(){
 
 function alit2(){
 	alias fd="$1"
+}
+
+function school(){
+  pushd
+  cd ~/Downloads
+  var=`ls ~/Downloads | grep WhatsApp | wc -l`
+  if [ $var -gt 1 ]; then
+        echo -en "\e[31m"
+        echo "Several Whatsapp zipps exist"
+        echo -en "\e[0m"
+        echo "Quitting. .."
+        return
+        
+  fi
+
+  if [ -d 'ImgToPdf' ]; then
+        echo -en "\e[33m"
+        echo "ImgToPdf Directory exist"
+        echo -en "\e[0m"
+        echo "It had these"
+        ls ./ImgToPdf/
+        eog -n  ./ImgToPdf/* &
+
+
+        num=0
+
+        prefix="./ImgToPdf.bak"
+        while true; do
+          if [ ! -e "$prefix$num" ]; then
+                break
+          fi
+          ((num+=1))
+        done
+
+        cp -r ./ImgToPdf/ "./ImgToPdf.bak$num"
+        #Workaround for zsh
+        rm -rf ./ImgToPdf/**
+  fi
+
+  unzip ./Wh* -d ./ImgToPdf/
+  convert ./ImgToPdf/* ~/Documents/OneFile/Emin_Umut_Gercek-21997548.pdf
+  evince ~/Documents/OneFile/Emin_Umut_Gercek-21997548.pdf
+  popd
 }
 

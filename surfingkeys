@@ -3,6 +3,8 @@ settings.hintAlign = "left";
 Hints.characters = 'fjdkrueisl'; // Home row without pinky baby
 cmap('<Ctrl-j>', '<Tab>');
 cmap('<Ctrl-k>', '<Shift-Tab>');
+unmap('<Ctrl-j>');
+unmap('<Ctrl-h>');
 
 
 function alt_key(default_key){
@@ -11,7 +13,7 @@ function alt_key(default_key){
 
 var vsc_keys = ['v', 's', 'd', 'h', 'l', 'r']; //Video Speed Controller Keys
 var youtube_keys = ['i', 'f', 'c', '0'];
-var block_sites = ["netflix.com", "youtube.com", "seyredelim.com", ".*dizi.*", ".*film.*"];
+var block_sites = ["netflix.com", "youtube.com", ".*dizi.*", ".*film.*" , ".*anime.*","udemy.com"];
 
 //TODO
 var block_for_vsc= new RegExp(block_sites.join("|"), "i");
