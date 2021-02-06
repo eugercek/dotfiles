@@ -1,5 +1,7 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
+
+;; To install a package with Doom you must declare them here and run 'doom sync'
 ;; on the command line, then restart Emacs for the changes to take effect -- or
 ;; use 'M-x doom/reload'.
 
@@ -47,11 +49,9 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-
 (package! turkish)
 (package! zeal-at-point)
 (package! peep-dired)
-(package! rainbow-mode)
 (package! google-translate)
 (package! org-super-agenda)
 (package! evil-terminal-cursor-changer)
@@ -60,7 +60,18 @@
 (package! org-download)
 (package! framemove
         :recipe (:host github :repo "emacsmirror/framemove"))
-
 (package! nov)
 (package! sicp)
 (package! define-word)
+(package! info-colors)
+
+;https://github.com/tecosaur/emacs-config/blob/master/config.org#visuals
+(package! org-pretty-table-mode
+  :recipe (:host github :repo "Fuco1/org-pretty-table") :pin "474ad84a8f...")
+
+(package! lsp-treemacs)
+;; No documentation on debugger
+;; (package! dap-mode)
+
+(package! org-autolist)
+(package! evil-visual-mark-mode)

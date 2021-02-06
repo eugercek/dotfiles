@@ -13,19 +13,16 @@
   display-line-numbers-type 'relative)
 ;(global-subword-mode 1)
 
-(setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))
-
-(when (file-exists-p custom-file)
+(setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))(when (file-exists-p custom-file)
   (load custom-file))
 
 (setq writeroom-fullscreen-effect t)
 
 (toggle-frame-fullscreen)
 
-(setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17)
-      doom-variable-pitch-font (font-spec :family "SauceCodePro Nerd Font" :size 15)
-      doom-big-font (font-spec :family "SauceCodePro Nerd Font" :size 24)
-)
+(setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
+;; (setq doom-font (font-spec :family "JetBrains Mono" :size 15))
+;; (setq doom-font (font-spec :family "Hack Nerd Font Mono" :size 15))
 
 (setq user-full-name "Umut Gercek"
       user-mail-address "umutgercek1999@gmail.com")
@@ -36,41 +33,22 @@
   (evil-terminal-cursor-changer-activate) ; or (etcc-on)
   )
 
-(defun my/light-theme ()
-  "Light theme configurations"
-  (progn
-    (setq doom-theme 'doom-one-light)
-    (use-package! doom-themes
-      :custom-face
-      (region ((nil :background "#aaaaaa")))
-
-      :config
-      (load-theme 'doom-one-light t)
-      )
-    ))
-
-(defun my/dark-theme ()
-  "Dark theme configurations"
-  (progn
-    (setq doom-theme 'doom-solarized-dark)
-    (use-package! doom-themes
-      :custom-face
-      (region ((nil :background "#0b4f61")))
-      :config
-      (setq doom-solarized-dark-brighter-text t)
-      (load-theme 'doom-solarized-dark t)
-      )
-    )
-  )
+(setq doom-solarized-dark-brighter-text t)
+(setq doom-solarized-dark-brighter-comments t)
+(setq doom-themes-enable-bold t)
 
 (setq my/current-time (string-to-number (format-time-string "%H")))
+
 (if
     (and
      (< 7 my/current-time)
      (< my/current-time 17 ))
-    (my/light-theme)
-  (my/dark-theme)
-  )
+    (setq my/current-theme 'doom-one-light)
+  (setq my/current-theme 'doom-solarized-dark))
+
+(setq doom-theme my/current-theme)
+(custom-set-faces!
+  `(region     :background ,"#094A5A"))
 
 (setq doom-scratch-buffer-major-mode t)
 
@@ -80,15 +58,15 @@
 
 (setq fancy-splash-image "~/.doom.d/GnuLove.png")
 
-     (define-key evil-normal-state-map (kbd "C-c =") 'evil-numbers/inc-at-pt)
-     (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
+(define-key evil-normal-state-map (kbd "C-c =") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
 
-     (setq +evil-want-o/O-to-continue-comments nil)
+(setq +evil-want-o/O-to-continue-comments nil)
 
-     (after! evil-snipe
-             (setq evil-snipe-scope 'visible)
-             (setq evil-snipe-repeat-scope 'buffer)
-             (setq evil-snipe-spillover-scope 'whole-buffer))
+(after! evil-snipe
+  (setq evil-snipe-scope 'visible)
+  (setq evil-snipe-repeat-scope 'buffer)
+  (setq evil-snipe-spillover-scope 'whole-buffer))
 
 (map!
   (:after dired
@@ -101,10 +79,12 @@
                                              (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 
+(setq rainbow-delimiters-max-face-count 9)
+
 (setq org-clock-persist t)
 (org-clock-persistence-insinuate)
 (setq org-clock-persist-query-resume nil)
-(setq org-hide-emphasis-markers t)
+;; (setq org-hide-emphasis-markers t)
 
 (setq org-directory "~/Dropbox/Org")
 (after! org
@@ -247,10 +227,18 @@
         "C-c l a y" #'zz/org-download-paste-clipboard
         "C-M-y" #'zz/org-download-paste-clipboard))
 
-(setq
- ;; org-superstar-headline-bullets-list '("⁖" "*" "†" "✸" "✿")
- org-superstar-headline-bullets-list '("*")
- )
+;; (setq
+;;  ;; org-superstar-headline-bullets-list '("⁖" "*" "†" "✸" "✿")
+;;  org-superstar-headline-bullets-list '("*")
+;;  )
+
+(map! :leader
+      :desc "org-ctrl-c-star copy"
+      "8" 'org-ctrl-c-star)
+
+(org-autolist-mode 1)
+
+(setq org-log-done 'time)
 
 (map! :leader
       :desc "Go to notes directory"
@@ -280,6 +268,16 @@
 (map! :leader
       :desc "Go to notes directory"
       "a s" 'my/src-counsel-find-file
+      )
+
+(defun my/documents-counsel-find-file ()
+  "Foobar"
+  (interactive)
+  (counsel-find-file "/home/umut/Document/"))
+
+(map! :leader
+      :desc "Go to documents directory"
+      "a d" 'my/documents-counsel-find-file
       )
 
 (defun my/curly-quoation-to-normal-quoation()
@@ -317,6 +315,26 @@
   "Opens a folder with xdg-open"
   (interactive)
   (shell-command "xdg-open ."))
+
+(defun my/org-table-color-y-n (start end)
+  "Make =y= s green and n s red with =y= and ~n~"
+  (interactive "r")
+  (replace-regexp " y " " =y= " nil start end)
+  (replace-regexp " n " " ~n~ " nil start end))
+
+(defun my/just-one-space-in-region (beg end)
+  "replace all whitespace in the region with single spaces"
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (while (re-search-forward "\\s-+" nil t)
+        (replace-match " ")))))
+
+(map! :leader
+      :desc "Go to documents directory"
+      "j s" 'my/my/just-one-space-in-region)
 
 (defun xah-open-file-at-cursor ()
   "Open the file path under cursor.
@@ -385,92 +403,102 @@ Version 2019-01-16"
       "d f" 'xah-open-file-at-cursor
       )
 
+(defun xah-title-case-region-or-line (@begin @end)
+  "Title case text between nearest brackets, or current line, or text selection.
+Capitalize first letter of each word, except words like {to, of, the, a, in, or, and, …}. If a word already contains cap letters such as HTTP, URL, they are left as is.
 
-
-(setq geiser-mit-binary "/usr/bin/scheme")
-(setq geiser-active-implementations '(mit))
-(setq geiser-scheme-implementation 'mit)
-(setq scheme-program-name "/usr/local/bin/mit-scheme")
-(setq geiser-scheme-implementation 'mit)
-(setq geiser-default-implementation 'mit)
-
-(defun my-compile-run ()
-  (interactive)
-  (save-buffer)
-  (if (get-buffer "vterm")
-      (setq cur-term "vterm")
-    (setq cur-term "*doom:vterm-popup:main*")
-    )
-  (comint-send-string cur-term
-                      (concat "clear"
-                              "\n"
-                              "g++ *.cpp"
-                              ";"
-                              "./a.out"
-                              "\n")))
-
-(defun my-compile-run-with-test ()
-  (interactive)
-  (save-buffer)
-  (if (get-buffer "vterm")
-      (setq cur-term "vterm")
-    (setq cur-term "*doom:vterm-popup:main*")
-    )
-  (comint-send-string cur-term (concat "clear"
-                                       "\n"
-                                       "g++ "
-                                       (buffer-name)
-                                       ";"
-                                       "./a.out"
-                                       "<test"
-                                       "\n")))
+When called in a elisp program, *begin *end are region boundaries.
+URL `http://ergoemacs.org/emacs/elisp_title_case_text.html'
+Version 2017-01-11"
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))
+     (let (
+           $p1
+           $p2
+           ($skipChars "^\"<>(){}[]“”‘’‹›«»「」『』【】〖〗《》〈〉〔〕"))
+       (progn
+         (skip-chars-backward $skipChars (line-beginning-position))
+         (setq $p1 (point))
+         (skip-chars-forward $skipChars (line-end-position))
+         (setq $p2 (point)))
+       (list $p1 $p2))))
+  (let* (
+         ($strPairs [
+                     [" A " " a "]
+                     [" And " " and "]
+                     [" At " " at "]
+                     [" As " " as "]
+                     [" By " " by "]
+                     [" Be " " be "]
+                     [" Into " " into "]
+                     [" In " " in "]
+                     [" Is " " is "]
+                     [" It " " it "]
+                     [" For " " for "]
+                     [" Of " " of "]
+                     [" Or " " or "]
+                     [" On " " on "]
+                     [" Via " " via "]
+                     [" The " " the "]
+                     [" That " " that "]
+                     [" To " " to "]
+                     [" Vs " " vs "]
+                     [" With " " with "]
+                     [" From " " from "]
+                     ["'S " "'s "]
+                     ["'T " "'t "]
+                     ]))
+    (save-excursion
+      (save-restriction
+        (narrow-to-region @begin @end)
+        (upcase-initials-region (point-min) (point-max))
+        (let ((case-fold-search nil))
+          (mapc
+           (lambda ($x)
+             (goto-char (point-min))
+             (while
+                 (search-forward (aref $x 0) nil t)
+               (replace-match (aref $x 1) "FIXEDCASE" "LITERAL")))
+           $strPairs))))))
 
 (map! :leader
-      :desc "Compile and Run in vterm buffer"
-      "d c"  'my-compile-run
-      "d t"  'my-compile-run-with-test
+      "j t"  'xah-title-case-region-or-line
       )
+
+(setq org-babel-default-header-args:C++ '((:includes . "<bits/stdc++.h>")
+                                          (:flags . "-std=c++20")
+                                          (:namespaces . "std")))
+
+(map! :leader
+      "j r" 'python-shell-send-region
+      "j b" 'python-shell-send-buffer
+      "j d" 'python-shell-send-defun)
 
 (after! company
   (setq company-idle-delay 0.35)
   (setq company-minimum-prefix-length 1)
-  (setq company-selection-wrap-around t)
-  (setq company-show-numbers t)
-  (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
-  (define-key company-active-map (kbd "TAB") #'company-complete-selection)
-  )
-(set-company-backend! '(c-mode c++-mode objc-mode) '(company-lsp company-yasnippet))
-                                        ;(after! company-box
-                                        ;     (setq company-box-backends-colors
-                                        ;           '((company-yasnippet . (:all "lime green" :selected (:background "lime green" :foreground "black"))))
-                                        ;           ))
+  (setq company-selection-wrap-around t);;Circular list
+  (setq company-show-numbers t));; M-7 for 7nd match
 
-(use-package zeal-at-point)
-(map! :leader
-      :desc "Zeal Look Up"
-      "d z" #'zeal-at-point
-      )
+(after! company
+  (define-key company-active-map (kbd "<tab>")
+    #'company-complete-selection)
+  (define-key company-active-map (kbd "TAB")
+    #'company-complete-selection))
 
-(use-package rainbow-mode)
+(after! company
+  (setq company-tooltip-limit 10
+        company-tooltip-minimum-width 80))
 
-(use-package! framemove
-  :config
-  (setq framemove-hook-into-windmove t))
-
-(use-package turkish)
-(map! :leader
-      :desc "Turkish last word"
-      "d t" 'turkish-correct-last-word
-      )
+(setq doom-themes-treemacs-theme "doom-colors")
+(doom-themes-treemacs-config)
 
 (use-package command-log-mode)
 
 (eval-after-load "artist"
   '(define-key artist-mode-map [(down-mouse-3)] 'artist-mouse-choose-operation)
   )
-
-(add-hook! 'rainbow-mode-hook
-  (hl-line-mode (if rainbow-mode -1 +1)))
 
 (add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) ;Dark mode
 
@@ -482,3 +510,44 @@ Version 2019-01-16"
   :mode ("\\.epub\\'" . nov-mode)
   :config
   (setq nov-save-place-file (concat doom-cache-dir "nov-places")))
+
+(use-package! info-colors
+  :commands (info-colors-fontify-node))
+
+(add-hook 'Info-selection-hook 'info-colors-fontify-node)
+(add-hook 'Info-mode-hook #'mixed-pitch-mode)
+
+(setq lsp-enable-symbol-highlighting nil)
+
+(setq  writeroom-width 80)
+
+(setq delimit-columns-str-before "{ ")
+(setq delimit-columns-str-after " }")
+(setq delimit-columns-str-separator ", ")
+(setq delimit-columns-before "")
+(setq delimit-columns-after "")
+(setq delimit-columns-separator " ")
+(setq delimit-columns-format 'separator)
+(setq delimit-columns-extra t)
+
+(map! :leader
+      "j [" 'delimit-columns-region)
+
+(use-package zeal-at-point)
+(map! :leader
+      :desc "Zeal Look Up"
+      "d z" #'zeal-at-point
+      )
+
+(use-package! framemove
+  :config
+  (setq framemove-hook-into-windmove t))
+
+(use-package turkish)
+(map! :leader
+      :desc "Turkish last word"
+      "d t" 'turkish-correct-last-word
+      )
+
+(add-hook! 'rainbow-mode-hook
+  (hl-line-mode (if rainbow-mode -1 +1)))
