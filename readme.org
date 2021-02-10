@@ -1,6 +1,240 @@
-* Will add
-  - top
-    - htop
-  - tmux
-  - dnf.conf
-  - resolve.conf
+#+TITLE: System Install Steps
+
+
+* Retrieve config files and call other sciprts
+#+BEGIN_SRC sh :tangle install_system.sh :noweb yes
+git clone https://github.com/EminUmutGercek/.dotfiles.git  ~/.config/dotfiles
+./zsh_setup.sh
+./create_links.sh
+<<install_all_packages>>
+#+END_SRC
+* Installing Doom Emacs :manual:
+Only manually downlod this!
+[[https://github.com/hlissner/doom-emacs#install][Github page]]
+#+BEGIN_SRC sh :dir ~/
+git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
+~/.emacs.d/bin/doom install
+#+END_SRC
+* zsh setup
+:PROPERTIES:
+:header-args: :tangle ./zsh_setup.sh
+:END:
+** Install zsh
+#+begin_src sh
+sudo dnf install zsh
+#+end_src
+
+#+RESULTS:
+
+** Change zsh to default shell
+#+begin_src shell
+chsh -s /bin/zsh
+#+end_src
+** Install powerlevel10k prompt
+https://github.com/romkatv/powerlevel10k#oh-my-zsh
+#+begin_src sh
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+#+end_src
+** Install Font for powerlevel10k
+https://github.com/romkatv/powerlevel10k#manual-font-installation
+Preferences -> Selected profile -> Text > Text Apperance -> Custom Font :  Select MesloLGS NF Regular.
+** Install Needed packages
+#+begin_src sh
+sudo dnf install fzf zsh-autosuggestions zsh-syntax-highlighting
+#+end_src
+** Install oh-my-zsh
+https://ohmyz.sh/#install
+
+#+begin_src sh
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+#+end_src
+** Install zsh-autosuggestions
+https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md#oh-my-zsh
+
+#+begin_src sh
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+#+end_src
+
+#+RESULTS:
+** Install zsh-syntax-highligh
+https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#oh-my-zsh
+
+#+begin_src sh
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+#+end_src
+* Install packages
+#+NAME: install_all_packages
+#+begin_src sh
+dnf install $(cat dnf_packages)
+#+end_src
+** dnf packages
+:PROPERTIES:
+:header-args: :tangle ./dnf_packages
+:END:
+*** Terminal
+#+begin_src text
+htop
+tree
+vim
+imagemagick
+cmatrix
+cowsay
+figlet
+lolcat
+youtube-dl
+acpi
+speedtest-cli
+tldr
+#+end_src
+*** Emacs
+#+begin_src text
+emacs
+libvterm
+#+end_src
+*** Programs
+#+begin_src text
+qbittorrent
+okular
+#+end_src
+*** Progammming Languages
+**** Python
+#+begin_src text
+bpython
+#+end_src
+**** C/C++
+#+begin_src text
+clagnd
+#+end_src
+
+* Browser Extensions
+** List
+*** Chrome
+- Audio Pan
+- Video Speed Controller
+- Volume Booster
+- Theme
+- Dark Reader
+- Material DevTools Theme Collection
+- BehindTheOverlay
+- Chrome extension source viewer
+- EditThisCookie
+- Extension Manager
+- GNOME Shell integration
+- Google Dictionary (by Google)
+- Grammarly for Chrome
+- JSON Formatter
+- Midnight Lizard
+- MyBib: Free Citation Generator
+- Relay: Chat on Every Website
+- Surfingkeys
+- uBlock Origin
+- Touch VPN - Secure and unlimited VPN
+- Vimium
+- Wappalyzer
+- WhatRuns
+- Wikiwand: Wikipedia Modernized
+- YouTube Playlist Duration
+- C/C++
+*** Only Firefox
+- Element Blocker
+- Code Copier
+- Flagfox
+- Firefox Multi Account Containers
+- Shortkeys
+- Snap Links
+- Chrome
+Video & Audio
+Audio Pan
+Video Speed Controller :config:
+| Show/hide | controller | V  |   0 |
+| Decrease  | speed      | S  | 0.1 |
+| Increase  | speed      | D  | 0.1 |
+| Rewind    | Z          | 10 |     |
+| Advance   | X          | 10 |     |
+| Reset     | speed      | R  |   1 |
+| Preferred | speed      | G  |   1 |
+| Rewind    | H          | 10 |     |
+Volume Booster
+Theme
+Dark Reader
+Material DevTools Theme Collection
+BehindTheOverlay
+Chrome extension source viewer
+EditThisCookie
+Extension Manager
+GNOME Shell integration
+Google Dictionary (by Google)
+Grammarly for Chrome
+JSON Formatter
+Midnight Lizard
+MyBib: Free Citation Generator
+Relay: Chat on Every Website
+Surfingkeys :config:
+Add https://raw.githubusercontent.com/EminUmutGercek/.dotfiles/master/surfingkeys to Load Settings from
+uBlock Origin
+Touch VPN - Secure and unlimited VPN
+Vimium
+Wappalyzer
+WhatRuns
+Wikiwand: Wikipedia Modernized
+YouTube Playlist Duration
+C/C++
+** Configs
+*** Video Speed Controller
+| Show/hide | controller | V  |   0 |
+| Decrease  | speed      | S  | 0.1 |
+| Increase  | speed      | D  | 0.1 |
+| Rewind    | Z          | 10 |     |
+| Advance   | X          | 10 |     |
+| Reset     | speed      | R  |   1 |
+| Preferred | speed      | G  |   1 |
+| Rewind    | H          | 10 |     |
+*** Surfingkeys
+Add  =https://raw.githubusercontent.com/EminUmutGercek/.dotfiles/master/surfingkeys= to  =Load settings from:=
+* Gnome
+** Gnome Extensions
+*** Fedora
+#+BEGIN_SRC sh  :results verbatim
+gnome-extensions list --enabled
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+alternate-tab@gnome-shell-extensions.gcampax.github.com
+scroll-workspaces@gfxmonk.net
+remove-alt-tab-delay@tetrafox.pw
+tray-icons@zhangkaizhao.com
+clipboard-indicator@tudmotu.com
+drive-menu@gnome-shell-extensions.gcampax.github.com
+sound-output-device-chooser@kgshank.net
+remove-dropdown-arrows@mpdeimos.com
+putWindow@clemens.lab21.org
+extensions@abteil.org
+color-picker@tuberry
+user-theme@gnome-shell-extensions.gcampax.github.com
+#+end_example
+*** pop_OS
+#+BEGIN_SRC sh  :results verbatim
+gnome-extensions list --enabled
+#+END_SRC
+
+#+RESULTS:
+drive-menu@gnome-shell-extensions.gcampax.github.com
+scroll-workspaces@gfxmonk.net
+clipboard-indicator@tudmotu.com
+sound-output-device-chooser@kgshank.net
+remove-dropdown-arrows@mpdeimos.com
+alt-tab-raise-first-window@system76.com
+always-show-workspaces@system76.com
+ding@rastersoft.com
+pop-shell@system76.com
+pop-shop-details@system76.com
+system76-power@system76.com
+ubuntu-appindicators@ubuntu.com
+
+*** Should Add
+https://extensions.gnome.org/extension/615/appindicator-support/
+** Gnome configurations
+#+begin_src sh
+dconf dump /
+#+end_src
