@@ -27,6 +27,7 @@ alias pip='pip3'
 ##C/C++
 alias m="make"
 alias run="./a.out"
+alias r="make run"
 ##Nand2Tetris
 alias vmemu='bash ~/src/nand2Tetris/tools/VMEmulator.sh'
 alias cpuemu='bash ~/src/nand2Tetris/tools/CPUEmulator.sh'
