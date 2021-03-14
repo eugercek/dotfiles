@@ -1,26 +1,27 @@
 (setq-default
-  delete-by-moving-to-trash t
-  tab-width 4
-  uniquify-buffer-name-style 'forward
-  window-combination-resize t
-  x-stretch-cursor t)
+ delete-by-moving-to-trash t
+ tab-width 4
+ uniquify-buffer-name-style 'forward
+ window-combination-resize t
+ x-stretch-cursor t)
 
 (setq undo-limit 80000000
-  evil-want-fine-undo t
-  auto-save-default t
-  inhibit-compacting-font-caches t
-  truncate-string-ellipsis "…"
-  display-line-numbers-type 'relative)
-;(global-subword-mode 1)
+      evil-want-fine-undo t
+      auto-save-default t
+      inhibit-compacting-font-caches t
+      truncate-string-ellipsis "…"
+      display-line-numbers-type 'relative)
+                                        ;(global-subword-mode 1)
 
 (setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))(when (file-exists-p custom-file)
-  (load custom-file))
+                                                                             (load custom-file))
 
 (setq writeroom-fullscreen-effect t)
 
 (toggle-frame-fullscreen)
 
-(setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
+;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
+(setq doom-font (font-spec :family "SauceCodePro NF" :size 17))
 ;; (setq doom-font (font-spec :family "JetBrains Mono" :size 15))
 ;; (setq doom-font (font-spec :family "Hack Nerd Font Mono" :size 15))
 
@@ -186,23 +187,41 @@
                            :order 90)
                           (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
 
-(setq org-capture-templates '(("t" "Todo")
+(setq org-capture-templates '(
+                              ("t" "Todo")
                               ("tn" "No time" entry
                                (file+headline "~/Dropbox/org/gtd/inbox.org" "Tasks")
                                "* TODO %^{Description} %^g\n  %?")
                               ("tt" "With time" entry
                                (file+headline "~/Dropbox/org/gtd/agenda.org" "Tasks")
                                "* TODO %^{Description} %^g\n \%^t\n  %?")
+
+
                               ("T" "Tickler" entry
                                (file+headline "~/Dropbox/org/gtd/tickler.org" "Tickler")
                                "* %i%? \n %U")
+
                               ("n" "Simple Notes" entry
                                (file+headline "~/Dropbox/org/gtd/inbox.org" "Notes")
                                "* %^{Description} %^g\n  %?")
+
                               ("j" "Journal" entry
                                (file+datetree "~/Dropbox/org/gtd/journal.org")
                                "* %U %?" :clock-in t :clock-keep t)
+
+
+                              ("l" "Log")
+
+                              ("ls" "Log SICP/LISP daily" entry
+                               (file+olp+datetree "~/Dropbox/org/gtd/log.org" "SICP")
+                               "* %<%H:%M>\n%^{minute}p%^{page}p%?" :jump-to-captured t :immediate-finish t)
+
+                              ("lu" "Log UNIX daily" entry
+                               (file+olp+datetree "~/Dropbox/org/gtd/log.org" "UNIX")
+                               "* %<%H:%M>%?\n%^{minute|60}p")
+
                               ("r" "Resource")
+
                               ("ri" "Internet" entry
                                (file+olp "~/Dropbox/org/gtd/inbox.org" "Resources" "Internet")
                                "* [[%c][%^{Name of link}]] %^g\n%U\n" :immediate-finish t)))
@@ -469,6 +488,9 @@ Version 2017-01-11"
 (setq org-babel-default-header-args:C++ '((:includes . "<bits/stdc++.h>")
                                           (:flags . "-std=c++20")
                                           (:namespaces . "std")))
+
+(setq org-babel-default-header-args:C '((:includes . "'(<stdio.h> <stdlib.h> <unistd.h> <time.h> <string.h>)")
+                                        (:flags . "-std=c99")))
 
 (map! :leader
       "j r" 'python-shell-send-region

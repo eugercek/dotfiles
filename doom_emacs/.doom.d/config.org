@@ -6,22 +6,22 @@
 ** Copy Paste
 #+BEGIN_SRC emacs-lisp
 (setq-default
-  delete-by-moving-to-trash t
-  tab-width 4
-  uniquify-buffer-name-style 'forward
-  window-combination-resize t
-  x-stretch-cursor t)
+ delete-by-moving-to-trash t
+ tab-width 4
+ uniquify-buffer-name-style 'forward
+ window-combination-resize t
+ x-stretch-cursor t)
 
 (setq undo-limit 80000000
-  evil-want-fine-undo t
-  auto-save-default t
-  inhibit-compacting-font-caches t
-  truncate-string-ellipsis "…"
-  display-line-numbers-type 'relative)
-;(global-subword-mode 1)
+      evil-want-fine-undo t
+      auto-save-default t
+      inhibit-compacting-font-caches t
+      truncate-string-ellipsis "…"
+      display-line-numbers-type 'relative)
+                                        ;(global-subword-mode 1)
 
 (setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))(when (file-exists-p custom-file)
-  (load custom-file))
+                                                                             (load custom-file))
 
 (setq writeroom-fullscreen-effect t)
 #+END_SRC
@@ -43,7 +43,8 @@
 #+END_SRC
 ** Font
 #+BEGIN_SRC emacs-lisp
-(setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
+;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
+(setq doom-font (font-spec :family "SauceCodePro NF" :size 17))
 ;; (setq doom-font (font-spec :family "JetBrains Mono" :size 15))
 ;; (setq doom-font (font-spec :family "Hack Nerd Font Mono" :size 15))
 #+END_SRC
@@ -235,28 +236,45 @@
 #+END_SRC
 ** Capture
 #+BEGIN_SRC emacs-lisp
-(setq org-capture-templates '(("t" "Todo")
+(setq org-capture-templates '(
+                              ("t" "Todo")
                               ("tn" "No time" entry
                                (file+headline "~/Dropbox/org/gtd/inbox.org" "Tasks")
                                "* TODO %^{Description} %^g\n  %?")
                               ("tt" "With time" entry
                                (file+headline "~/Dropbox/org/gtd/agenda.org" "Tasks")
                                "* TODO %^{Description} %^g\n \%^t\n  %?")
+
+
                               ("T" "Tickler" entry
                                (file+headline "~/Dropbox/org/gtd/tickler.org" "Tickler")
                                "* %i%? \n %U")
+
                               ("n" "Simple Notes" entry
                                (file+headline "~/Dropbox/org/gtd/inbox.org" "Notes")
                                "* %^{Description} %^g\n  %?")
+
                               ("j" "Journal" entry
                                (file+datetree "~/Dropbox/org/gtd/journal.org")
                                "* %U %?" :clock-in t :clock-keep t)
+
+
+                              ("l" "Log")
+
+                              ("ls" "Log SICP/LISP daily" entry
+                               (file+olp+datetree "~/Dropbox/org/gtd/log.org" "SICP")
+                               "* %<%H:%M>\n%^{minute}p%^{page}p%?" :jump-to-captured t :immediate-finish t)
+
+                              ("lu" "Log UNIX daily" entry
+                               (file+olp+datetree "~/Dropbox/org/gtd/log.org" "UNIX")
+                               "* %<%H:%M> %^{Topic}\n%^{minute|60}p" :immediate-finish t)
+
                               ("r" "Resource")
+
                               ("ri" "Internet" entry
                                (file+olp "~/Dropbox/org/gtd/inbox.org" "Resources" "Internet")
-                               "* [[%c][%^{Name of link}]] %^g\n%U\n" :immediate-finish t)))
+                               "* [[%c][%^{Name of link}]] %^g\n%U\n")))
 #+END_SRC
-
 ** org-download
 https://zzamboni.org/post/my-doom-emacs-configuration-with-commentary/
 #+BEGIN_SRC emacs-lisp
@@ -648,6 +666,14 @@ For syntax cechking I'm using flycheck
 #+END_SRC
 *** Error List
 Run =(lsp-ui-flycheck-list)=
+** C
+*** Org default setup for C
+#+BEGIN_SRC emacs-lisp
+(setq org-babel-default-header-args:C '((:includes . "'(<stdio.h> <stdlib.h> <unistd.h> <time.h> <string.h>)")
+                                        (:flags . "-std=c99")))
+#+END_SRC
+
+
 ** Python
 *** Keybindgins
 Currently SPC [j k l] is empty for me

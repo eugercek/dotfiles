@@ -1,19 +1,21 @@
 #+TITLE: System Install Steps
 
 
-* Retrieve config files and call other sciprts
+* Call other sciprts
 #+BEGIN_SRC sh :tangle install_system.sh :noweb yes
-git clone https://github.com/EminUmutGercek/.dotfiles.git  ~/.config/dotfiles
 ./zsh_setup.sh
 ./create_links.sh
 <<install_all_packages>>
 #+END_SRC
 * Installing Doom Emacs :manual:
 Only manually downlod this!
+*Download Sauce Code Pro*
 [[https://github.com/hlissner/doom-emacs#install][Github page]]
 #+BEGIN_SRC sh :dir ~/
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
+ln -s .config/dotfiles/doom_emacs/.doom.d/ ~/
+~/.emacs.d/bin/doom sync
 #+END_SRC
 * zsh setup
 :PROPERTIES:
@@ -85,11 +87,16 @@ youtube-dl
 acpi
 speedtest-cli
 tldr
+lm_sensors
+neofetch
+glances
+telnet
 #+end_src
 *** Emacs
 #+begin_src text
 emacs
 libvterm
+plantuml
 #+end_src
 *** Programs
 #+begin_src text
@@ -103,9 +110,25 @@ bpython
 #+end_src
 **** C/C++
 #+begin_src text
-clagnd
+cmake
+libtool
+clang
+meson
 #+end_src
-
+**** Lisp
+#+begin_src text
+rlwrap
+#+end_src
+** pip packages
+:PROPERTIES:
+:header-args: :tangle ./pip_packages
+:END:
+#+begin_src text
+pytest
+nose
+pip install python-language-server[all]
+pyright
+#+end_src
 * Browser Extensions
 ** List
 *** Chrome
@@ -200,41 +223,20 @@ gnome-extensions list --enabled
 
 #+RESULTS:
 #+begin_example
-alternate-tab@gnome-shell-extensions.gcampax.github.com
 scroll-workspaces@gfxmonk.net
+drive-menu@gnome-shell-extensions.gcampax.github.com
+sound-output-device-chooser@kgshank.net
+remove-dropdown-arrows@mpdeimos.com
+appindicatorsupport@rgcjonas.gmail.com
 remove-alt-tab-delay@tetrafox.pw
-tray-icons@zhangkaizhao.com
+extensions-sync@elhan.io
+alternate-tab@gnome-shell-extensions.gcampax.github.com
 clipboard-indicator@tudmotu.com
-drive-menu@gnome-shell-extensions.gcampax.github.com
-sound-output-device-chooser@kgshank.net
-remove-dropdown-arrows@mpdeimos.com
 putWindow@clemens.lab21.org
-extensions@abteil.org
 color-picker@tuberry
-user-theme@gnome-shell-extensions.gcampax.github.com
+nightthemeswitcher@romainvigier.fr
+timepp@zagortenay333
+refresh-wifi@kgshank.net
+extensions@abteil.org
+vim-altTab@kokong.info
 #+end_example
-*** pop_OS
-#+BEGIN_SRC sh  :results verbatim
-gnome-extensions list --enabled
-#+END_SRC
-
-#+RESULTS:
-drive-menu@gnome-shell-extensions.gcampax.github.com
-scroll-workspaces@gfxmonk.net
-clipboard-indicator@tudmotu.com
-sound-output-device-chooser@kgshank.net
-remove-dropdown-arrows@mpdeimos.com
-alt-tab-raise-first-window@system76.com
-always-show-workspaces@system76.com
-ding@rastersoft.com
-pop-shell@system76.com
-pop-shop-details@system76.com
-system76-power@system76.com
-ubuntu-appindicators@ubuntu.com
-
-*** Should Add
-https://extensions.gnome.org/extension/615/appindicator-support/
-** Gnome configurations
-#+begin_src sh
-dconf dump /
-#+end_src

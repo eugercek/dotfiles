@@ -1,7 +1,7 @@
 htop
 tree
 vim
-imagemagick
+ImageMagick
 cmatrix
 cowsay
 figlet
@@ -10,13 +10,8 @@ youtube-dl
 acpi
 speedtest-cli
 tldr
-
 emacs
 libvterm
-
 qbittorrent
 okular
-
 bpython
-
-clagnd
