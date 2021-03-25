@@ -218,13 +218,13 @@
 
                               ("lu" "Log UNIX daily" entry
                                (file+olp+datetree "~/Dropbox/org/gtd/log.org" "UNIX")
-                               "* %<%H:%M>%?\n%^{minute|60}p")
+                               "* %<%H:%M> %^{Topic}\n%^{minute|60}p" :immediate-finish t)
 
                               ("r" "Resource")
 
                               ("ri" "Internet" entry
                                (file+olp "~/Dropbox/org/gtd/inbox.org" "Resources" "Internet")
-                               "* [[%c][%^{Name of link}]] %^g\n%U\n" :immediate-finish t)))
+                               "* [[%c][%^{Name of link}]] %^g\n%U\n")))
 
 (defun zz/org-download-paste-clipboard (&optional use-default-filename)
   (interactive "P")

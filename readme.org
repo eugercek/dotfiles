@@ -91,6 +91,9 @@ lm_sensors
 neofetch
 glances
 telnet
+hugo
+inxi
+cloc
 #+end_src
 *** Emacs
 #+begin_src text
@@ -98,10 +101,11 @@ emacs
 libvterm
 plantuml
 #+end_src
-*** Programs
+*** GUI Programs
 #+begin_src text
 qbittorrent
 okular
+flameshot
 #+end_src
 *** Progammming Languages
 **** Python

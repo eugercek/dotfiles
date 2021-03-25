@@ -104,14 +104,14 @@
 ** Dired
 #+BEGIN_SRC emacs-lisp
 (map!
-  (:after dired
-    (:map dired-mode-map
-      :n "RET" 'dired-find-alternate-file ;;Open in same bufer
-          "-"   'find-alternate-file)
-          "C-x i" #'peep-dired
-     ))
+ (:after dired
+  (:map dired-mode-map
+   :n "RET" 'dired-find-alternate-file ;;Open in same bufer
+   "-"   'find-alternate-file)
+  "C-x i" #'peep-dired
+  ))
 (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file
-                                             (kbd "k") 'peep-dired-prev-file)
+  (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 #+END_SRC
 ** Rainbow Deliiters
@@ -312,7 +312,7 @@ It also hides emphasis markers
 #+BEGIN_SRC emacs-lisp :tangle no
 (add-hook! 'org-mode-hook #'+org-pretty-mode )
 #+END_SRC
-** Keybindings
+** [#A] Keybindings
 #+BEGIN_SRC emacs-lisp
 (map! :leader
       :desc "org-ctrl-c-star copy"
@@ -345,7 +345,141 @@ It also hides emphasis markers
       "d l" 'google-translate-at-point
       )
 #+END_SRC
-** TODO Offline
+** xah lee
+*** TODO Open File Under Cursor
+#+BEGIN_SRC emacs-lisp
+(defun xah-open-file-at-cursor ()
+  "Open the file path under cursor.
+If there is text selection, uses the text selection for path.
+If the path starts with “http://”, open the URL in browser.
+Input path can be {relative, full path, URL}.
+Path may have a trailing “:‹n›” that indicates line number. If so, jump to that line number.
+If path does not have a file extension, automatically try with “.el” for elisp files.
+This command is similar to `find-file-at-point' but without prompting for confirmation.
+
+URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'
+Version 2019-01-16"
+  (interactive)
+  (let* (($inputStr (if (use-region-p)
+                        (buffer-substring-no-properties (region-beginning) (region-end))
+                      (let ($p0 $p1 $p2
+                                ;; chars that are likely to be delimiters of file path or url, e.g. whitespace, comma. The colon is a problem. cuz it's in url, but not in file name. Don't want to use just space as delimiter because path or url are often in brackets or quotes as in markdown or html
+                                ($pathStops "^  \t\n\"`'‘’“”|[]{}「」<>〔〕〈〉《》【】〖〗«»‹›❮❯❬❭〘〙·。\\"))
+                        (setq $p0 (point))
+                        (skip-chars-backward $pathStops)
+                        (setq $p1 (point))
+                        (goto-char $p0)
+                        (skip-chars-forward $pathStops)
+                        (setq $p2 (point))
+                        (goto-char $p0)
+                        (buffer-substring-no-properties $p1 $p2))))
+         ($path
+          (replace-regexp-in-string
+           "^file:///" "/"
+           (replace-regexp-in-string
+            ":\\'" "" $inputStr))))
+    (if (string-match-p "\\`https?://" $path)
+        (if (fboundp 'xahsite-url-to-filepath)
+            (let (($x (xahsite-url-to-filepath $path)))
+              (if (string-match "^http" $x )
+                  (browse-url $x)
+                (find-file $x)))
+          (progn (browse-url $path)))
+      (if ; not starting “http://”
+          (string-match "^\\`\\(.+?\\):\\([0-9]+\\)\\'" $path)
+          (let (
+                ($fpath (match-string 1 $path))
+                ($line-num (string-to-number (match-string 2 $path))))
+            (if (file-exists-p $fpath)
+                (progn
+                  (find-file $fpath)
+                  (goto-char 1)
+                  (forward-line (1- $line-num)))
+              (when (y-or-n-p (format "file no exist: 「%s」. Create?" $fpath))
+                (find-file $fpath))))
+        (if (file-exists-p $path)
+            (progn ; open f.ts instead of f.js
+              (let (($ext (file-name-extension $path))
+                    ($fnamecore (file-name-sans-extension $path)))
+                (if (and (string-equal $ext "js")
+                         (file-exists-p (concat $fnamecore ".ts")))
+                    (find-file (concat $fnamecore ".ts"))
+                  (find-file $path))))
+          (if (file-exists-p (concat $path ".el"))
+              (find-file (concat $path ".el"))
+            (when (y-or-n-p (format "file no exist: 「%s」. Create?" $path))
+              (find-file $path ))))))))
+
+(map! :leader
+      :desc "Translate word"
+      "d f" 'xah-open-file-at-cursor
+      )
+#+END_SRC
+*** Title Case
+#+BEGIN_SRC emacs-lisp
+(defun xah-title-case-region-or-line (@begin @end)
+  "Title case text between nearest brackets, or current line, or text selection.
+Capitalize first letter of each word, except words like {to, of, the, a, in, or, and, …}. If a word already contains cap letters such as HTTP, URL, they are left as is.
+
+When called in a elisp program, *begin *end are region boundaries.
+URL `http://ergoemacs.org/emacs/elisp_title_case_text.html'
+Version 2017-01-11"
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))
+     (let (
+           $p1
+           $p2
+           ($skipChars "^\"<>(){}[]“”‘’‹›«»「」『』【】〖〗《》〈〉〔〕"))
+       (progn
+         (skip-chars-backward $skipChars (line-beginning-position))
+         (setq $p1 (point))
+         (skip-chars-forward $skipChars (line-end-position))
+         (setq $p2 (point)))
+       (list $p1 $p2))))
+  (let* (
+         ($strPairs [
+                     [" A " " a "]
+                     [" And " " and "]
+                     [" At " " at "]
+                     [" As " " as "]
+                     [" By " " by "]
+                     [" Be " " be "]
+                     [" Into " " into "]
+                     [" In " " in "]
+                     [" Is " " is "]
+                     [" It " " it "]
+                     [" For " " for "]
+                     [" Of " " of "]
+                     [" Or " " or "]
+                     [" On " " on "]
+                     [" Via " " via "]
+                     [" The " " the "]
+                     [" That " " that "]
+                     [" To " " to "]
+                     [" Vs " " vs "]
+                     [" With " " with "]
+                     [" From " " from "]
+                     ["'S " "'s "]
+                     ["'T " "'t "]
+                     ]))
+    (save-excursion
+      (save-restriction
+        (narrow-to-region @begin @end)
+        (upcase-initials-region (point-min) (point-max))
+        (let ((case-fold-search nil))
+          (mapc
+           (lambda ($x)
+             (goto-char (point-min))
+             (while
+                 (search-forward (aref $x 0) nil t)
+               (replace-match (aref $x 1) "FIXEDCASE" "LITERAL")))
+           $strPairs))))))
+
+(map! :leader
+      "j t"  'xah-title-case-region-or-line
+      )
+#+END_SRC
 * Bookmark like
 ** notes
 #+BEGIN_SRC emacs-lisp
@@ -673,7 +807,6 @@ Run =(lsp-ui-flycheck-list)=
                                         (:flags . "-std=c99")))
 #+END_SRC
 
-
 ** Python
 *** Keybindgins
 Currently SPC [j k l] is empty for me
@@ -685,7 +818,7 @@ Currently SPC [j k l] is empty for me
 #+END_SRC
 *** Error list
 * Packages
-** Company
+** completion/company
 *** Company Behaviour
 #+BEGIN_SRC emacs-lisp
 (after! company
@@ -793,6 +926,7 @@ Run with =(lsp-headerline-breadcrumb-mode)=
 M-x =(lsp-treemacs-symbols)= for cool outline.
 M-x =(lsp-treemacs-errors-list)= Fancier way than lsp-ui-sideline
 *** lsp-ivy
+
 Search through entire project(in headers too).
 ** ui/zen
 *** Writeroom width limit
@@ -823,6 +957,9 @@ M-i for insert what you select.
 (map! :leader
       "j [" 'delimit-columns-region)
 #+END_SRC
+*** Look up documentation
+Function name + ( will show arguments in modeline + can enter them with tab.
+Just press ~K~ =(lsp-describe-thing-at-point)= for documentation.
 * Personal Packages
 ** Zeal
 #+BEGIN_SRC emacs-lisp
