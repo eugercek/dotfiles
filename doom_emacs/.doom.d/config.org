@@ -599,6 +599,24 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
       :desc "Go to documents directory"
       "j s" 'my/my/just-one-space-in-region)
 #+END_SRC
+*** Multiply With Two
+#+begin_src emacs-lisp
+(defun my/multipliy-with-2-number-at-point ()
+  (interactive)
+  (skip-chars-backward "0-9")
+  (or (looking-at "[0-9]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (* (string-to-number (match-string 0) 2)))))
+#+end_src
+*** Divide With Two
+#+begin_src emacs-lisp
+(defun my/divide-with-2-number-at-point ()
+  (interactive)
+  (skip-chars-backward "0-9")
+  (or (looking-at "[0-9]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (/ (string-to-number (match-string 0)) 2))))
+#+end_src
 ** xah lee
 *** TODO Open File Under Cursor
 #+BEGIN_SRC emacs-lisp

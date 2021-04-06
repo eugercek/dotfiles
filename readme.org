@@ -64,75 +64,6 @@ https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#oh-m
 #+begin_src sh
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 #+end_src
-* Install packages
-#+NAME: install_all_packages
-#+begin_src sh
-dnf install $(cat dnf_packages)
-#+end_src
-** dnf packages
-:PROPERTIES:
-:header-args: :tangle ./dnf_packages
-:END:
-*** Terminal
-#+begin_src text
-htop
-tree
-vim
-imagemagick
-cmatrix
-cowsay
-figlet
-lolcat
-youtube-dl
-acpi
-speedtest-cli
-tldr
-lm_sensors
-neofetch
-glances
-telnet
-hugo
-inxi
-cloc
-#+end_src
-*** Emacs
-#+begin_src text
-emacs
-libvterm
-plantuml
-#+end_src
-*** GUI Programs
-#+begin_src text
-qbittorrent
-okular
-flameshot
-#+end_src
-*** Progammming Languages
-**** Python
-#+begin_src text
-bpython
-#+end_src
-**** C/C++
-#+begin_src text
-cmake
-libtool
-clang
-meson
-#+end_src
-**** Lisp
-#+begin_src text
-rlwrap
-#+end_src
-** pip packages
-:PROPERTIES:
-:header-args: :tangle ./pip_packages
-:END:
-#+begin_src text
-pytest
-nose
-pip install python-language-server[all]
-pyright
-#+end_src
 * Browser Extensions
 ** List
 *** Chrome
@@ -218,6 +149,95 @@ C/C++
 | Rewind    | H          | 10 |     |
 *** Surfingkeys
 Add  =https://raw.githubusercontent.com/EminUmutGercek/.dotfiles/master/surfingkeys= to  =Load settings from:=
+* Install packages
+#+NAME: install_all_packages
+#+begin_src sh
+dnf install $(cat dnf_packages)
+#+end_src
+** dnf packages
+:PROPERTIES:
+:header-args: :tangle ./dnf_packages
+:END:
+*** Terminal
+#+begin_src text
+htop
+tree
+vim
+imagemagick
+cmatrix
+cowsay
+figlet
+lolcat
+youtube-dl
+acpi
+speedtest-cli
+tldr
+lm_sensors
+neofetch
+glances
+telnet
+hugo
+inxi
+cloc
+the_silver_searcher
+xdotool
+bashtop
+#+end_src
+*** Emacs
+#+begin_src text
+emacs
+libvterm
+plantuml
+#+end_src
+*** GUI Programs
+#+begin_src text
+qbittorrent
+okular
+flameshot
+#+end_src
+*** Progammming Languages
+**** Python
+#+begin_src text
+bpython
+#+end_src
+**** C/C++
+#+begin_src text
+cmake
+libtool
+clang
+meson
+valgrind
+#+end_src
+**** Lisp
+#+begin_src text
+rlwrap
+#+end_src
+**** Javascript
+#+begin_src text
+nodejs
+#+end_src
+*** Fedora specific
+#+begin_src text
+firewall-config
+#+end_src
+** flatpak
+#+begin_src text
+Discord
+Dropbox
+Flatseal
+Spotify
+Peek
+#+end_src
+** pip packages
+:PROPERTIES:
+:header-args: :tangle ./pip_packages
+:END:
+#+begin_src text
+pytest
+nose
+pip install python-language-server[all]
+pyright
+#+end_src
 * Gnome
 ** Gnome Extensions
 *** Fedora
@@ -244,3 +264,12 @@ refresh-wifi@kgshank.net
 extensions@abteil.org
 vim-altTab@kokong.info
 #+end_example
+* Fedora Settings
+** TOOD Remove nano
+* CentOS Server Setup
+#+begin_src bash
+sudo dnf install git
+sudo dnf group install "Development Tools"
+sudo dnf install net-tools
+sudo dnf install tmux
+#+end_src
