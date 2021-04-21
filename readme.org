@@ -182,6 +182,7 @@ cloc
 the_silver_searcher
 xdotool
 bashtop
+stress
 #+end_src
 *** Emacs
 #+begin_src text
@@ -194,6 +195,7 @@ plantuml
 qbittorrent
 okular
 flameshot
+kruler
 #+end_src
 *** Progammming Languages
 **** Python
@@ -219,6 +221,10 @@ nodejs
 *** Fedora specific
 #+begin_src text
 firewall-config
+#+end_src
+*** Cyber Security
+#+begin_src text
+nmap
 #+end_src
 ** flatpak
 #+begin_src text

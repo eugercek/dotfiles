@@ -51,11 +51,6 @@
 (custom-set-faces!
   `(region     :background ,"#094A5A"))
 
-;; (custom-set-faces!
-;;   '(font-lock-comment-face :slant italic)
-;;   '(font-lock-keyword-face :slant italic))
-(custom-set-faces! '(font-lock-comment-face :slant italic))
-
 (setq doom-scratch-buffer-major-mode t)
 
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
@@ -490,6 +485,36 @@ Version 2017-01-11"
       :desc "Go to documents directory"
       "j s" 'my/my/just-one-space-in-region)
 
+(defun my/multipliy-with-2-number-at-point ()
+  (interactive)
+  (skip-chars-backward "0-9")
+  (or (looking-at "[0-9]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (* (string-to-number (match-string 0) 2)))))
+
+(defun my/divide-with-2-number-at-point ()
+  (interactive)
+  (skip-chars-backward "0-9")
+  (or (looking-at "[0-9]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (/ (string-to-number (match-string 0)) 2))))
+
+(defun my/info-to-org-heading()
+  "Simple workflow for reading info in emasc while taking notes on
+  org-mode"
+  (interactive)
+  (fm-right-frame)
+  (goto-char (point-max))
+  (insert (substring-no-properties (car kill-ring)))
+  (forward-line -1)
+  (kill-whole-line)
+  (forward-line -1)
+  (org-ctrl-c-star))
+
+
+(map! :leader
+      "j o" 'my/info-to-org-heading)
+
 (defun xah-open-file-at-cursor ()
   "Open the file path under cursor.
 If there is text selection, uses the text selection for path.
@@ -705,6 +730,23 @@ Version 2017-01-11"
       :desc "Turkish last word"
       "d t" 'turkish-correct-last-word
       )
+
+(setq gdb-many-windows t)
+(setq gdb-show-main t)
+(add-hook 'gud-mode-hook
+          (lambda ()
+            (tool-bar-mode 1)
+            (gud-tooltip-mode)))
+
+(defun my/gud-quit ()
+  (interactive)
+  (tool-bar-mode -1)
+  (let ((kill-buffer-query-functions nil))
+    (switch-to-buffer "*gud-a.out*")
+    (kill-buffer-and-window))
+  (gud-basic-call "quit"))
+
+(set-fringe-style (quote (24 . 24)))
 
 (add-hook! 'rainbow-mode-hook
   (hl-line-mode (if rainbow-mode -1 +1)))

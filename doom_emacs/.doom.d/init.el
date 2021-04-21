@@ -102,7 +102,7 @@
         +docsets)
        lsp
        magit             ; a git porcelain for Emacs
-       ;;make              ; run make tasks from Emacs
+       make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
        pdf               ; pdf enhancements
        ;;
@@ -163,7 +163,6 @@
        plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
        (python
-        +pyenv
         +lsp)
        ;;qt                ; the 'cutest' gui framework ever
        racket            ; a DSL for DSLs
