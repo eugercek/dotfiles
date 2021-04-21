@@ -824,7 +824,6 @@ Run =(lsp-ui-flycheck-list)=
 (setq org-babel-default-header-args:C '((:includes . "'(<stdio.h> <stdlib.h> <unistd.h> <time.h> <string.h>)")
                                         (:flags . "-std=c99")))
 #+END_SRC
-
 ** Python
 *** Keybindgins
 Currently SPC [j k l] is empty for me
@@ -1001,4 +1000,51 @@ Just press ~K~ =(lsp-describe-thing-at-point)= for documentation.
       "d t" 'turkish-correct-last-word
       )
 #+END_SRC
-**  evil-visual-mark-mode
+** evil-visual-mark-mode
+* GDB Debugger
+** Variables
+#+begin_src emacs-lisp
+(setq gdb-many-windows t)
+(setq gdb-show-main t)
+(add-hook 'gud-mode-hook
+          (lambda ()
+            (tool-bar-mode 1)
+            (gud-tooltip-mode)))
+#+end_src
+** Simple quit function from debugger
+#+begin_src emacs-lisp
+(defun my/gud-quit ()
+  (interactive)
+  (tool-bar-mode -1)
+  (let ((kill-buffer-query-functions nil))
+    (switch-to-buffer "*gud-a.out*")
+    (kill-buffer-and-window))
+  (gud-basic-call "quit"))
+#+end_src
+** Fringe
+This is for proper breakpoints.
+#+begin_src emacs-lisp
+(set-fringe-style (quote (24 . 24)))
+#+end_src
+** Tips
+*** For more buffers to display
+M-x gdb-display-buffertype
+M-x gdb-frame-buffertype-buffer
+*** Broked Layout
+M-x gdb-restore-windows
+*** Breakpoints on Source File
+| mouse-1   | Toggle Breakpoint  |
+| C-mouse-1 | Enable/Disable     |
+| mouse-3   | Continue execution |
+| C-mouse-3 | Jump to line       |
+*** Breakpoints Buffer
+| SPC     | Enable/Disable |
+| D       | Delete         |
+| RET     | Go to line     |
+| mouse-2 | Go to line     |
+*** Stack Buffer
+You can click stacks and see their locals.
+*** Locales Buffer
+Can look at simple variables directly.
+To look at array or struct use (gud-watch).
+Can enter new value with mouse-2 or RET
