@@ -499,7 +499,7 @@ Version 2017-01-11"
       (error "No number at point"))
   (replace-match (number-to-string (/ (string-to-number (match-string 0)) 2))))
 
-(defun my/info-to-org-heading()
+(defun my/info->org-heading()
   "Simple workflow for reading info in emasc while taking notes on
   org-mode"
   (interactive)
@@ -509,11 +509,25 @@ Version 2017-01-11"
   (forward-line -1)
   (kill-whole-line)
   (forward-line -1)
+  (fm-left-frame)
   (org-ctrl-c-star))
 
 
 (map! :leader
-      "j o" 'my/info-to-org-heading)
+      "j o" 'my/info->org-heading)
+
+(defun my/info->org-text(beginning end)
+  "Simple workflow for reading info in emasc while taking notes on
+  org-mode"
+  (interactive "r")
+  (fm-right-frame)
+  (goto-char (point-max))
+  (insert (substring-no-properties (car kill-ring)))
+  (insert "\n")
+  (fm-left-frame))
+
+(map! :leader
+      "j f" 'my/info->org-text)
 
 (defun xah-open-file-at-cursor ()
   "Open the file path under cursor.

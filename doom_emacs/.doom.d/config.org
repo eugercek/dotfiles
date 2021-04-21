@@ -619,8 +619,9 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
 #+end_src
 *** Org mode
 **** Info to Org
+***** Heading
 #+begin_src emacs-lisp
-(defun my/info-to-org-heading()
+(defun my/info->org-heading()
   "Simple workflow for reading info in emasc while taking notes on
   org-mode"
   (interactive)
@@ -630,13 +631,28 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
   (forward-line -1)
   (kill-whole-line)
   (forward-line -1)
+  (fm-left-frame)
   (org-ctrl-c-star))
 
 
 (map! :leader
-      "j o" 'my/info-to-org-heading)
+      "j o" 'my/info->org-heading)
 #+end_src
+***** Text
+#+begin_src emacs-lisp
+(defun my/info->org-text(beginning end)
+  "Simple workflow for reading info in emasc while taking notes on
+  org-mode"
+  (interactive "r")
+  (fm-right-frame)
+  (goto-char (point-max))
+  (insert (substring-no-properties (car kill-ring)))
+  (insert "\n")
+  (fm-left-frame))
 
+(map! :leader
+      "j f" 'my/info->org-text)
+#+end_src
 ** xah lee
 *** TODO Open File Under Cursor
 #+BEGIN_SRC emacs-lisp
