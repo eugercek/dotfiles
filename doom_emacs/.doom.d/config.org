@@ -617,6 +617,26 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
       (error "No number at point"))
   (replace-match (number-to-string (/ (string-to-number (match-string 0)) 2))))
 #+end_src
+*** Org mode
+**** Info to Org
+#+begin_src emacs-lisp
+(defun my/info-to-org-heading()
+  "Simple workflow for reading info in emasc while taking notes on
+  org-mode"
+  (interactive)
+  (fm-right-frame)
+  (goto-char (point-max))
+  (insert (substring-no-properties (car kill-ring)))
+  (forward-line -1)
+  (kill-whole-line)
+  (forward-line -1)
+  (org-ctrl-c-star))
+
+
+(map! :leader
+      "j o" 'my/info-to-org-heading)
+#+end_src
+
 ** xah lee
 *** TODO Open File Under Cursor
 #+BEGIN_SRC emacs-lisp
