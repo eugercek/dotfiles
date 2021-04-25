@@ -66,15 +66,24 @@
 (package! info-colors)
 
 ;https://github.com/tecosaur/emacs-config/blob/master/config.org#visuals
-;; (package! org-pretty-table
-;;   :recipe (:host github :repo "Fuco1/org-pretty-table") :pin "474ad84a8fe5377d67ab7e491e8e68dac6e37a11")
 (package! lsp-treemacs)
-;; No documentation on debugger
-;; (package! dap-mode)
 
 (package! org-autolist)
 (package! evil-visual-mark-mode)
 
-(package! nmap
-        :recipe (:host github :repo "EminUmutGercek/nmap.el"))
+
 (package! pair-tree)
+
+(package! org-appear :recipe (:host github :repo "awth13/org-appear")
+  :pin "0b3b029d5851c77ee792727b280f062eaf2c22c7")
+
+(package! nmap
+   :recipe (:host github
+           :repo "EminUmutGercek/nmap.el"))
+
+(package! rotate)
+
+(package! org-pandoc-import
+  :recipe (:host github
+           :repo "tecosaur/org-pandoc-import"
+           :files ("*.el" "filters" "preprocessors")))

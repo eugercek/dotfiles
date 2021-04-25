@@ -3,7 +3,8 @@
 #+EMAIL: umutgercek1999@gmail.com
 
 * Non doom
-** Copy Paste
+** Sane defaults for Emacs
+Copy Pasted
 #+BEGIN_SRC emacs-lisp
 (setq-default
  delete-by-moving-to-trash t
@@ -16,52 +17,21 @@
       evil-want-fine-undo t
       auto-save-default t
       inhibit-compacting-font-caches t
-      truncate-string-ellipsis "…"
-      display-line-numbers-type 'relative)
-                                        ;(global-subword-mode 1)
+      truncate-string-ellipsis "…")
 
-(setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))(when (file-exists-p custom-file)
-                                                                             (load custom-file))
+(setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 (setq writeroom-fullscreen-effect t)
 #+END_SRC
 ** Maximize on boot
-*** KILL Old
-#+BEGIN_SRC emacs-lisp :tangle no
-(if (eq initial-window-system 'x)
-    (toggle-frame-maximized)
-  (toggle-frame-fullscreen))
-#+END_SRC
-*** New
 #+BEGIN_SRC emacs-lisp
 (toggle-frame-fullscreen)
 #+END_SRC
 * Doom
-** KILL Projectile
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq projectile-project-search-path '("~/src/"))
-#+END_SRC
-** Font
-#+BEGIN_SRC emacs-lisp
-;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
-(setq doom-font (font-spec :family "SauceCodePro NF" :size 17))
-;; (setq doom-font (font-spec :family "JetBrains Mono" :size 15))
-;; (setq doom-font (font-spec :family "Hack Nerd Font Mono" :size 15))
-#+END_SRC
-** User Info
-#+BEGIN_SRC emacs-lisp
-(setq user-full-name "Umut Gercek"
-      user-mail-address "umutgercek1999@gmail.com")
-#+END_SRC
-** Better Default
-#+BEGIN_SRC emacs-lisp
-(setq confirm-kill-emacs nil)
-(unless (display-graphic-p)
-  (require 'evil-terminal-cursor-changer)
-  (evil-terminal-cursor-changer-activate) ; or (etcc-on)
-  )
-#+END_SRC
 ** Theme
+I will handle this ugliness one day ...
 *** Light & Dark
 #+BEGIN_SRC emacs-lisp
 (setq doom-solarized-dark-brighter-text t)
@@ -81,6 +51,31 @@
 (custom-set-faces!
   `(region     :background ,"#094A5A"))
 #+END_SRC
+** Font
+*** Main fonts
+#+BEGIN_SRC emacs-lisp
+;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
+(setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
+      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
+#+END_SRC
+*** Enable bold and italic
+#+begin_src emacs-lisp
+(after! doom-themes
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t))
+#+end_src
+** User Info
+#+BEGIN_SRC emacs-lisp
+(setq user-full-name "Emin Umut Gerçek"
+      user-mail-address "umutgercek1999@gmail.com")
+#+END_SRC
+** Better Defaults
+#+BEGIN_SRC emacs-lisp
+(setq confirm-kill-emacs nil)
+(unless (display-graphic-p)
+  (require 'evil-terminal-cursor-changer)
+  (evil-terminal-cursor-changer-activate)) ; or (etcc-on)
+#+END_SRC
 ** Dashboard
 #+BEGIN_SRC emacs-lisp
 (setq doom-scratch-buffer-major-mode t)
@@ -90,79 +85,27 @@
 (remove-hook '+doom-dashboard-functions 'doom-dashboard-widget-loaded)
 
 (setq fancy-splash-image "~/.doom.d/GnuLove.png")
-
-(define-key evil-normal-state-map (kbd "C-c =") 'evil-numbers/inc-at-pt)
-(define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
-
-(setq +evil-want-o/O-to-continue-comments nil)
-
-(after! evil-snipe
-  (setq evil-snipe-scope 'visible)
-  (setq evil-snipe-repeat-scope 'buffer)
-  (setq evil-snipe-spillover-scope 'whole-buffer))
-#+END_SRC
-** Dired
-#+BEGIN_SRC emacs-lisp
-(map!
- (:after dired
-  (:map dired-mode-map
-   :n "RET" 'dired-find-alternate-file ;;Open in same bufer
-   "-"   'find-alternate-file)
-  "C-x i" #'peep-dired
-  ))
-(evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file
-  (kbd "k") 'peep-dired-prev-file)
-(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
-#+END_SRC
-** Rainbow Deliiters
-#+BEGIN_SRC emacs-lisp
-(setq rainbow-delimiters-max-face-count 9)
-#+END_SRC
-** KILL SPC SPC as M-x
-#+BEGIN_SRC emacs-lisp :tangle no
-(map! :leader
-      :desc "Open like spacemacs"
-      "SPC" #'counsel-M-x)
 #+END_SRC
 * Org
-** Messy
+** Rudimentary
+#+begin_src emacs-lisp
+(setq org-directory "~/Dropbox/Org")
+
+(after! org
+  (setq org-src-window-setup 'split-window-right))
+
+(org-autolist-mode 1)
+
+(setq org-log-done 'time)
+#+end_src
+** Org clock
 #+BEGIN_SRC emacs-lisp
 (setq org-clock-persist t)
 (org-clock-persistence-insinuate)
 (setq org-clock-persist-query-resume nil)
-;; (setq org-hide-emphasis-markers t)
-
-(setq org-directory "~/Dropbox/Org")
-(after! org
-  (setq org-directory "~/Dropbox/Org"))
-
-;;(setq +org:reading-list-file (+org/expand-org-file-name "gtd/read-list.org"))
-;;(setq +org:bookmarks-file (+org/expand-org-file-name "gtd/bookmarks.org"))
-
-(after! org
-  (setq org-src-window-setup 'current-window))
-
-(after! org-mode
-  (unmap! '(motion) "C-h")
-  )
-
-(setq org-directory "~/Dropbox/org")
-
-;; (use-package evil
-;;   :custom
-;;   evil-disable-insert-state-bindings t
-;;   )
-(setq org-emphasis-alist
-      '(("/" italic)
-        ("_" underline)
-        ("=" org-verbatim verbatim)
-        ("~" org-code verbatim)
-        ("+"
-         (:strike-through t))))
 #+END_SRC
-** Agenda
+** TODO Agenda
 #+BEGIN_SRC emacs-lisp
-;;Agenda
 (setq org-agenda-files (directory-files-recursively "~/Dropbox/org/gtd/" "\\.org$"))
 
 (use-package! org-super-agenda
@@ -174,6 +117,7 @@
       org-agenda-skip-deadline-if-done t
       org-agenda-include-deadlines t
       org-agenda-block-separator nil org-agenda-tags-column 100)
+
 (setq org-agenda-custom-commands
       '(("o" "Overview"
          ((agenda "" ((org-agenda-span 'day)
@@ -234,7 +178,7 @@
                            :order 90)
                           (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
 #+END_SRC
-** Capture
+** TODO Capture
 #+BEGIN_SRC emacs-lisp
 (setq org-capture-templates '(
                               ("t" "Todo")
@@ -299,37 +243,73 @@ https://zzamboni.org/post/my-doom-emacs-configuration-with-commentary/
         "C-M-y" #'zz/org-download-paste-clipboard))
 #+END_SRC
 
-** org bullets
-#+BEGIN_SRC emacs-lisp
-;; (setq
-;;  ;; org-superstar-headline-bullets-list '("⁖" "*" "†" "✸" "✿")
-;;  org-superstar-headline-bullets-list '("*")
-;;  )
-#+END_SRC
+*** Keybindging
+#+begin_src emacs-lisp
+(map! :leader
+      :desc "Insert image from clipboard to org"
+      "e p" 'zz/org-download-paste-clipboard)
+#+end_src
 ** Visual
-*** KILL utf8
-It also hides emphasis markers
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-hook! 'org-mode-hook #'+org-pretty-mode )
+*** Pretty entitites
+It also hides emphasis markers?
+#+BEGIN_SRC emacs-lisp
+(setq org-pretty-entities t)
 #+END_SRC
+*** Subscript and Superscrip
+If really want to dispaly inline in org mode use _{} syntax
+#+begin_src emacs-lisp
+(setq org-use-sub-superscripts '{})
+#+end_src
+*** Emphasis markers
+**** Hide them
+#+begin_src emacs-lisp
+(setq org-hide-emphasis-markers t)
+#+end_src
+**** Org emphasis list
+#+begin_src emacs-lisp
+(setq org-emphasis-alist
+      '(("*" bold)
+        ("/" italic)
+        ("_" underline)
+        ("=" org-verbatim verbatim)
+        ("~" org-code verbatim)))
+;; ("+" (:strike-through t))))
+#+end_src
+**** WAIT Unhide emphasis interactively
+#+begin_src emacs-lisp
+(use-package! org-appear
+  :hook (org-mode . org-appear-mode))
+#+end_src
+*** Org pretty tables
+#+begin_src emacs-lisp :tangle no
+(require 'org-pretty-table)
+(add-hook 'org-mode-hook (lambda () (org-pretty-table-mode)))
+#+end_src
 ** [#A] Keybindings
 #+BEGIN_SRC emacs-lisp
 (map! :leader
       :desc "org-ctrl-c-star copy"
       "8" 'org-ctrl-c-star)
 #+END_SRC
-** Automaticalyl add new list item
-#+BEGIN_SRC emacs-lisp
-(org-autolist-mode 1)
-#+END_SRC
-** Org Log Done
-#+BEGIN_SRC emacs-lisp
-(setq org-log-done 'time)
-#+END_SRC
+** Latex
+*** Please bigger latex preview
+Or glasses :(
+#+begin_src emacs-lisp
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))
+#+end_src
+** Export
+*** TeX-like syntax
+Don't interpret every _ subscript!
 
-#+RESULTS:
-: time
-
+| F_1   | ❌ |
+| F_{1} | ✔  |
+#+begin_src emacs-lisp
+(setq org-export-with-sub-superscripts '{})
+#+end_src
+*** Increase Expoted Headline Level
+#+begin_src emacs-lisp
+(setq org-export-headline-levels 6)
+#+end_src
 * Translator
 ** KILL Google Translate
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -342,8 +322,7 @@ It also hides emphasis markers
   (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130)))
 (map! :leader
       :desc "Translate word"
-      "d l" 'google-translate-at-point
-      )
+      "d l" 'google-translate-at-point)
 #+END_SRC
 ** xah lee
 *** TODO Open File Under Cursor
@@ -351,10 +330,10 @@ It also hides emphasis markers
 (defun xah-open-file-at-cursor ()
   "Open the file path under cursor.
 If there is text selection, uses the text selection for path.
-If the path starts with “http://”, open the URL in browser.
+If the path starts with "http://", open the URL in browser.
 Input path can be {relative, full path, URL}.
-Path may have a trailing “:‹n›” that indicates line number. If so, jump to that line number.
-If path does not have a file extension, automatically try with “.el” for elisp files.
+Path may have a trailing ":‹n›" that indicates line number. If so, jump to that line number.
+If path does not have a file extension, automatically try with ".el" for elisp files.
 This command is similar to `find-file-at-point' but without prompting for confirmation.
 
 URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'
@@ -364,7 +343,7 @@ Version 2019-01-16"
                         (buffer-substring-no-properties (region-beginning) (region-end))
                       (let ($p0 $p1 $p2
                                 ;; chars that are likely to be delimiters of file path or url, e.g. whitespace, comma. The colon is a problem. cuz it's in url, but not in file name. Don't want to use just space as delimiter because path or url are often in brackets or quotes as in markdown or html
-                                ($pathStops "^  \t\n\"`'‘’“”|[]{}「」<>〔〕〈〉《》【】〖〗«»‹›❮❯❬❭〘〙·。\\"))
+                                ($pathStops "^  \t\n\"`'''""|[]{}「」<>〔〕〈〉《》【】〖〗«»‹›❮❯❬❭〘〙·。\\"))
                         (setq $p0 (point))
                         (skip-chars-backward $pathStops)
                         (setq $p1 (point))
@@ -385,7 +364,7 @@ Version 2019-01-16"
                   (browse-url $x)
                 (find-file $x)))
           (progn (browse-url $path)))
-      (if ; not starting “http://”
+      (if ; not starting "http://"
           (string-match "^\\`\\(.+?\\):\\([0-9]+\\)\\'" $path)
           (let (
                 ($fpath (match-string 1 $path))
@@ -430,7 +409,7 @@ Version 2017-01-11"
      (let (
            $p1
            $p2
-           ($skipChars "^\"<>(){}[]“”‘’‹›«»「」『』【】〖〗《》〈〉〔〕"))
+           ($skipChars "^\"<>(){}[]""''‹›«»「」『』【】〖〗《》〈〉〔〕"))
        (progn
          (skip-chars-backward $skipChars (line-beginning-position))
          (setq $p1 (point))
@@ -477,8 +456,7 @@ Version 2017-01-11"
            $strPairs))))))
 
 (map! :leader
-      "j t"  'xah-title-case-region-or-line
-      )
+      "j t"  'xah-title-case-region-or-line)
 #+END_SRC
 * Bookmark like
 ** notes
@@ -531,49 +509,48 @@ Version 2017-01-11"
 #+END_SRC
 * Functions
 ** Mine
-*** Curly to Normal Quote
+*** TODO Curly to Normal Quote
+One day fix this too...
 #+BEGIN_SRC emacs-lisp
 (defun my/curly-quoation-to-normal-quoation()
   "Change any curly quotation mark to normal quoation mark"
   (interactive)
   (goto-char (point-min))
-  (while (search-forward "‘" nil t)
+  (while (search-forward "'" nil t)
     (replace-match "'"))
   (goto-char (point-min))
-  (while (search-forward "’" nil t)
+  (while (search-forward "'" nil t)
     (replace-match "'"))
 
   (goto-char (point-min))
-  (while (search-forward "“" nil t)
+  (while (search-forward """ nil t)
     (replace-match "\""))
 
   (goto-char (point-min))
-  (while (search-forward "”" nil t)
+  (while (search-forward """ nil t)
     (replace-match "\""))
   )
 #+END_SRC
-*** Debug Functions
+*** TODO Debug Functions
 #+BEGIN_SRC emacs-lisp
 (defun my/error-line ()
   "Create an error message in C++"
   (interactive)
   (move-beginning-of-line nil)
-  (insert "std::cout << \"Error:\" << __LINE__ << std::endl;")
-  )
+  (insert "std::cout << \"Error:\" << __LINE__ << std::endl;"))
 
 (map! :leader
       :desc "Create an error message in C++"
-      "d e" 'my/error-line
-      )
+      "d e" 'my/error-line)
 #+END_SRC
-*** Open a folder
+*** Open a directory
 #+BEGIN_SRC emacs-lisp
-(defun my/open-folder ()
+(defun my/open-directory ()
   "Opens a folder with xdg-open"
   (interactive)
   (shell-command "xdg-open ."))
 #+END_SRC
-*** Org Table y n
+*** TODO Org Table y n
 Very hacky but it works.
 #+BEGIN_SRC emacs-lisp
 (defun my/org-table-color-y-n (start end)
@@ -601,7 +578,7 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
 #+END_SRC
 *** Multiply With Two
 #+begin_src emacs-lisp
-(defun my/multipliy-with-2-number-at-point ()
+(defun my/*2 ()
   (interactive)
   (skip-chars-backward "0-9")
   (or (looking-at "[0-9]+")
@@ -610,7 +587,7 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
 #+end_src
 *** Divide With Two
 #+begin_src emacs-lisp
-(defun my/divide-with-2-number-at-point ()
+(defun my//2 ()
   (interactive)
   (skip-chars-backward "0-9")
   (or (looking-at "[0-9]+")
@@ -618,7 +595,7 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
   (replace-match (number-to-string (/ (string-to-number (match-string 0)) 2))))
 #+end_src
 *** Org mode
-**** Info to Org
+**** PROJ Info to Org
 ***** Heading
 #+begin_src emacs-lisp
 (defun my/info->org-heading()
@@ -631,8 +608,8 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
   (forward-line -1)
   (kill-whole-line)
   (forward-line -1)
-  (fm-left-frame)
-  (org-ctrl-c-star))
+  (org-ctrl-c-star)
+  (fm-left-frame))
 
 
 (map! :leader
@@ -654,75 +631,6 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
       "j f" 'my/info->org-text)
 #+end_src
 ** xah lee
-*** TODO Open File Under Cursor
-#+BEGIN_SRC emacs-lisp
-(defun xah-open-file-at-cursor ()
-  "Open the file path under cursor.
-If there is text selection, uses the text selection for path.
-If the path starts with “http://”, open the URL in browser.
-Input path can be {relative, full path, URL}.
-Path may have a trailing “:‹n›” that indicates line number. If so, jump to that line number.
-If path does not have a file extension, automatically try with “.el” for elisp files.
-This command is similar to `find-file-at-point' but without prompting for confirmation.
-
-URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'
-Version 2019-01-16"
-  (interactive)
-  (let* (($inputStr (if (use-region-p)
-                        (buffer-substring-no-properties (region-beginning) (region-end))
-                      (let ($p0 $p1 $p2
-                                ;; chars that are likely to be delimiters of file path or url, e.g. whitespace, comma. The colon is a problem. cuz it's in url, but not in file name. Don't want to use just space as delimiter because path or url are often in brackets or quotes as in markdown or html
-                                ($pathStops "^  \t\n\"`'‘’“”|[]{}「」<>〔〕〈〉《》【】〖〗«»‹›❮❯❬❭〘〙·。\\"))
-                        (setq $p0 (point))
-                        (skip-chars-backward $pathStops)
-                        (setq $p1 (point))
-                        (goto-char $p0)
-                        (skip-chars-forward $pathStops)
-                        (setq $p2 (point))
-                        (goto-char $p0)
-                        (buffer-substring-no-properties $p1 $p2))))
-         ($path
-          (replace-regexp-in-string
-           "^file:///" "/"
-           (replace-regexp-in-string
-            ":\\'" "" $inputStr))))
-    (if (string-match-p "\\`https?://" $path)
-        (if (fboundp 'xahsite-url-to-filepath)
-            (let (($x (xahsite-url-to-filepath $path)))
-              (if (string-match "^http" $x )
-                  (browse-url $x)
-                (find-file $x)))
-          (progn (browse-url $path)))
-      (if ; not starting “http://”
-          (string-match "^\\`\\(.+?\\):\\([0-9]+\\)\\'" $path)
-          (let (
-                ($fpath (match-string 1 $path))
-                ($line-num (string-to-number (match-string 2 $path))))
-            (if (file-exists-p $fpath)
-                (progn
-                  (find-file $fpath)
-                  (goto-char 1)
-                  (forward-line (1- $line-num)))
-              (when (y-or-n-p (format "file no exist: 「%s」. Create?" $fpath))
-                (find-file $fpath))))
-        (if (file-exists-p $path)
-            (progn ; open f.ts instead of f.js
-              (let (($ext (file-name-extension $path))
-                    ($fnamecore (file-name-sans-extension $path)))
-                (if (and (string-equal $ext "js")
-                         (file-exists-p (concat $fnamecore ".ts")))
-                    (find-file (concat $fnamecore ".ts"))
-                  (find-file $path))))
-          (if (file-exists-p (concat $path ".el"))
-              (find-file (concat $path ".el"))
-            (when (y-or-n-p (format "file no exist: 「%s」. Create?" $path))
-              (find-file $path ))))))))
-
-(map! :leader
-      :desc "Translate word"
-      "d f" 'xah-open-file-at-cursor
-      )
-#+END_SRC
 *** Title Case
 #+BEGIN_SRC emacs-lisp
 (defun xah-title-case-region-or-line (@begin @end)
@@ -738,7 +646,7 @@ Version 2017-01-11"
      (let (
            $p1
            $p2
-           ($skipChars "^\"<>(){}[]“”‘’‹›«»「」『』【】〖〗《》〈〉〔〕"))
+           ($skipChars "^\"<>(){}[]""''‹›«»「」『』【】〖〗《》〈〉〔〕"))
        (progn
          (skip-chars-backward $skipChars (line-beginning-position))
          (setq $p1 (point))
@@ -785,8 +693,7 @@ Version 2017-01-11"
            $strPairs))))))
 
 (map! :leader
-      "j t"  'xah-title-case-region-or-line
-      )
+      "j t"  'xah-title-case-region-or-line)
 #+END_SRC
 * Languages
 ** KILL C/C++
@@ -828,7 +735,6 @@ Version 2017-01-11"
       "d t"  'my-compile-run-with-test
       )
 #+END_SRC
-
 ** Notes :info:
 For syntax cechking I'm using flycheck
 *** Flycheck
@@ -869,18 +775,20 @@ Currently SPC [j k l] is empty for me
       "j b" 'python-shell-send-buffer
       "j d" 'python-shell-send-defun)
 #+END_SRC
-*** Error list
 * Packages
-** completion/company
-*** Company Behaviour
+** Doom Packages
+Category from init.el
+*** completion
+**** company
+***** Company Behaviour
 #+BEGIN_SRC emacs-lisp
 (after! company
-  (setq company-idle-delay 0.35)
+  (setq company-idle-delay 0.5)
   (setq company-minimum-prefix-length 1)
   (setq company-selection-wrap-around t);;Circular list
   (setq company-show-numbers t));; M-7 for 7nd match
 #+END_SRC
-*** Select with tab
+***** Select with tab
 #+BEGIN_SRC emacs-lisp
 (after! company
   (define-key company-active-map (kbd "<tab>")
@@ -889,51 +797,148 @@ Currently SPC [j k l] is empty for me
     #'company-complete-selection))
 #+END_SRC
 
-*** Company ui
+***** Company ui
 #+BEGIN_SRC emacs-lisp
 (after! company
   (setq company-tooltip-limit 10
         company-tooltip-minimum-width 80))
 #+END_SRC
 
-** TODO Treemacs
+**** TODO ivy
+M-i for insert what you select.
+~  for go home
+// for go root
+`  for narrow down to projectile
+*** ui
+**** zen
+***** Writeroom width limit
+I generaly use lightrom for reading text-info manuals or manuals in one screen.
+I don't need 80 column restriciton
+#+BEGIN_SRC emacs-lisp
+(setq  writeroom-width 80)
+#+END_SRC
+**** TODO Treemacs
 Add +treemacs-git-mode
 #+BEGIN_SRC emacs-lisp
 (setq doom-themes-treemacs-theme "doom-colors")
 (doom-themes-treemacs-config)
 #+END_SRC
 
-** Command Log Mode
+*** editor
+**** evil
+#+begin_src emacs-lisp
+(setq +evil-want-o/O-to-continue-comments nil)
+
+(after! evil-snipe
+  (setq evil-snipe-scope 'visible)
+  (setq evil-snipe-repeat-scope 'buffer)
+  (setq evil-snipe-spillover-scope 'whole-buffer))
+#+end_src
+**** rotate-text
+Use =] r= for rotate
+**** snippets
+***** Nested snippets
+#+begin_src emacs-lisp
+(setq yas-triggers-in-field t)
+#+end_src
+*** emacs
+**** dired
+Look at files continuously like ranger.
 #+BEGIN_SRC emacs-lisp
-(use-package command-log-mode)
+(map!
+ (:after dired
+  (:map dired-mode-map
+   :n "RET" 'dired-find-alternate-file ;;Open in same bufer
+   "-"   'find-alternate-file)
+  "C-x i" #'peep-dired))
+
+(evil-define-key 'normal peep-dired-mode-map
+  (kbd "j") 'peep-dired-next-file
+  (kbd "k") 'peep-dired-prev-file)
+(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 #+END_SRC
-** Artist Mode Right Click
+*** tools
+**** rgb
+***** hl-line-mode don't override rainbow
+#+BEGIN_SRC elisp
+(add-hook! 'rainbow-mode-hook
+  (hl-line-mode (if rainbow-mode -1 +1)))
+#+END_SRC
+***** TODO global rainbow mode
+***** kurecolor functions
+****** ++
+kurecolor-increase-hue-by-step
+kurecolor-increase-saturation-by-step
+kurecolor-increase-brightness-by-step
+****** --
+kurecolor-decrease-hue-by-step
+kurecolor-decrease-saturation-by-step
+kurecolor-decrease-brightness-by-step
+**** lsp
+[[https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/][Lsp Features List]]
+Doom emacs's defaults are good for me
+***** Don't highlight same symbol
+If I want to look at same symbol then I probably want to go there
+`*` does this, also it highlight too
 #+BEGIN_SRC emacs-lisp
-(eval-after-load "artist"
-  '(define-key artist-mode-map [(down-mouse-3)] 'artist-mouse-choose-operation)
-  )
+(setq lsp-enable-symbol-highlighting nil)
 #+END_SRC
-** Pdf
-*** Dark Mode
+***** Code Action
+Code actions are lsp's way to fix code.
+Can run with =(lsp-execute-code-action)= ,in doom emacs SPC c a
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq lsp-modeline-code-actions-segments '(count icon name))
+#+END_SRC
+***** Breadcrumb :info:
+Fancy way to show where you are in header
+Run with =(lsp-headerline-breadcrumb-mode)=
+***** lsp-treemacs
+M-x =(lsp-treemacs-symbols)= for cool outline.
+M-x =(lsp-treemacs-errors-list)= Fancier way than lsp-ui-sideline
+***** lsp-ivy
+Search through entire project(in headers too).
+**** lookup
+| SPC g f | Look for a file , named the word under cursor |
+| SPC s O | Look online                                   |
+**** Pdf
+***** Dark Mode
 #+BEGIN_SRC emacs-lisp
 (add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) ;Dark mode
 #+END_SRC
-*** Latex Viewer
+***** Latex Viewer
 #+BEGIN_SRC emacs-lisp
 (setq +latex-viewers '(pdf-tools))
 #+END_SRC
-*** org-file-apps
+***** org-file-apps
 #+BEGIN_SRC emacs-lisp
 (push '("\\.pdf\\'" . emacs) org-file-apps)
 #+END_SRC
-** Epub
+***** Look up documentation
+Function name + ( will show arguments in modeline + can enter them with tab.
+Just press ~K~ =(lsp-describe-thing-at-point)= for documentation.
+** Personal Packages
+*** Zeal
 #+BEGIN_SRC emacs-lisp
-(use-package! nov
-  :mode ("\\.epub\\'" . nov-mode)
-  :config
-  (setq nov-save-place-file (concat doom-cache-dir "nov-places")))
+(use-package zeal-at-point)
+(map! :leader
+      :desc "Zeal Look Up"
+      "j z" #'zeal-at-point)
 #+END_SRC
-** info-colors
+*** Buffer Position Managment (framemove)
+#+BEGIN_SRC emacs-lisp
+(use-package! framemove
+  :config
+  (setq framemove-hook-into-windmove t))
+#+END_SRC
+*** TODO Turkish Mode
+#+BEGIN_SRC emacs-lisp
+(use-package turkish)
+(map! :leader
+      :desc "Turkish last word"
+      "d t" 'turkish-correct-last-word)
+#+END_SRC
+*** info-colors
+Make info more readable with syntax higlight at least for elisp.
 #+BEGIN_SRC emacs-lisp
 (use-package! info-colors
   :commands (info-colors-fontify-node))
@@ -941,62 +946,25 @@ Add +treemacs-git-mode
 (add-hook 'Info-selection-hook 'info-colors-fontify-node)
 (add-hook 'Info-mode-hook #'mixed-pitch-mode)
 #+END_SRC
-** tools/rgb
-*** hl-line-mode don't override rainbow
-#+BEGIN_SRC elisp
-(add-hook! 'rainbow-mode-hook
-  (hl-line-mode (if rainbow-mode -1 +1)))
-#+END_SRC
-*** TODO global rainbow mode
-*** kurecolor functions
-**** ++
-kurecolor-increase-hue-by-step
-kurecolor-increase-saturation-by-step
-kurecolor-increase-brightness-by-step
-**** --
-kurecolor-decrease-hue-by-step
-kurecolor-decrease-saturation-by-step
-kurecolor-decrease-brightness-by-step
-** tools/lsp
-[[https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/][Lsp Features List]]
-Doom emacs's defaults are good for me
-*** Don't highlight same symbol
-If I want to look at same symbol then I probably want to go there
-`*` does this, also it highlight too
+*** Command Log Mode
 #+BEGIN_SRC emacs-lisp
-(setq lsp-enable-symbol-highlighting nil)
+(use-package! command-log-mode)
 #+END_SRC
-*** Code Action
-Code actions are lsp's way to fix code.
-Can run with =(lsp-execute-code-action)= ,in doom emacs SPC c a
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq lsp-modeline-code-actions-segments '(count icon name))
-#+END_SRC
-*** Breadcrumb :info:
-Fancy way to show where you are in header
-Run with =(lsp-headerline-breadcrumb-mode)=
-*** lsp-treemacs
-M-x =(lsp-treemacs-symbols)= for cool outline.
-M-x =(lsp-treemacs-errors-list)= Fancier way than lsp-ui-sideline
-*** lsp-ivy
-
-Search through entire project(in headers too).
-** ui/zen
-*** Writeroom width limit
-I generaly use lightrom for reading text-info manuals or manuals in one screen.
-I don't need 80 column restriciton
+*** Epub
 #+BEGIN_SRC emacs-lisp
-(setq  writeroom-width 80)
+(use-package! nov
+  :mode ("\\.epub\\'" . nov-mode)
+  :config
+  (setq nov-save-place-file (concat doom-cache-dir "nov-places")))
 #+END_SRC
-** completion/ivy
-M-i for insert what you select.
-~  for go home
-// for go root
-`  for narrow down to projectile
-** tools/lookup
-| SPC g f | Look for a file , named the word under cursor |
-| SPC s O | Look online                                   |
-** Delimcol
+*** rotate
+Use =rotate-window= and =rotate-layout=
+*** Convert every other file to .org
+#+begin_src emacs-lisp
+(use-package! org-pandoc-import :after org)
+#+end_src
+** Other
+*** Delimcol
 #+BEGIN_SRC emacs-lisp
 (setq delimit-columns-str-before "{ ")
 (setq delimit-columns-str-after " }")
@@ -1010,33 +978,36 @@ M-i for insert what you select.
 (map! :leader
       "j [" 'delimit-columns-region)
 #+END_SRC
-*** Look up documentation
-Function name + ( will show arguments in modeline + can enter them with tab.
-Just press ~K~ =(lsp-describe-thing-at-point)= for documentation.
-* Personal Packages
-** Zeal
+
+**** Usage
+1. Use ~my/just-one-space-region~
+2. Select region then use it
+#+begin_example
+1 2 3 4 5
+{ 1, 2, 3, 4, 5 }
+#+end_example
+
+*** Artist Mode Right Click
 #+BEGIN_SRC emacs-lisp
-(use-package zeal-at-point)
-(map! :leader
-      :desc "Zeal Look Up"
-      "d z" #'zeal-at-point
-      )
+(eval-after-load "artist"
+  '(define-key artist-mode-map [(down-mouse-3)] 'artist-mouse-choose-operation))
 #+END_SRC
-** Buffer Position Managment (framemove)
+*** Rainbow Deliiters
 #+BEGIN_SRC emacs-lisp
-(use-package! framemove
-  :config
-  (setq framemove-hook-into-windmove t))
+(setq rainbow-delimiters-max-face-count 9)
 #+END_SRC
-** TODO Turkish Mode
-#+BEGIN_SRC emacs-lisp
-(use-package turkish)
-(map! :leader
-      :desc "Turkish last word"
-      "d t" 'turkish-correct-last-word
-      )
-#+END_SRC
-** evil-visual-mark-mode
+*** Which Key
+Too much evil
+#+begin_src emacs-lisp
+(setq which-key-allow-multiple-replacements t)
+(after! which-key
+  (pushnew!
+   which-key-replacement-alist
+   '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "◂\\1"))
+   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
+   ))
+#+end_src
+
 * GDB Debugger
 ** Variables
 #+begin_src emacs-lisp
@@ -1084,3 +1055,9 @@ You can click stacks and see their locals.
 Can look at simple variables directly.
 To look at array or struct use (gud-watch).
 Can enter new value with mouse-2 or RET
+* Syntax highlight for common CLI programs
+I will implement these in time with consistent color scheme between different programs.
+** nmap
+#+begin_src emacs-lisp
+(use-package! nmap)
+#+end_src
