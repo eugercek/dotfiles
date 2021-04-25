@@ -189,6 +189,7 @@ stress
 emacs
 libvterm
 plantuml
+pandoc
 #+end_src
 *** GUI Programs
 #+begin_src text
@@ -233,6 +234,7 @@ Dropbox
 Flatseal
 Spotify
 Peek
+FontFinder
 #+end_src
 ** pip packages
 :PROPERTIES:
