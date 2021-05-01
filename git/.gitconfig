@@ -1,5 +1,4 @@
 [user]
-# Please adapt and uncomment the following lines:
 	name = Emin Umut Gerçek
 	email = umutgercek1999@gmail.com
 [filter "lfs"]
@@ -7,3 +6,7 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[init]
+	defaultBranch = main
+[diff]
+	colorMoved = zebra
