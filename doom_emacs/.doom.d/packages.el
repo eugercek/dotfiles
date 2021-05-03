@@ -54,7 +54,7 @@
 (package! peep-dired)
 (package! google-translate)
 (package! org-super-agenda)
-(package! evil-terminal-cursor-changer)
+;; (package! evil-terminal-cursor-changer)
 (package! doct)
 (package! command-log-mode)
 (package! org-download)
@@ -70,7 +70,6 @@
 
 (package! org-autolist)
 (package! evil-visual-mark-mode)
-
 
 (package! pair-tree)
 
@@ -89,3 +88,5 @@
            :files ("*.el" "filters" "preprocessors")))
 
 (package! tldr)
+(package! org-fragtog)
+(package! language-detection)

@@ -190,6 +190,7 @@ emacs
 libvterm
 plantuml
 pandoc
+zeal
 #+end_src
 *** GUI Programs
 #+begin_src text
@@ -274,6 +275,11 @@ vim-altTab@kokong.info
 #+end_example
 * Fedora Settings
 ** TOOD Remove nano
+** Fonts
+#+begin_src text
+sudo dnf install curl cabextract xorg-x11-font-utils fontconfig
+sudo rpm -i https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm 
+#+end_src
 * CentOS Server Setup
 #+begin_src bash
 sudo dnf install git

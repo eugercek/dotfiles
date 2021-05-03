@@ -16,7 +16,8 @@ alias ficonf="vim ~/.mozilla/firefox/u01d5cj2.default-release/chrome/userChrome.
 alias sorzsh="source ~/.zshrc"
 
 ##Doom
-alias dos="doom sync;emacs&disown"
+alias dos="doom sync && emacs& disown"
+alias dose="doom sync && emacs& disown && exit"
 
 #Programming Languages
 ##Python

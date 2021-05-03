@@ -285,6 +285,27 @@ If really want to dispaly inline in org mode use _{} syntax
 (require 'org-pretty-table)
 (add-hook 'org-mode-hook (lambda () (org-pretty-table-mode)))
 #+end_src
+*** Pretty Symbols
+#+begin_src emacs-lisp
+(defun org-pretty-symbols-mode ()
+  (push '("[ ]" .  "☐") prettify-symbols-alist)
+  (push '("[X]" . "☑" ) prettify-symbols-alist)
+  (push '("#+begin_src"      . "λ") prettify-symbols-alist)
+  (push '("#+end_src"        . "⋱") prettify-symbols-alist)
+  (push '("#+results:"       . "»") prettify-symbols-alist)
+  (push '(":end:"            . "⋱") prettify-symbols-alist)
+  (push '(":results:"        . "⋰") prettify-symbols-alist)
+  (push '("#+begin_verbatim" . "") prettify-symbols-alist)
+  (push '("#+end_verbatim"   . "") prettify-symbols-alist)
+  (push '("#+begin_verse"    . "") prettify-symbols-alist)
+  (push '("#+end_verse"      . "") prettify-symbols-alist)
+  (push '("#+begin_quote"    . "𐄚") prettify-symbols-alist)
+  (push '("#+end_quote"      . "𐄚") prettify-symbols-alist)
+  (prettify-symbols-mode t))
+
+(add-hook 'org-mode-hook (lambda () (org-pretty-symbols-mode)))
+#+end_src
+
 ** [#A] Keybindings
 #+BEGIN_SRC emacs-lisp
 (map! :leader
