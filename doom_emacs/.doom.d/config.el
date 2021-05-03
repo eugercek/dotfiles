@@ -246,6 +246,10 @@
 
 (add-hook 'org-mode-hook (lambda () (org-pretty-symbols-mode)))
 
+(custom-set-faces!
+  '(org-block-begin-line :background "#002b36")
+  '(org-block-end-line :background "#002b36"))
+
 (map! :leader
       :desc "org-ctrl-c-star copy"
       "8" 'org-ctrl-c-star)

@@ -308,6 +308,13 @@ If really want to dispaly inline in org mode use _{} syntax
 
 (add-hook 'org-mode-hook (lambda () (org-pretty-symbols-mode)))
 #+end_src
+*** Smoother blocks begin and end lines
+You can use ~(org-faces)~ =SPC F= to search faces.
+#+begin_src emacs-lisp
+(custom-set-faces!
+  '(org-block-begin-line :background "#002b36")
+  '(org-block-end-line :background "#002b36"))
+#+end_src
 
 ** [#A] Keybindings
 #+BEGIN_SRC emacs-lisp
