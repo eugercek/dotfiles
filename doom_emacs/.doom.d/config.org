@@ -56,6 +56,8 @@ I will handle this ugliness one day ...
 #+BEGIN_SRC emacs-lisp
 ;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
 (setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
+      doom-big-font (font-spec :family "Ubuntu" :size 24)
+      ;; doom-serif-font (font-spec :family "Noto Serif SC" :size 24)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
 #+END_SRC
 *** Enable bold and italic
@@ -258,7 +260,8 @@ It also hides emphasis markers?
 *** Subscript and Superscrip
 If really want to dispaly inline in org mode use _{} syntax
 #+begin_src emacs-lisp
-(setq org-use-sub-superscripts '{})
+;; (setq org-use-sub-superscripts '{})
+(setq org-use-sub-superscripts nil)
 #+end_src
 *** Emphasis markers
 **** Hide them
@@ -313,10 +316,28 @@ If really want to dispaly inline in org mode use _{} syntax
       "8" 'org-ctrl-c-star)
 #+END_SRC
 ** Latex
-*** Please bigger latex preview
+*** Visual
+**** Please bigger latex preview
 Or glasses :(
 #+begin_src emacs-lisp
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))
+#+end_src
+**** Toggle fragments
+#+begin_src emacs-lisp
+(use-package! org-fragtog)
+;; :hook (org-mode . org-fragtog-mode))
+#+end_src
+*** Pretty Syntax Highlight for Source Code
+You need [[https://pypi.org/project/Pygments/][Pygemnts]]
+Snippet is [[https://stackoverflow.com/questions/21005885/export-org-mode-code-block-and-result-with-different-styles][From]]
+#+begin_src emacs-lisp
+(setq org-latex-listings 'minted)
+(require 'ox-latex)
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 #+end_src
 ** Export
 *** TeX-like syntax
@@ -330,6 +351,19 @@ Don't interpret every _ subscript!
 *** Increase Expoted Headline Level
 #+begin_src emacs-lisp
 (setq org-export-headline-levels 6)
+#+end_src
+*** Insert order of picture
+#+begin_src emacs-lisp
+(defun my/insert-picture-order()
+  "Insert order of picture"
+  (interactive)
+  (setq current-cursor (point))
+  (setq x 0)
+  (while (re-search-forward "file:Pictures" nil t -1)
+    (setq x (+ x 1)))
+  (setq x (- x 1))
+  (goto-char current-cursor)
+  x)
 #+end_src
 * Translator
 ** KILL Google Translate
@@ -855,6 +889,11 @@ Add +treemacs-git-mode
   (setq evil-snipe-repeat-scope 'buffer)
   (setq evil-snipe-spillover-scope 'whole-buffer))
 #+end_src
+***** Proper way to deal with long lines
+[[https://github.com/hlissner/doom-emacs/issues/401][Write in init.el]]
+#+begin_src emacs-lisp :tangle no
+(setq evil-respect-visual-line-mode t)
+#+end_src
 **** rotate-text
 Use =] r= for rotate
 **** snippets
@@ -983,6 +1022,86 @@ Use =rotate-window= and =rotate-layout=
 *** Convert every other file to .org
 #+begin_src emacs-lisp
 (use-package! org-pandoc-import :after org)
+#+end_src
+*** eww sytnax highlight
+https://github.com/andreasjansson/language-detection.el#eww-syntax-highlighting
+#+begin_src emacs-lisp
+(require 'cl-lib)
+
+(defun eww-tag-pre (dom)
+  (let ((shr-folding-mode 'none)
+        (shr-current-font 'default))
+    (shr-ensure-newline)
+    (insert (eww-fontify-pre dom))
+    (shr-ensure-newline)))
+
+(defun eww-fontify-pre (dom)
+  (with-temp-buffer
+    (shr-generic dom)
+    (let ((mode (eww-buffer-auto-detect-mode)))
+      (when mode
+        (eww-fontify-buffer mode)))
+    (buffer-string)))
+
+(defun eww-fontify-buffer (mode)
+  (delay-mode-hooks (funcall mode))
+  (font-lock-default-function mode)
+  (font-lock-default-fontify-region (point-min)
+                                    (point-max)
+                                    nil))
+
+(defun eww-buffer-auto-detect-mode ()
+  (let* ((map '((ada ada-mode)
+                (awk awk-mode)
+                (c c-mode)
+                (cpp c++-mode)
+                (clojure clojure-mode lisp-mode)
+                (csharp csharp-mode java-mode)
+                (css css-mode)
+                (dart dart-mode)
+                (delphi delphi-mode)
+                (emacslisp emacs-lisp-mode)
+                (erlang erlang-mode)
+                (fortran fortran-mode)
+                (fsharp fsharp-mode)
+                (go go-mode)
+                (groovy groovy-mode)
+                (haskell haskell-mode)
+                (html html-mode)
+                (java java-mode)
+                (javascript javascript-mode)
+                (json json-mode javascript-mode)
+                (latex latex-mode)
+                (lisp lisp-mode)
+                (lua lua-mode)
+                (matlab matlab-mode octave-mode)
+                (objc objc-mode c-mode)
+                (perl perl-mode)
+                (php php-mode)
+                (prolog prolog-mode)
+                (python python-mode)
+                (r r-mode)
+                (ruby ruby-mode)
+                (rust rust-mode)
+                (scala scala-mode)
+                (shell shell-script-mode)
+                (smalltalk smalltalk-mode)
+                (sql sql-mode)
+                (swift swift-mode)
+                (visualbasic visual-basic-mode)
+                (xml sgml-mode)))
+         (language (language-detection-string
+                    (buffer-substring-no-properties (point-min) (point-max))))
+         (modes (cdr (assoc language map)))
+         (mode (cl-loop for mode in modes
+                        when (fboundp mode)
+                        return mode)))
+    (message (format "%s" language))
+    (when (fboundp mode)
+      mode)))
+
+(setq shr-external-rendering-functions
+      '((pre . eww-tag-pre)))
 #+end_src
 ** Other
 *** Delimcol

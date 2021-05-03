@@ -38,6 +38,8 @@
 
 ;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
 (setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
+      doom-big-font (font-spec :family "Ubuntu" :size 24)
+      ;; doom-serif-font (font-spec :family "Noto Serif SC" :size 24)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
 
 (after! doom-themes
@@ -210,7 +212,8 @@
 
 (setq org-pretty-entities t)
 
-(setq org-use-sub-superscripts '{})
+;; (setq org-use-sub-superscripts '{})
+(setq org-use-sub-superscripts nil)
 
 (setq org-hide-emphasis-markers t)
 
@@ -225,15 +228,55 @@
 (use-package! org-appear
   :hook (org-mode . org-appear-mode))
 
+(defun org-pretty-symbols-mode ()
+  (push '("[ ]" .  "☐") prettify-symbols-alist)
+  (push '("[X]" . "☑" ) prettify-symbols-alist)
+  (push '("#+begin_src"      . "λ") prettify-symbols-alist)
+  (push '("#+end_src"        . "⋱") prettify-symbols-alist)
+  (push '("#+results:"       . "»") prettify-symbols-alist)
+  (push '(":end:"            . "⋱") prettify-symbols-alist)
+  (push '(":results:"        . "⋰") prettify-symbols-alist)
+  (push '("#+begin_verbatim" . "") prettify-symbols-alist)
+  (push '("#+end_verbatim"   . "") prettify-symbols-alist)
+  (push '("#+begin_verse"    . "") prettify-symbols-alist)
+  (push '("#+end_verse"      . "") prettify-symbols-alist)
+  (push '("#+begin_quote"    . "𐄚") prettify-symbols-alist)
+  (push '("#+end_quote"      . "𐄚") prettify-symbols-alist)
+  (prettify-symbols-mode t))
+
+(add-hook 'org-mode-hook (lambda () (org-pretty-symbols-mode)))
+
 (map! :leader
       :desc "org-ctrl-c-star copy"
       "8" 'org-ctrl-c-star)
 
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))
 
+(use-package! org-fragtog)
+;; :hook (org-mode . org-fragtog-mode))
+
+(setq org-latex-listings 'minted)
+(require 'ox-latex)
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
 (setq org-export-with-sub-superscripts '{})
 
 (setq org-export-headline-levels 6)
+
+(defun my/insert-picture-order()
+  "Insert order of picture"
+  (interactive)
+  (setq current-cursor (point))
+  (setq x 0)
+  (while (re-search-forward "file:Pictures" nil t -1)
+    (setq x (+ x 1)))
+  (setq x (- x 1))
+  (goto-char current-cursor)
+  x)
 
 (defun xah-open-file-at-cursor ()
   "Open the file path under cursor.
@@ -654,6 +697,83 @@ Version 2017-01-11"
   (setq nov-save-place-file (concat doom-cache-dir "nov-places")))
 
 (use-package! org-pandoc-import :after org)
+
+(require 'cl-lib)
+
+(defun eww-tag-pre (dom)
+  (let ((shr-folding-mode 'none)
+        (shr-current-font 'default))
+    (shr-ensure-newline)
+    (insert (eww-fontify-pre dom))
+    (shr-ensure-newline)))
+
+(defun eww-fontify-pre (dom)
+  (with-temp-buffer
+    (shr-generic dom)
+    (let ((mode (eww-buffer-auto-detect-mode)))
+      (when mode
+        (eww-fontify-buffer mode)))
+    (buffer-string)))
+
+(defun eww-fontify-buffer (mode)
+  (delay-mode-hooks (funcall mode))
+  (font-lock-default-function mode)
+  (font-lock-default-fontify-region (point-min)
+                                    (point-max)
+                                    nil))
+
+(defun eww-buffer-auto-detect-mode ()
+  (let* ((map '((ada ada-mode)
+                (awk awk-mode)
+                (c c-mode)
+                (cpp c++-mode)
+                (clojure clojure-mode lisp-mode)
+                (csharp csharp-mode java-mode)
+                (css css-mode)
+                (dart dart-mode)
+                (delphi delphi-mode)
+                (emacslisp emacs-lisp-mode)
+                (erlang erlang-mode)
+                (fortran fortran-mode)
+                (fsharp fsharp-mode)
+                (go go-mode)
+                (groovy groovy-mode)
+                (haskell haskell-mode)
+                (html html-mode)
+                (java java-mode)
+                (javascript javascript-mode)
+                (json json-mode javascript-mode)
+                (latex latex-mode)
+                (lisp lisp-mode)
+                (lua lua-mode)
+                (matlab matlab-mode octave-mode)
+                (objc objc-mode c-mode)
+                (perl perl-mode)
+                (php php-mode)
+                (prolog prolog-mode)
+                (python python-mode)
+                (r r-mode)
+                (ruby ruby-mode)
+                (rust rust-mode)
+                (scala scala-mode)
+                (shell shell-script-mode)
+                (smalltalk smalltalk-mode)
+                (sql sql-mode)
+                (swift swift-mode)
+                (visualbasic visual-basic-mode)
+                (xml sgml-mode)))
+         (language (language-detection-string
+                    (buffer-substring-no-properties (point-min) (point-max))))
+         (modes (cdr (assoc language map)))
+         (mode (cl-loop for mode in modes
+                        when (fboundp mode)
+                        return mode)))
+    (message (format "%s" language))
+    (when (fboundp mode)
+      mode)))
+
+(setq shr-external-rendering-functions
+      '((pre . eww-tag-pre)))
 
 (setq delimit-columns-str-before "{ ")
 (setq delimit-columns-str-after " }")
