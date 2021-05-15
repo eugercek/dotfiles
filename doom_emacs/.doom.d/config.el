@@ -169,6 +169,9 @@
                                (file+datetree "~/Dropbox/org/gtd/journal.org")
                                "* %U %?" :clock-in t :clock-keep t)
 
+                              ("w" "Word" entry
+                               (file+datetree "~/Dropbox/org/gtd/words.org")
+                               "* %U %?" :clock-in t :clock-keep t)
 
                               ("l" "Log")
 
@@ -232,7 +235,8 @@
   (push '("[ ]" .  "☐") prettify-symbols-alist)
   (push '("[X]" . "☑" ) prettify-symbols-alist)
   (push '("#+begin_src"      . "λ") prettify-symbols-alist)
-  (push '("#+end_src"        . "⋱") prettify-symbols-alist)
+  ;; (push '("#+end_src"        . "⋱") prettify-symbols-alist)
+  (push '("#+end_src"        . "・") prettify-symbols-alist)
   (push '("#+results:"       . "»") prettify-symbols-alist)
   (push '(":end:"            . "⋱") prettify-symbols-alist)
   (push '(":results:"        . "⋰") prettify-symbols-alist)
@@ -242,13 +246,29 @@
   (push '("#+end_verse"      . "") prettify-symbols-alist)
   (push '("#+begin_quote"    . "𐄚") prettify-symbols-alist)
   (push '("#+end_quote"      . "𐄚") prettify-symbols-alist)
+  ;;               Capital
+  (push '("#+BEGIN_SRC"      . "λ") prettify-symbols-alist)
+  (push '("#+END_SRC"        . "⋱") prettify-symbols-alist)
+  (push '("#+END_SRC"        . "・・") prettify-symbols-alist)
+  (push '("#+RESULTS:"       . "»") prettify-symbols-alist)
+  (push '(":END:"            . "⋱") prettify-symbols-alist)
+  (push '(":RESULTS:"        . "⋰") prettify-symbols-alist)
+  (push '("#+BEGIN_VERBATIM" . "") prettify-symbols-alist)
+  (push '("#+END_VERBATIM"   . "") prettify-symbols-alist)
+  (push '("#+BEGIN_VERSE"    . "") prettify-symbols-alist)
+  (push '("#+END_VERSE"      . "") prettify-symbols-alist)
+  (push '("#+BEGIN_QUOTE"    . "𐄚") prettify-symbols-alist)
+  (push '("#+END_QUOTE"      . "𐄚") prettify-symbols-alist)
   (prettify-symbols-mode t))
 
 (add-hook 'org-mode-hook (lambda () (org-pretty-symbols-mode)))
 
 (custom-set-faces!
-  '(org-block-begin-line :background "#002b36")
-  '(org-block-end-line :background "#002b36"))
+  '(org-block-begin-line :background "#002b3a")
+  '(org-block-end-line   :background "#002b3a"))
+;; (custom-set-faces!
+;;   '(org-block-begin-line :background "#fafaf8")
+;;   '(org-block-end-line   :background "#fafaf8"))
 
 (map! :leader
       :desc "org-ctrl-c-star copy"
@@ -281,6 +301,13 @@
   (setq x (- x 1))
   (goto-char current-cursor)
   x)
+
+(defun my/include-file-lines-org-mode (file-name src-lang begin end)
+  "Insert file's lines as source block ing org mode"
+  (setq real-end (+ end 1))
+  (setq line-string (format "%d-%d" begin real-end))
+  (format "#+include: %s :lines %s :src %s" file-name line-string src-lang ))
+(my/include-file-lines-org-mode "./New.cpp" "C++" 5 10)
 
 (defun xah-open-file-at-cursor ()
   "Open the file path under cursor.

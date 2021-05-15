@@ -183,6 +183,7 @@ the_silver_searcher
 xdotool
 bashtop
 stress
+pdfgrep
 #+end_src
 *** Emacs
 #+begin_src text
@@ -191,6 +192,7 @@ libvterm
 plantuml
 pandoc
 zeal
+texlive-scheme-full
 #+end_src
 *** GUI Programs
 #+begin_src text
@@ -227,6 +229,10 @@ firewall-config
 *** Cyber Security
 #+begin_src text
 nmap
+#+end_src
+*** Git
+#+begin_src shell
+git-instaweb
 #+end_src
 ** flatpak
 #+begin_src text
