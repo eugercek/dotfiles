@@ -17,6 +17,12 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ln -s .config/dotfiles/doom_emacs/.doom.d/ ~/
 ~/.emacs.d/bin/doom sync
 #+END_SRC
+
+** Compiling Some Packages
+*** vterm
+Just =SPC o t= and press =y=
+*** epdinfo
+~pdf-tools-install~
 * zsh setup
 :PROPERTIES:
 :header-args: :tangle ./zsh_setup.sh
@@ -154,6 +160,10 @@ Add  =https://raw.githubusercontent.com/EminUmutGercek/.dotfiles/master/surfingk
 #+begin_src sh
 dnf install $(cat dnf_packages)
 #+end_src
+** Add dnf Repos
+#+begin_src bash
+sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+#+end_src
 ** dnf packages
 :PROPERTIES:
 :header-args: :tangle ./dnf_packages
@@ -184,6 +194,7 @@ xdotool
 bashtop
 stress
 pdfgrep
+gh
 #+end_src
 *** Emacs
 #+begin_src text

@@ -671,6 +671,9 @@ Version 2017-01-11"
 (setq doom-themes-treemacs-theme "doom-colors")
 (doom-themes-treemacs-config)
 
+(setq doom-modeline-github t)
+(setq doom-modeline-github-interval 30)
+
 (setq +evil-want-o/O-to-continue-comments nil)
 
 (after! evil-snipe

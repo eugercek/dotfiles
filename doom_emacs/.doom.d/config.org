@@ -938,7 +938,12 @@ Add +treemacs-git-mode
 (setq doom-themes-treemacs-theme "doom-colors")
 (doom-themes-treemacs-config)
 #+end_src
-
+**** modeline
+***** Github
+#+begin_src emacs-lisp
+(setq doom-modeline-github t)
+(setq doom-modeline-github-interval 30)
+#+end_src
 *** editor
 **** evil
 #+begin_src emacs-lisp
