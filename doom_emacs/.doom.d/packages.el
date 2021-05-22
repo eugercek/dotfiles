@@ -90,3 +90,5 @@
 (package! tldr)
 (package! org-fragtog)
 (package! language-detection)
+(package! keyfreq)
+(package! outshine)
