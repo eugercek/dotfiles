@@ -33,23 +33,46 @@ Copy Pasted
 ** Theme
 I will handle this ugliness one day ...
 *** Light & Dark
+**** Day
 #+begin_src emacs-lisp
-(setq doom-solarized-dark-brighter-text t)
-(setq doom-solarized-dark-brighter-comments t)
-(setq doom-themes-enable-bold t)
+(defun my/day-additonals ()
+  (custom-set-faces!
+    '(region     :background "#f5f5ff")
+    '(org-block-begin-line :background "#fafaf8")
+    '(org-block-end-line   :background "#fafaf8")))
+#+end_src
+**** Night
+#+begin_src emacs-lisp
+(defun my/night-additonals ()
+  (progn
+    (custom-set-faces!
+      '(region     :background "#094A5A")
+      '(org-block-begin-line :background "#002b3a")
+      '(org-block-end-line   :background "#002b3a"))
 
+    (setq doom-solarized-dark-brighter-text t
+          doom-solarized-dark-brighter-comments t
+          doom-themes-enable-bold t)))
+#+end_src
+**** Find Day or Night
+#+begin_src emacs-lisp
 (setq my/current-time (string-to-number (format-time-string "%H")))
 
-(if
-    (and
-     (< 7 my/current-time)
-     (< my/current-time 17 ))
-    (setq my/current-theme 'doom-one-light)
-  (setq my/current-theme 'doom-solarized-dark))
+(defun my/day-or-night ()
+  (if
+      (and
+       (< 5 my/current-time)
+       (< my/current-time 20))
+      'day
+    'night))
 
-(setq doom-theme my/current-theme)
-(custom-set-faces!
-  `(region     :background ,"#094A5A"))
+(setq doom-theme (if (eq (my/day-or-night) 'day)
+                     'doom-one-light
+                   'doom-solarized-dark))
+
+(if (eq (my/day-or-night) 'day)
+    (my/day-additonals)
+    (my/night-additonals))
 #+end_src
 ** Font
 *** Main fonts
@@ -294,8 +317,9 @@ If really want to dispaly inline in org mode use _{} syntax
 *** Pretty Symbols
 #+begin_src emacs-lisp
 (defun org-pretty-symbols-mode ()
-  (push '("[ ]" .  "☐") prettify-symbols-alist)
-  (push '("[X]" . "☑" ) prettify-symbols-alist)
+  ;; (push '("[ ]" .  "☐") prettify-symbols-alist)
+  ;; (push '("[X]" . "☑" ) prettify-symbols-alist)
+
   (push '("#+begin_src"      . "λ") prettify-symbols-alist)
   ;; (push '("#+end_src"        . "⋱") prettify-symbols-alist)
   (push '("#+end_src"        . "・") prettify-symbols-alist)
@@ -325,17 +349,6 @@ If really want to dispaly inline in org mode use _{} syntax
 
 (add-hook 'org-mode-hook (lambda () (org-pretty-symbols-mode)))
 #+end_src
-*** Smoother blocks begin and end lines
-You can use ~(org-faces)~ =SPC F= to search faces.
-#+begin_src emacs-lisp
-(custom-set-faces!
-  '(org-block-begin-line :background "#002b3a")
-  '(org-block-end-line   :background "#002b3a"))
-;; (custom-set-faces!
-;;   '(org-block-begin-line :background "#fafaf8")
-;;   '(org-block-end-line   :background "#fafaf8"))
-#+end_src
-
 ** [#A] Keybindings
 #+begin_src emacs-lisp
 (map! :leader
@@ -1167,6 +1180,16 @@ https://github.com/andreasjansson/language-detection.el#eww-syntax-highlighting
 
 (setq shr-external-rendering-functions
       '((pre . eww-tag-pre)))
+#+end_src
+*** Make keybindgs more efficent
+#+begin_src emacs-lisp
+(use-package! keyfreq)
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
+#+end_src
+*** TODO Fold source code like org mode
+#+begin_src emacs-lisp
+(use-package! outshine)
 #+end_src
 ** Other
 *** Delimcol

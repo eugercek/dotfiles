@@ -195,6 +195,7 @@ bashtop
 stress
 pdfgrep
 gh
+ripgrep
 #+end_src
 *** Emacs
 #+begin_src text

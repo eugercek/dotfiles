@@ -19,22 +19,40 @@
 
 (toggle-frame-fullscreen)
 
-(setq doom-solarized-dark-brighter-text t)
-(setq doom-solarized-dark-brighter-comments t)
-(setq doom-themes-enable-bold t)
+(defun my/day-additonals ()
+  (custom-set-faces!
+    '(region     :background "#f5f5ff")
+    '(org-block-begin-line :background "#fafaf8")
+    '(org-block-end-line   :background "#fafaf8")))
+
+(defun my/night-additonals ()
+  (progn
+    (custom-set-faces!
+      '(region     :background "#094A5A")
+      '(org-block-begin-line :background "#002b3a")
+      '(org-block-end-line   :background "#002b3a"))
+
+    (setq doom-solarized-dark-brighter-text t
+          doom-solarized-dark-brighter-comments t
+          doom-themes-enable-bold t)))
 
 (setq my/current-time (string-to-number (format-time-string "%H")))
 
-(if
-    (and
-     (< 7 my/current-time)
-     (< my/current-time 17 ))
-    (setq my/current-theme 'doom-one-light)
-  (setq my/current-theme 'doom-solarized-dark))
+(defun my/day-or-night ()
+  (if
+      (and
+       (< 5 my/current-time)
+       (< my/current-time 20))
+      'day
+    'night))
 
-(setq doom-theme my/current-theme)
-(custom-set-faces!
-  `(region     :background ,"#094A5A"))
+(setq doom-theme (if (eq (my/day-or-night) 'day)
+                     'doom-one-light
+                   'doom-solarized-dark))
+
+(if (eq (my/day-or-night) 'day)
+    (my/day-additonals)
+    (my/night-additonals))
 
 ;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
 (setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
@@ -232,8 +250,9 @@
   :hook (org-mode . org-appear-mode))
 
 (defun org-pretty-symbols-mode ()
-  (push '("[ ]" .  "☐") prettify-symbols-alist)
-  (push '("[X]" . "☑" ) prettify-symbols-alist)
+  ;; (push '("[ ]" .  "☐") prettify-symbols-alist)
+  ;; (push '("[X]" . "☑" ) prettify-symbols-alist)
+
   (push '("#+begin_src"      . "λ") prettify-symbols-alist)
   ;; (push '("#+end_src"        . "⋱") prettify-symbols-alist)
   (push '("#+end_src"        . "・") prettify-symbols-alist)
@@ -262,13 +281,6 @@
   (prettify-symbols-mode t))
 
 (add-hook 'org-mode-hook (lambda () (org-pretty-symbols-mode)))
-
-(custom-set-faces!
-  '(org-block-begin-line :background "#002b3a")
-  '(org-block-end-line   :background "#002b3a"))
-;; (custom-set-faces!
-;;   '(org-block-begin-line :background "#fafaf8")
-;;   '(org-block-end-line   :background "#fafaf8"))
 
 (map! :leader
       :desc "org-ctrl-c-star copy"
@@ -808,6 +820,12 @@ Version 2017-01-11"
 
 (setq shr-external-rendering-functions
       '((pre . eww-tag-pre)))
+
+(use-package! keyfreq)
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
+
+(use-package! outshine)
 
 (setq delimit-columns-str-before "{ ")
 (setq delimit-columns-str-after " }")
