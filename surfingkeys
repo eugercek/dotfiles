@@ -82,8 +82,8 @@ mapkey('eK', 'Move up current tabs tree', () => {
 mapkey('ez', 'Toggle tree collapse state', () => {
     //Call from root of tree
     browser.runtime.sendMessage('treestyletab@piro.sakura.ne.jp', {
-          type: 'toggle-tree-collapsed',
-          tab:  'active' // required, tabs.Tab.id or alias
+        type: 'toggle-tree-collapsed',
+        tab:  'active' // required, tabs.Tab.id or alias
     });
 });
 
@@ -119,33 +119,28 @@ mapkey('eH', 'Outdent/Promote a tree', () => {
     });
 });
 
-/*
-mapkey('er', 'Toggle J and K character', () => {
-    
-    if (j_k_character == 0){
-        map('J', 'E');
-        map('K', 'R');
-        j_k_character = 1;
-    }
-    else{
-        map('J', 'R');
-        map('K', 'E');
-        j_k_character = 0;
-        
-    }
+//TV series go to next episode
+mapkey(';n', 'Go to next episode', 
+       function next_episode(){
+           base_url = window.location.href
+           ep_no = base_url.match(/(\d+)(?!.*\d)/)[0]
+           new_ep = parseInt(ep_no, 10) + 1;
+           n = base_url.lastIndexOf(ep_no);
+           new_url = base_url.slice(0, n) + base_url.slice(n).replace(ep_no, new_ep);
+           window.location = new_url;
+       }) ;
+
+//unmapAllExcept(['j','k','gf', 'J', 'K', 'H', 'L', 'yy', 'gg', 'G', 'gi', 'F', '<Ctrl-6>', 'X'], /youtube.com|dizibox.com|netflix.com/);
+
+mapkey('ye', '7Copy src URL of an image', function() {
+    Hints.create('img[src]', function(element, event) {
+        Clipboard.write(element.src);
+    });
 });
-*/
-
-
-    //TV series go to next episode
-   mapkey(';n', 'Go to next episode', 
-    function next_episode(){
-        base_url = window.location.href
-        ep_no = base_url.match(/(\d+)(?!.*\d)/)[0]
-        new_ep = parseInt(ep_no, 10) + 1;
-        n = base_url.lastIndexOf(ep_no);
-        new_url = base_url.slice(0, n) + base_url.slice(n).replace(ep_no, new_ep);
-        window.location = new_url;
-    }) ;
-    
-    //unmapAllExcept(['j','k','gf', 'J', 'K', 'H', 'L', 'yy', 'gg', 'G', 'gi', 'F', '<Ctrl-6>', 'X'], /youtube.com|dizibox.com|netflix.com/);
+// mapkey('yme', '7Copy multiple link URLs to the clipboard', function() {
+//     var linksToYank = [];
+//     Hints.create('img[src]', function(element) {
+//         linksToYank.push(element.src);
+//         Clipboard.write(linksToYank.join('\n'));
+//     }, {multipleHits: true});
+// });
