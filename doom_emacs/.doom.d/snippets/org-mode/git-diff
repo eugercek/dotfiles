@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: git-diff
+# key: gd
+# condition: t
+# --
+~git diff~ $0

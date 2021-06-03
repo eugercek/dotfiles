@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: git-config
+# key: gcon
+# condition: t
+# --
+~git config~ $0

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: ~git add~
+# key: ga
+# condition: t
+# --
+~git add~ $0

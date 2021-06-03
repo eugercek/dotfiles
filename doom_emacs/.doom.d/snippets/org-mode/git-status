@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: ~git status~
+# key: gstt
+# condition: t
+# --
+~git status~ $0

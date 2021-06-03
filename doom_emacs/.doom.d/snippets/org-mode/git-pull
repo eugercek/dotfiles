@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: git-pull
+# key: gpl
+# --
+
+~git pull~ $0

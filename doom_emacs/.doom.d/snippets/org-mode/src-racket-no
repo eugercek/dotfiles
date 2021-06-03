@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: src-racket-no
+# key: rktno
+# --
+#+begin_src racket :tangle no :eval no
+$0
+#+end_src

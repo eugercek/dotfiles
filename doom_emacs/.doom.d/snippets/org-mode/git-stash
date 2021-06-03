@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: git-stash
+# key: gsta
+# condition: t
+# --
+~git stash~ $0

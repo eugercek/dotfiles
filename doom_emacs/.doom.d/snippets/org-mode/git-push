@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: git-push
+# key: gps
+# condition: t
+# --
+~git push~ $0

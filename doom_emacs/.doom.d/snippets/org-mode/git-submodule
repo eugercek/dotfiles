@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: git-submodule
+# key: gsu
+# --
+~git submodule~ $0

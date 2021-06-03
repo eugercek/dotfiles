@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: git-rm
+# key: grm
+# condition: t
+# --
+~git rm~ $0

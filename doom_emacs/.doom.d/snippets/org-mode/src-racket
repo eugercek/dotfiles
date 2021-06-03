@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: src-racket
+# key: rkt
+# --
+#+begin_src racket
+$0
+#+end_src

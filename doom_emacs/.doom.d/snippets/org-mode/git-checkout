@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: git-checkout
+# key: gch
+# condition: t
+# --
+~git checkout~ $0

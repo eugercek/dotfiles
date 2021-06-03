@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: git-clone
+# key: gcl
+# condition: t
+# --
+~git clone~ $0

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: ~git commit~
+# key: gcom
+# condition: t
+# --
+~git commit~ $0

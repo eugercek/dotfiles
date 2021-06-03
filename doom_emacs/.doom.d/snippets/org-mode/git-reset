@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: git-reset
+# key: grs
+# condition: t
+# --
+~git reset~ $0

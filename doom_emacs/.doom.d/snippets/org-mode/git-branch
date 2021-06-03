@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: git-branch
+# key: gb
+# condition: t
+# --
+~git branch~ $0
