@@ -44,6 +44,7 @@ I will handle this ugliness one day ...
 **** Night
 #+begin_src emacs-lisp
 (defun my/night-additonals ()
+  (interactive )
   (progn
     (custom-set-faces!
       '(region     :background "#094A5A")
@@ -78,10 +79,10 @@ I will handle this ugliness one day ...
 *** Main fonts
 #+begin_src emacs-lisp
 ;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
-(setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
-      doom-big-font (font-spec :family "Ubuntu" :size 24)
+(setq doom-font (font-spec :family "SauceCodePro NF" :size 17))
+      ;; doom-big-font (font-spec :family "Ubuntu" :size 24)
       ;; doom-serif-font (font-spec :family "Noto Serif SC" :size 24)
-      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
+      ;; doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
 #+end_src
 *** Enable bold and italic
 #+begin_src emacs-lisp
@@ -203,8 +204,8 @@ I will handle this ugliness one day ...
                            :order 90)
                           (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
 #+end_src
-** TODO Capture
-#+begin_src emacs-lisp
+** KILL Old Capture
+#+begin_src emacs-lisp :tangle no
 (setq org-capture-templates '(
                               ("t" "Todo")
                               ("tn" "No time" entry
@@ -236,6 +237,40 @@ I will handle this ugliness one day ...
                               ("ls" "Log SICP/LISP daily" entry
                                (file+olp+datetree "~/Dropbox/org/gtd/log.org" "SICP")
                                "* %<%H:%M>\n%^{minute}p%^{page}p%?" :jump-to-captured t :immediate-finish t)
+
+                              ("lu" "Log UNIX daily" entry
+                               (file+olp+datetree "~/Dropbox/org/gtd/log.org" "UNIX")
+                               "* %<%H:%M> %^{Topic}\n%^{minute|60}p" :immediate-finish t)
+
+                              ("r" "Resource")
+
+                              ("ri" "Internet" entry
+                               (file+olp "~/Dropbox/org/gtd/inbox.org" "Resources" "Internet")
+                               "* [[%c][%^{Name of link}]] %^g\n%U\n")))
+#+end_src
+** TODO Capture
+#+begin_src emacs-lisp
+(setq org-capture-templates '(("t" "Todo")
+                              ("tn" "No time" entry
+                               (file+headline "~/Dropbox/org/gtd/inbox.org" "Tasks")
+                               "* TODO %^{Description} %^g\n  %?")
+                              ("tt" "With time" entry
+                               (file+headline "~/Dropbox/org/gtd/agenda.org" "Tasks")
+                               "* TODO %^{Description} %^g\n \%^t\n  %?")
+
+                              ("T" "Tickler" entry
+                               (file+headline "~/Dropbox/org/gtd/tickler.org" "Tickler")
+                               "* %i%? \n %U")
+
+                              ("j" "Journal" entry
+                               (file+datetree "~/Dropbox/org/gtd/journal.org")
+                               "* %U %?" :clock-in t :clock-keep t)
+
+                              ("l" "Log")
+
+                              ("ls" "Log SICP daily" entry
+                               (file+olp+datetree "~/Dropbox/org/gtd/sicp.org" "Log")
+                               "* %<%H:%M>\n%^{minute}p%^{page}p%^{current-page}p%?" :jump-to-captured t :immediate-finish t)
 
                               ("lu" "Log UNIX daily" entry
                                (file+olp+datetree "~/Dropbox/org/gtd/log.org" "UNIX")

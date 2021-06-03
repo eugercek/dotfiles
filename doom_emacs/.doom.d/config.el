@@ -26,6 +26,7 @@
     '(org-block-end-line   :background "#fafaf8")))
 
 (defun my/night-additonals ()
+  (interactive )
   (progn
     (custom-set-faces!
       '(region     :background "#094A5A")
@@ -55,10 +56,10 @@
     (my/night-additonals))
 
 ;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
-(setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
-      doom-big-font (font-spec :family "Ubuntu" :size 24)
+(setq doom-font (font-spec :family "SauceCodePro NF" :size 17))
+      ;; doom-big-font (font-spec :family "Ubuntu" :size 24)
       ;; doom-serif-font (font-spec :family "Noto Serif SC" :size 24)
-      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
+      ;; doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
 
 (after! doom-themes
   (setq doom-themes-enable-bold t
@@ -165,8 +166,7 @@
                            :order 90)
                           (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
 
-(setq org-capture-templates '(
-                              ("t" "Todo")
+(setq org-capture-templates '(("t" "Todo")
                               ("tn" "No time" entry
                                (file+headline "~/Dropbox/org/gtd/inbox.org" "Tasks")
                                "* TODO %^{Description} %^g\n  %?")
@@ -174,28 +174,19 @@
                                (file+headline "~/Dropbox/org/gtd/agenda.org" "Tasks")
                                "* TODO %^{Description} %^g\n \%^t\n  %?")
 
-
                               ("T" "Tickler" entry
                                (file+headline "~/Dropbox/org/gtd/tickler.org" "Tickler")
                                "* %i%? \n %U")
-
-                              ("n" "Simple Notes" entry
-                               (file+headline "~/Dropbox/org/gtd/inbox.org" "Notes")
-                               "* %^{Description} %^g\n  %?")
 
                               ("j" "Journal" entry
                                (file+datetree "~/Dropbox/org/gtd/journal.org")
                                "* %U %?" :clock-in t :clock-keep t)
 
-                              ("w" "Word" entry
-                               (file+datetree "~/Dropbox/org/gtd/words.org")
-                               "* %U %?" :clock-in t :clock-keep t)
-
                               ("l" "Log")
 
-                              ("ls" "Log SICP/LISP daily" entry
-                               (file+olp+datetree "~/Dropbox/org/gtd/log.org" "SICP")
-                               "* %<%H:%M>\n%^{minute}p%^{page}p%?" :jump-to-captured t :immediate-finish t)
+                              ("ls" "Log SICP daily" entry
+                               (file+olp+datetree "~/Dropbox/org/gtd/sicp.org" "Log")
+                               "* %<%H:%M>\n%^{minute}p%^{page}p%^{current-page}p%?" :jump-to-captured t :immediate-finish t)
 
                               ("lu" "Log UNIX daily" entry
                                (file+olp+datetree "~/Dropbox/org/gtd/log.org" "UNIX")
