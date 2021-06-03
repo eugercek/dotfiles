@@ -245,30 +245,29 @@
   ;; (push '("[X]" . "☑" ) prettify-symbols-alist)
 
   (push '("#+begin_src"      . "λ") prettify-symbols-alist)
-  ;; (push '("#+end_src"        . "⋱") prettify-symbols-alist)
   (push '("#+end_src"        . "・") prettify-symbols-alist)
   (push '("#+results:"       . "»") prettify-symbols-alist)
   (push '(":end:"            . "⋱") prettify-symbols-alist)
   (push '(":results:"        . "⋰") prettify-symbols-alist)
-  (push '("#+begin_verbatim" . "") prettify-symbols-alist)
-  (push '("#+end_verbatim"   . "") prettify-symbols-alist)
-  (push '("#+begin_verse"    . "") prettify-symbols-alist)
-  (push '("#+end_verse"      . "") prettify-symbols-alist)
-  (push '("#+begin_quote"    . "𐄚") prettify-symbols-alist)
-  (push '("#+end_quote"      . "𐄚") prettify-symbols-alist)
+  (push '("#+begin_verbatim" . "∬") prettify-symbols-alist)
+  (push '("#+end_verbatim"   . "∯") prettify-symbols-alist)
+  (push '("#+begin_verse"    . "∭") prettify-symbols-alist)
+  (push '("#+end_verse"      . "∰") prettify-symbols-alist)
+  (push '("#+begin_quote"    . "") prettify-symbols-alist)
+  (push '("#+end_quote"      . "") prettify-symbols-alist)
   ;;               Capital
   (push '("#+BEGIN_SRC"      . "λ") prettify-symbols-alist)
   (push '("#+END_SRC"        . "⋱") prettify-symbols-alist)
-  (push '("#+END_SRC"        . "・・") prettify-symbols-alist)
+  (push '("#+END_SRC"        . "・") prettify-symbols-alist)
   (push '("#+RESULTS:"       . "»") prettify-symbols-alist)
   (push '(":END:"            . "⋱") prettify-symbols-alist)
   (push '(":RESULTS:"        . "⋰") prettify-symbols-alist)
-  (push '("#+BEGIN_VERBATIM" . "") prettify-symbols-alist)
-  (push '("#+END_VERBATIM"   . "") prettify-symbols-alist)
-  (push '("#+BEGIN_VERSE"    . "") prettify-symbols-alist)
-  (push '("#+END_VERSE"      . "") prettify-symbols-alist)
-  (push '("#+BEGIN_QUOTE"    . "𐄚") prettify-symbols-alist)
-  (push '("#+END_QUOTE"      . "𐄚") prettify-symbols-alist)
+  (push '("#+BEGIN_VERBATIM" . "∬") prettify-symbols-alist)
+  (push '("#+END_VERBATIM"   . "∯") prettify-symbols-alist)
+  (push '("#+BEGIN_VERSE"    . "∭") prettify-symbols-alist)
+  (push '("#+END_VERSE"      . "∰") prettify-symbols-alist)
+  (push '("#+BEGIN_QUOTE"    . "") prettify-symbols-alist)
+  (push '("#+END_QUOTE"      . "") prettify-symbols-alist)
   (prettify-symbols-mode t))
 
 (add-hook 'org-mode-hook (lambda () (org-pretty-symbols-mode)))
@@ -671,6 +670,10 @@ Version 2017-01-11"
 
 (setq  writeroom-width 80)
 
+(setq writeroom-mode-hook
+      '(writeroom-mode-set-explicitly
+        +zen-enable-mixed-pitch-mode-h))
+
 (setq doom-themes-treemacs-theme "doom-colors")
 (doom-themes-treemacs-config)
 
@@ -861,6 +864,11 @@ Version 2017-01-11"
 (set-fringe-style (quote (24 . 24)))
 
 (use-package! nmap)
+
+(map! :leader
+      :desc "Insert image from clipboard to org"
+      "x" 'org-capture
+      "X" 'doom/open-scratch-buffer)
 
 (add-hook! 'rainbow-mode-hook
   (hl-line-mode (if rainbow-mode -1 +1)))
