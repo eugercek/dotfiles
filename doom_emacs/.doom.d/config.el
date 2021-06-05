@@ -868,7 +868,8 @@ Version 2017-01-11"
 (map! :leader
       :desc "Insert image from clipboard to org"
       "x" 'org-capture
-      "X" 'doom/open-scratch-buffer)
+      "X" 'doom/open-scratch-buffer
+      "jj" 'org-ctrl-c-ctrl-c)
 
 (add-hook! 'rainbow-mode-hook
   (hl-line-mode (if rainbow-mode -1 +1)))

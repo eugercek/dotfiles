@@ -1334,5 +1334,6 @@ I will implement these in time with consistent color scheme between different pr
 (map! :leader
       :desc "Insert image from clipboard to org"
       "x" 'org-capture
-      "X" 'doom/open-scratch-buffer)
+      "X" 'doom/open-scratch-buffer
+      "jj" 'org-ctrl-c-ctrl-c)
 #+end_src
