@@ -92,3 +92,4 @@
 (package! language-detection)
 (package! keyfreq)
 (package! outshine)
+(package! bnf-mode)

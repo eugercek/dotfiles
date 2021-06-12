@@ -90,6 +90,9 @@
 
 (setq org-log-done 'time)
 
+(remove-hook! '(org-mode-hook text-mode-hook)
+              #'display-line-numbers-mode)
+
 (setq org-clock-persist t)
 (org-clock-persistence-insinuate)
 (setq org-clock-persist-query-resume nil)

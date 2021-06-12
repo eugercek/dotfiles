@@ -123,6 +123,9 @@ I will handle this ugliness one day ...
 (org-autolist-mode 1)
 
 (setq org-log-done 'time)
+
+(remove-hook! '(org-mode-hook text-mode-hook)
+              #'display-line-numbers-mode)
 #+end_src
 ** Org clock
 #+begin_src emacs-lisp
@@ -1035,6 +1038,7 @@ Look at files continuously like ranger.
   (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 #+end_src
+*** checkers
 *** tools
 **** rgb
 ***** hl-line-mode don't override rainbow
@@ -1323,6 +1327,7 @@ You can click stacks and see their locals.
 Can look at simple variables directly.
 To look at array or struct use (gud-watch).
 Can enter new value with mouse-2 or RET
+
 * Syntax highlight for common CLI programs
 I will implement these in time with consistent color scheme between different programs.
 ** nmap

@@ -85,8 +85,9 @@
 
        :checkers
        syntax              ; tasing you for every semicolon you forget
-       ;; (spell
-       ;;  +aspell)
+       (spell
+        +aspell
+        +everywhere)
        ;;grammar           ; tasing grammar mistake every you make
 
        :tools
