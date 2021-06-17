@@ -93,3 +93,4 @@
 (package! keyfreq)
 (package! outshine)
 (package! bnf-mode)
+(package! elfeed-goodies)
