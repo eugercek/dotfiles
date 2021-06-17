@@ -1,14 +1,14 @@
 #+TITLE: System Install Steps
 
 
-* Call other sciprts
+* Call other scripts
 #+BEGIN_SRC sh :tangle install_system.sh :noweb yes
 ./zsh_setup.sh
 ./create_links.sh
 <<install_all_packages>>
 #+END_SRC
 * Installing Doom Emacs :manual:
-Only manually downlod this!
+Only manually download this!
 *Download Sauce Code Pro*
 [[https://github.com/hlissner/doom-emacs#install][Github page]]
 #+BEGIN_SRC sh :dir ~/
@@ -45,7 +45,7 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$
 #+end_src
 ** Install Font for powerlevel10k
 https://github.com/romkatv/powerlevel10k#manual-font-installation
-Preferences -> Selected profile -> Text > Text Apperance -> Custom Font :  Select MesloLGS NF Regular.
+Preferences -> Selected profile -> Text > Text Appereance -> Custom Font :  Select MesloLGS NF Regular.
 ** Install Needed packages
 #+begin_src sh
 sudo dnf install fzf zsh-autosuggestions zsh-syntax-highlighting
@@ -64,7 +64,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 #+end_src
 
 #+RESULTS:
-** Install zsh-syntax-highligh
+** Install zsh-syntax-highlight
 https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#oh-my-zsh
 
 #+begin_src sh
@@ -213,7 +213,7 @@ okular
 flameshot
 kruler
 #+end_src
-*** Progammming Languages
+*** Programming Languages
 **** Python
 #+begin_src text
 bpython
