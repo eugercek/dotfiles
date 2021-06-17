@@ -22,8 +22,6 @@ Copy Pasted
 (setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))
 (when (file-exists-p custom-file)
   (load custom-file))
-
-(setq writeroom-fullscreen-effect t)
 #+end_src
 ** Maximize on boot
 #+begin_src emacs-lisp
@@ -309,20 +307,20 @@ https://zzamboni.org/post/my-doom-emacs-configuration-with-commentary/
         "C-M-y" #'zz/org-download-paste-clipboard))
 #+end_src
 
-*** Keybindging
+*** Keybindings
 #+begin_src emacs-lisp
 (map! :leader
       :desc "Insert image from clipboard to org"
       "e p" 'zz/org-download-paste-clipboard)
 #+end_src
 ** Visual
-*** Pretty entitites
+*** Pretty Entities
 It also hides emphasis markers?
 #+begin_src emacs-lisp
 (setq org-pretty-entities t)
 #+end_src
-*** Subscript and Superscrip
-If really want to dispaly inline in org mode use _{} syntax
+*** Subscript and Superscript
+If really want to display inline in org mode use _{} syntax
 #+begin_src emacs-lisp
 ;; (setq org-use-sub-superscripts '{})
 (setq org-use-sub-superscripts nil)
@@ -425,7 +423,7 @@ Don't interpret every _ subscript!
 #+begin_src emacs-lisp
 (setq org-export-with-sub-superscripts '{})
 #+end_src
-*** Increase Expoted Headline Level
+*** Increase Exported Headline Level
 #+begin_src emacs-lisp
 (setq org-export-headline-levels 6)
 #+end_src
@@ -901,7 +899,7 @@ Version 2017-01-11"
       )
 #+end_src
 ** Notes :info:
-For syntax cechking I'm using flycheck
+For syntax checking I'm using flycheck
 *** Flycheck
 =(global-flycheck-mode)= is already enabled in doom.
 [[https://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html#flycheck-versus-flymake][Why not flymake ?]]
@@ -932,7 +930,7 @@ Run =(lsp-ui-flycheck-list)=
                                         (:flags . "-std=c99")))
 #+end_src
 ** Python
-*** Keybindgins
+*** Keybindings
 Currently SPC [j k l] is empty for me
 #+begin_src emacs-lisp
 (map! :leader
@@ -977,8 +975,8 @@ M-i for insert what you select.
 *** ui
 **** zen
 ***** Writeroom width limit
-I generaly use lightrom for reading text-info manuals or manuals in one screen.
-I don't need 80 column restriciton
+I generally use lightroom for reading text-info manuals or manuals in one screen.
+I don't need 80 column restriction.
 #+begin_src emacs-lisp
 (setq  writeroom-width 80)
 #+end_src
@@ -1120,7 +1118,7 @@ Just press ~K~ =(lsp-describe-thing-at-point)= for documentation.
       "d t" 'turkish-correct-last-word)
 #+end_src
 *** info-colors
-Make info more readable with syntax higlight at least for elisp.
+Make info more readable with syntax highlight at least for elisp.
 #+begin_src emacs-lisp
 (use-package! info-colors
   :commands (info-colors-fontify-node))
@@ -1145,7 +1143,7 @@ Use =rotate-window= and =rotate-layout=
 #+begin_src emacs-lisp
 (use-package! org-pandoc-import :after org)
 #+end_src
-*** eww sytnax highlight
+*** eww syntax highlight
 https://github.com/andreasjansson/language-detection.el#eww-syntax-highlighting
 #+begin_src emacs-lisp
 (require 'cl-lib)
@@ -1225,7 +1223,7 @@ https://github.com/andreasjansson/language-detection.el#eww-syntax-highlighting
 (setq shr-external-rendering-functions
       '((pre . eww-tag-pre)))
 #+end_src
-*** Make keybindgs more efficent
+*** Make keybindings more efficent
 #+begin_src emacs-lisp
 (use-package! keyfreq)
 (keyfreq-mode 1)
@@ -1264,7 +1262,7 @@ https://github.com/andreasjansson/language-detection.el#eww-syntax-highlighting
 (eval-after-load "artist"
   '(define-key artist-mode-map [(down-mouse-3)] 'artist-mouse-choose-operation))
 #+end_src
-*** Rainbow Deliiters
+*** Rainbow Delimiters
 #+begin_src emacs-lisp
 (setq rainbow-delimiters-max-face-count 9)
 #+end_src
@@ -1307,10 +1305,10 @@ This is for proper breakpoints.
 #+end_src
 ** Tips
 *** For more buffers to display
-M-x gdb-display-buffertype
-M-x gdb-frame-buffertype-buffer
-*** Broked Layout
-M-x gdb-restore-windows
+M-x ~gdb-display-buffertype~
+M-x ~gdb-frame-buffertype-buffer~
+*** When Broke Layout
+M-x ~gdb-restore-windows~
 *** Breakpoints on Source File
 | mouse-1   | Toggle Breakpoint  |
 | C-mouse-1 | Enable/Disable     |
