@@ -77,10 +77,11 @@ I will handle this ugliness one day ...
 *** Main fonts
 #+begin_src emacs-lisp
 ;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
-(setq doom-font (font-spec :family "SauceCodePro NF" :size 17))
-      ;; doom-big-font (font-spec :family "Ubuntu" :size 24)
-      ;; doom-serif-font (font-spec :family "Noto Serif SC" :size 24)
-      ;; doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
+(setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
+      doom-variable-pitch-font (font-spec :family "Overpass" :size 24))
+;; doom-big-font (font-spec :family "Ubuntu" :size 24)
+;; doom-serif-font (font-spec :family "Noto Serif SC" :size 24)
+;; doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
 #+end_src
 *** Enable bold and italic
 #+begin_src emacs-lisp

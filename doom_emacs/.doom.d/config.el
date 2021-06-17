@@ -54,10 +54,11 @@
     (my/night-additonals))
 
 ;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
-(setq doom-font (font-spec :family "SauceCodePro NF" :size 17))
-      ;; doom-big-font (font-spec :family "Ubuntu" :size 24)
-      ;; doom-serif-font (font-spec :family "Noto Serif SC" :size 24)
-      ;; doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
+(setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
+      doom-variable-pitch-font (font-spec :family "Overpass" :size 24))
+;; doom-big-font (font-spec :family "Ubuntu" :size 24)
+;; doom-serif-font (font-spec :family "Noto Serif SC" :size 24)
+;; doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
 
 (after! doom-themes
   (setq doom-themes-enable-bold t
