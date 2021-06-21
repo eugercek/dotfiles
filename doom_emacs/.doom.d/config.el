@@ -68,9 +68,9 @@
       user-mail-address "umutgercek1999@gmail.com")
 
 (setq confirm-kill-emacs nil)
-(unless (display-graphic-p)
-  (require 'evil-terminal-cursor-changer)
-  (evil-terminal-cursor-changer-activate)) ; or (etcc-on)
+;; (unless (display-graphic-p)
+;;   (require 'evil-terminal-cursor-changer)
+;;   (evil-terminal-cursor-changer-activate)) ; or (etcc-on)
 
 (setq doom-scratch-buffer-major-mode t)
 

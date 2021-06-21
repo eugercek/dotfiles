@@ -97,9 +97,9 @@ I will handle this ugliness one day ...
 ** Better Defaults
 #+begin_src emacs-lisp
 (setq confirm-kill-emacs nil)
-(unless (display-graphic-p)
-  (require 'evil-terminal-cursor-changer)
-  (evil-terminal-cursor-changer-activate)) ; or (etcc-on)
+;; (unless (display-graphic-p)
+;;   (require 'evil-terminal-cursor-changer)
+;;   (evil-terminal-cursor-changer-activate)) ; or (etcc-on)
 #+end_src
 ** Dashboard
 #+begin_src emacs-lisp
@@ -1046,6 +1046,15 @@ Use =] r= for rotate
         :n "H" #'dired-hide-dotfiles-mode))
 #+end_src
 *** checkers
+#+begin_src emacs-lisp :tangle no
+(setq ispell-local-dictionary "en")
+#+end_src
+
+#+begin_src shell :tangle no :eval no
+rm .emacs.d/.local/etc/ispell/.pws
+#+end_src
+
+
 *** tools
 **** rgb
 ***** hl-line-mode don't override rainbow
