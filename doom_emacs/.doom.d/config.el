@@ -68,9 +68,6 @@
       user-mail-address "umutgercek1999@gmail.com")
 
 (setq confirm-kill-emacs nil)
-;; (unless (display-graphic-p)
-;;   (require 'evil-terminal-cursor-changer)
-;;   (evil-terminal-cursor-changer-activate)) ; or (etcc-on)
 
 (setq doom-scratch-buffer-major-mode t)
 
@@ -312,135 +309,6 @@
   (setq line-string (format "%d-%d" begin real-end))
   (format "#+include: %s :lines %s :src %s" file-name line-string src-lang ))
 (my/include-file-lines-org-mode "./New.cpp" "C++" 5 10)
-
-(defun xah-open-file-at-cursor ()
-  "Open the file path under cursor.
-If there is text selection, uses the text selection for path.
-If the path starts with "http://", open the URL in browser.
-Input path can be {relative, full path, URL}.
-Path may have a trailing ":‹n›" that indicates line number. If so, jump to that line number.
-If path does not have a file extension, automatically try with ".el" for elisp files.
-This command is similar to `find-file-at-point' but without prompting for confirmation.
-
-URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'
-Version 2019-01-16"
-  (interactive)
-  (let* (($inputStr (if (use-region-p)
-                        (buffer-substring-no-properties (region-beginning) (region-end))
-                      (let ($p0 $p1 $p2
-                                ;; chars that are likely to be delimiters of file path or url, e.g. whitespace, comma. The colon is a problem. cuz it's in url, but not in file name. Don't want to use just space as delimiter because path or url are often in brackets or quotes as in markdown or html
-                                ($pathStops "^  \t\n\"`'''""|[]{}「」<>〔〕〈〉《》【】〖〗«»‹›❮❯❬❭〘〙·。\\"))
-                        (setq $p0 (point))
-                        (skip-chars-backward $pathStops)
-                        (setq $p1 (point))
-                        (goto-char $p0)
-                        (skip-chars-forward $pathStops)
-                        (setq $p2 (point))
-                        (goto-char $p0)
-                        (buffer-substring-no-properties $p1 $p2))))
-         ($path
-          (replace-regexp-in-string
-           "^file:///" "/"
-           (replace-regexp-in-string
-            ":\\'" "" $inputStr))))
-    (if (string-match-p "\\`https?://" $path)
-        (if (fboundp 'xahsite-url-to-filepath)
-            (let (($x (xahsite-url-to-filepath $path)))
-              (if (string-match "^http" $x )
-                  (browse-url $x)
-                (find-file $x)))
-          (progn (browse-url $path)))
-      (if ; not starting "http://"
-          (string-match "^\\`\\(.+?\\):\\([0-9]+\\)\\'" $path)
-          (let (
-                ($fpath (match-string 1 $path))
-                ($line-num (string-to-number (match-string 2 $path))))
-            (if (file-exists-p $fpath)
-                (progn
-                  (find-file $fpath)
-                  (goto-char 1)
-                  (forward-line (1- $line-num)))
-              (when (y-or-n-p (format "file no exist: 「%s」. Create?" $fpath))
-                (find-file $fpath))))
-        (if (file-exists-p $path)
-            (progn ; open f.ts instead of f.js
-              (let (($ext (file-name-extension $path))
-                    ($fnamecore (file-name-sans-extension $path)))
-                (if (and (string-equal $ext "js")
-                         (file-exists-p (concat $fnamecore ".ts")))
-                    (find-file (concat $fnamecore ".ts"))
-                  (find-file $path))))
-          (if (file-exists-p (concat $path ".el"))
-              (find-file (concat $path ".el"))
-            (when (y-or-n-p (format "file no exist: 「%s」. Create?" $path))
-              (find-file $path ))))))))
-
-(map! :leader
-      :desc "Translate word"
-      "d f" 'xah-open-file-at-cursor
-      )
-
-(defun xah-title-case-region-or-line (@begin @end)
-  "Title case text between nearest brackets, or current line, or text selection.
-Capitalize first letter of each word, except words like {to, of, the, a, in, or, and, …}. If a word already contains cap letters such as HTTP, URL, they are left as is.
-
-When called in a elisp program, *begin *end are region boundaries.
-URL `http://ergoemacs.org/emacs/elisp_title_case_text.html'
-Version 2017-01-11"
-  (interactive
-   (if (use-region-p)
-       (list (region-beginning) (region-end))
-     (let (
-           $p1
-           $p2
-           ($skipChars "^\"<>(){}[]""''‹›«»「」『』【】〖〗《》〈〉〔〕"))
-       (progn
-         (skip-chars-backward $skipChars (line-beginning-position))
-         (setq $p1 (point))
-         (skip-chars-forward $skipChars (line-end-position))
-         (setq $p2 (point)))
-       (list $p1 $p2))))
-  (let* (
-         ($strPairs [
-                     [" A " " a "]
-                     [" And " " and "]
-                     [" At " " at "]
-                     [" As " " as "]
-                     [" By " " by "]
-                     [" Be " " be "]
-                     [" Into " " into "]
-                     [" In " " in "]
-                     [" Is " " is "]
-                     [" It " " it "]
-                     [" For " " for "]
-                     [" Of " " of "]
-                     [" Or " " or "]
-                     [" On " " on "]
-                     [" Via " " via "]
-                     [" The " " the "]
-                     [" That " " that "]
-                     [" To " " to "]
-                     [" Vs " " vs "]
-                     [" With " " with "]
-                     [" From " " from "]
-                     ["'S " "'s "]
-                     ["'T " "'t "]
-                     ]))
-    (save-excursion
-      (save-restriction
-        (narrow-to-region @begin @end)
-        (upcase-initials-region (point-min) (point-max))
-        (let ((case-fold-search nil))
-          (mapc
-           (lambda ($x)
-             (goto-char (point-min))
-             (while
-                 (search-forward (aref $x 0) nil t)
-               (replace-match (aref $x 1) "FIXEDCASE" "LITERAL")))
-           $strPairs))))))
-
-(map! :leader
-      "j t"  'xah-title-case-region-or-line)
 
 (map! :leader
       :desc "Go to notes directory"
@@ -829,6 +697,10 @@ Version 2017-01-11"
 
 (use-package! outshine)
 
+(use-package! atomic-chrome
+  :config
+  (atomic-chrome-start-server))
+
 (setq delimit-columns-str-before "{ ")
 (setq delimit-columns-str-after " }")
 (setq delimit-columns-str-separator ", ")
@@ -878,6 +750,15 @@ Version 2017-01-11"
       "x" 'org-capture
       "X" 'doom/open-scratch-buffer
       "jj" 'org-ctrl-c-ctrl-c)
+
+(map!
+    :n "M-k" #'drag-stuff-up
+    :n "M-j" #'drag-stuff-down)
+
+(use-package! string-inflection
+  :config
+  (map! :leader
+        "ec" 'string-inflection-all-cycle))
 
 (setq rmh-elfeed-org-files
       '("~/Dropbox/rss.org"))

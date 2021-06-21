@@ -95,3 +95,5 @@
 (package! bnf-mode)
 (package! elfeed-goodies)
 (package! dired-hide-dotfiles)
+(package! string-inflection)
+(package! atomic-chrome)
