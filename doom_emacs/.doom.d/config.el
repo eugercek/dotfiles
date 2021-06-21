@@ -703,6 +703,12 @@ Version 2017-01-11"
   (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 
+(use-package! dired-hide-dotfiles
+  :hook (dired-mode . dired-hide-dotfiles-mode)
+  :config
+  (map! :map dired-mode-map
+        :n "H" #'dired-hide-dotfiles-mode))
+
 (setq lsp-enable-symbol-highlighting nil)
 
 (add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) ;Dark mode

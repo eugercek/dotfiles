@@ -94,3 +94,4 @@
 (package! outshine)
 (package! bnf-mode)
 (package! elfeed-goodies)
+(package! dired-hide-dotfiles)

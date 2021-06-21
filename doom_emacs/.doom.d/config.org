@@ -1023,7 +1023,7 @@ Use =] r= for rotate
 #+end_src
 *** emacs
 **** dired
-Look at files continuously like ranger.
+***** Continuous Preview
 #+begin_src emacs-lisp
 (map!
  (:after dired
@@ -1036,6 +1036,14 @@ Look at files continuously like ranger.
   (kbd "j") 'peep-dired-next-file
   (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+#+end_src
+***** Hide dotfiles
+#+begin_src emacs-lisp
+(use-package! dired-hide-dotfiles
+  :hook (dired-mode . dired-hide-dotfiles-mode)
+  :config
+  (map! :map dired-mode-map
+        :n "H" #'dired-hide-dotfiles-mode))
 #+end_src
 *** checkers
 *** tools
