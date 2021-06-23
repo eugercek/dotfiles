@@ -72,7 +72,8 @@
        (dired
         +icons)
        electric          ; smarter, keyword-based electric-indent
-       ;;ibuffer         ; interactive buffer management
+       (ibuffer
+        +icons)
        (undo
         +tree)
        vc                ; version-control and Emacs, sitting in a tree

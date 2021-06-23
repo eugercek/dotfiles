@@ -657,6 +657,25 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
 (map! :leader
       "j f" 'my/info->org-text)
 #+end_src
+*** Send source block's content to vterm
+#+begin_src emacs-lisp
+(defun my/send-src-block-to-vterm ()
+  "Send source code's (currently on) content to vterm.
+It won't looks more than one vterm, close other ones."
+  (interactive)
+  (save-buffer)
+  (let
+      ((cur-term (if (get-buffer "vterm")
+                     "vterm"
+                   "*doom:vterm-popup:main*"))
+       (content  (org-element-property :value (org-element-at-point))))
+    (comint-send-string cur-term
+                        content)))
+
+(map! :map org-mode-map
+      :leader
+      "e s" 'my/send-src-block-to-vterm)
+#+end_src
 ** xah lee
 *** Title Case
 #+begin_src emacs-lisp
@@ -857,10 +876,10 @@ Add +treemacs-git-mode
 (doom-themes-treemacs-config)
 #+end_src
 **** modeline
-***** Github
+***** GitHub
 #+begin_src emacs-lisp
 (setq doom-modeline-github t)
-(setq doom-modeline-github-interval 30)
+(setq doom-modeline-github-interval (* 30 60))
 #+end_src
 *** editor
 **** evil
@@ -1113,7 +1132,7 @@ https://github.com/andreasjansson/language-detection.el#eww-syntax-highlighting
 #+begin_src emacs-lisp
 (use-package! outshine)
 #+end_src
-*** Edit browser's text from Emacs
+*** Edit browser's text from emacs
 #+begin_src emacs-lisp
 (use-package! atomic-chrome
   :config

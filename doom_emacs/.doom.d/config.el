@@ -448,6 +448,23 @@
 (map! :leader
       "j f" 'my/info->org-text)
 
+(defun my/send-src-block-to-vterm ()
+  "Send source code's (currently on) content to vterm.
+It won't looks more than one vterm, close other ones."
+  (interactive)
+  (save-buffer)
+  (let
+      ((cur-term (if (get-buffer "vterm")
+                     "vterm"
+                   "*doom:vterm-popup:main*"))
+       (content  (org-element-property :value (org-element-at-point))))
+    (comint-send-string cur-term
+                        content)))
+
+(map! :map org-mode-map
+      :leader
+      "e s" 'my/send-src-block-to-vterm)
+
 (defun xah-title-case-region-or-line (@begin @end)
   "Title case text between nearest brackets, or current line, or text selection.
 Capitalize first letter of each word, except words like {to, of, the, a, in, or, and, …}. If a word already contains cap letters such as HTTP, URL, they are left as is.
@@ -548,7 +565,7 @@ Version 2017-01-11"
 (doom-themes-treemacs-config)
 
 (setq doom-modeline-github t)
-(setq doom-modeline-github-interval 30)
+(setq doom-modeline-github-interval (* 30 60))
 
 (setq +evil-want-o/O-to-continue-comments nil)
 

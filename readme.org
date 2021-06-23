@@ -230,6 +230,10 @@ valgrind
 #+begin_src text
 rlwrap
 #+end_src
+**** Common Lisp
+#+begin_src text
+sbcl
+#+end_src
 **** Javascript
 #+begin_src text
 nodejs
