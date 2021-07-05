@@ -78,7 +78,7 @@
 
 (package! nmap
    :recipe (:host github
-           :repo "EminUmutGercek/nmap.el"))
+           :repo "eugercek/nmap.el"))
 
 (package! rotate)
 
@@ -97,3 +97,6 @@
 (package! dired-hide-dotfiles)
 (package! string-inflection)
 (package! atomic-chrome)
+(package! info-noter
+  :recipe (:host github
+           :repo "eugercek/info-noter.el"))

@@ -196,6 +196,7 @@ stress
 pdfgrep
 gh
 ripgrep
+docker
 #+end_src
 *** Emacs
 #+begin_src text

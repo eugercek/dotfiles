@@ -89,7 +89,8 @@
 (remove-hook! '(org-mode-hook text-mode-hook)
               #'display-line-numbers-mode)
 
-(setq org-clock-persist t)
+(after! org-clock
+  (setq org-clock-persist t))  ;; Doom emacs sets to 'history
 (org-clock-persistence-insinuate)
 (setq org-clock-persist-query-resume nil)
 
@@ -310,15 +311,14 @@
   (format "#+include: %s :lines %s :src %s" file-name line-string src-lang ))
 (my/include-file-lines-org-mode "./New.cpp" "C++" 5 10)
 
-(map! :leader
-      :desc "Go to notes directory"
-      "a n" 'my/notes-counsel-find-file
-      )
-
 (defun my/notes-counsel-find-file ()
   "Foobar"
   (interactive)
   (counsel-find-file "/home/umut/Dropbox/org/Notes"))
+
+(map! :leader
+      :desc "Go to notes directory"
+      "a n" 'my/notes-counsel-find-file)
 
 (defun my/gtd-counsel-find-file ()
   "Foobar"
@@ -327,8 +327,7 @@
 
 (map! :leader
       :desc "Go to notes directory"
-      "a g" 'my/gtd-counsel-find-file
-      )
+      "a g" 'my/gtd-counsel-find-file)
 
 (defun my/src-counsel-find-file ()
   "Foobar"
@@ -337,18 +336,7 @@
 
 (map! :leader
       :desc "Go to notes directory"
-      "a s" 'my/src-counsel-find-file
-      )
-
-(defun my/documents-counsel-find-file ()
-  "Foobar"
-  (interactive)
-  (counsel-find-file "/home/umut/Document/"))
-
-(map! :leader
-      :desc "Go to documents directory"
-      "a d" 'my/documents-counsel-find-file
-      )
+      "a s" 'my/src-counsel-find-file)
 
 (defun my/curly-quoation-to-normal-quoation()
   "Change any curly quotation mark to normal quoation mark"
@@ -417,115 +405,6 @@
   (or (looking-at "[0-9]+")
       (error "No number at point"))
   (replace-match (number-to-string (/ (string-to-number (match-string 0)) 2))))
-
-(defun my/info->org-heading()
-  "Simple workflow for reading info in emasc while taking notes on
-  org-mode"
-  (interactive)
-  (fm-right-frame)
-  (goto-char (point-max))
-  (insert (substring-no-properties (car kill-ring)))
-  (forward-line -1)
-  (kill-whole-line)
-  (forward-line -1)
-  (org-ctrl-c-star)
-  (fm-left-frame))
-
-
-(map! :leader
-      "j o" 'my/info->org-heading)
-
-(defun my/info->org-text(beginning end)
-  "Simple workflow for reading info in emasc while taking notes on
-  org-mode"
-  (interactive "r")
-  (fm-right-frame)
-  (goto-char (point-max))
-  (insert (substring-no-properties (car kill-ring)))
-  (insert "\n")
-  (fm-left-frame))
-
-(map! :leader
-      "j f" 'my/info->org-text)
-
-(defun my/send-src-block-to-vterm ()
-  "Send source code's (currently on) content to vterm.
-It won't looks more than one vterm, close other ones."
-  (interactive)
-  (save-buffer)
-  (let
-      ((cur-term (if (get-buffer "vterm")
-                     "vterm"
-                   "*doom:vterm-popup:main*"))
-       (content  (org-element-property :value (org-element-at-point))))
-    (comint-send-string cur-term
-                        content)))
-
-(map! :map org-mode-map
-      :leader
-      "e s" 'my/send-src-block-to-vterm)
-
-(defun xah-title-case-region-or-line (@begin @end)
-  "Title case text between nearest brackets, or current line, or text selection.
-Capitalize first letter of each word, except words like {to, of, the, a, in, or, and, …}. If a word already contains cap letters such as HTTP, URL, they are left as is.
-
-When called in a elisp program, *begin *end are region boundaries.
-URL `http://ergoemacs.org/emacs/elisp_title_case_text.html'
-Version 2017-01-11"
-  (interactive
-   (if (use-region-p)
-       (list (region-beginning) (region-end))
-     (let (
-           $p1
-           $p2
-           ($skipChars "^\"<>(){}[]""''‹›«»「」『』【】〖〗《》〈〉〔〕"))
-       (progn
-         (skip-chars-backward $skipChars (line-beginning-position))
-         (setq $p1 (point))
-         (skip-chars-forward $skipChars (line-end-position))
-         (setq $p2 (point)))
-       (list $p1 $p2))))
-  (let* (
-         ($strPairs [
-                     [" A " " a "]
-                     [" And " " and "]
-                     [" At " " at "]
-                     [" As " " as "]
-                     [" By " " by "]
-                     [" Be " " be "]
-                     [" Into " " into "]
-                     [" In " " in "]
-                     [" Is " " is "]
-                     [" It " " it "]
-                     [" For " " for "]
-                     [" Of " " of "]
-                     [" Or " " or "]
-                     [" On " " on "]
-                     [" Via " " via "]
-                     [" The " " the "]
-                     [" That " " that "]
-                     [" To " " to "]
-                     [" Vs " " vs "]
-                     [" With " " with "]
-                     [" From " " from "]
-                     ["'S " "'s "]
-                     ["'T " "'t "]
-                     ]))
-    (save-excursion
-      (save-restriction
-        (narrow-to-region @begin @end)
-        (upcase-initials-region (point-min) (point-max))
-        (let ((case-fold-search nil))
-          (mapc
-           (lambda ($x)
-             (goto-char (point-min))
-             (while
-                 (search-forward (aref $x 0) nil t)
-               (replace-match (aref $x 1) "FIXEDCASE" "LITERAL")))
-           $strPairs))))))
-
-(map! :leader
-      "j t"  'xah-title-case-region-or-line)
 
 (setq org-babel-default-header-args:C++ '((:includes . "<bits/stdc++.h>")
                                           (:flags . "-std=c++20")
@@ -760,13 +639,12 @@ Version 2017-01-11"
 
 (set-fringe-style (quote (24 . 24)))
 
-(use-package! nmap)
-
 (map! :leader
       :desc "Insert image from clipboard to org"
       "x" 'org-capture
       "X" 'doom/open-scratch-buffer
-      "jj" 'org-ctrl-c-ctrl-c)
+      "jj" 'org-ctrl-c-ctrl-c
+      "el" 'counsel-fzf)
 
 (map!
     :n "M-k" #'drag-stuff-up
@@ -896,6 +774,13 @@ Version 2017-01-11"
       (goto-char (point-min))))
 
   )
+
+(use-package! nmap)
+
+(use-package! info-noter
+  :config
+  (map!  :mode Info-mode
+         :n "x" 'info-heading->org-heading))
 
 (add-hook! 'rainbow-mode-hook
   (hl-line-mode (if rainbow-mode -1 +1)))

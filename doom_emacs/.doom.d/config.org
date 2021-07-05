@@ -125,7 +125,8 @@ I will handle this ugliness one day ...
 #+end_src
 ** Org clock
 #+begin_src emacs-lisp
-(setq org-clock-persist t)
+(after! org-clock
+  (setq org-clock-persist t))  ;; Doom emacs sets to 'history
 (org-clock-persistence-insinuate)
 (setq org-clock-persist-query-resume nil)
 #+end_src
@@ -470,7 +471,6 @@ Don't interpret every _ subscript!
             (define-key org-mode-map "*" 'electric-pair)
             (define-key org-mode-map "/" 'electric-pair)))
 #+end_src
-
 * Translator
 ** KILL Google Translate
 #+begin_src emacs-lisp :tangle no
@@ -488,15 +488,14 @@ Don't interpret every _ subscript!
 * Bookmark like
 ** notes
 #+begin_src emacs-lisp
-(map! :leader
-      :desc "Go to notes directory"
-      "a n" 'my/notes-counsel-find-file
-      )
-
 (defun my/notes-counsel-find-file ()
   "Foobar"
   (interactive)
   (counsel-find-file "/home/umut/Dropbox/org/Notes"))
+
+(map! :leader
+      :desc "Go to notes directory"
+      "a n" 'my/notes-counsel-find-file)
 #+end_src
 ** gtd
 #+begin_src emacs-lisp
@@ -507,8 +506,7 @@ Don't interpret every _ subscript!
 
 (map! :leader
       :desc "Go to notes directory"
-      "a g" 'my/gtd-counsel-find-file
-      )
+      "a g" 'my/gtd-counsel-find-file)
 #+end_src
 ** src
 #+begin_src emacs-lisp
@@ -519,20 +517,7 @@ Don't interpret every _ subscript!
 
 (map! :leader
       :desc "Go to notes directory"
-      "a s" 'my/src-counsel-find-file
-      )
-#+end_src
-** documents
-#+begin_src emacs-lisp
-(defun my/documents-counsel-find-file ()
-  "Foobar"
-  (interactive)
-  (counsel-find-file "/home/umut/Document/"))
-
-(map! :leader
-      :desc "Go to documents directory"
-      "a d" 'my/documents-counsel-find-file
-      )
+      "a s" 'my/src-counsel-find-file)
 #+end_src
 * Functions
 ** Mine
@@ -620,126 +605,6 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
   (or (looking-at "[0-9]+")
       (error "No number at point"))
   (replace-match (number-to-string (/ (string-to-number (match-string 0)) 2))))
-#+end_src
-*** Org mode
-**** PROJ Info to Org
-***** Heading
-#+begin_src emacs-lisp
-(defun my/info->org-heading()
-  "Simple workflow for reading info in emasc while taking notes on
-  org-mode"
-  (interactive)
-  (fm-right-frame)
-  (goto-char (point-max))
-  (insert (substring-no-properties (car kill-ring)))
-  (forward-line -1)
-  (kill-whole-line)
-  (forward-line -1)
-  (org-ctrl-c-star)
-  (fm-left-frame))
-
-
-(map! :leader
-      "j o" 'my/info->org-heading)
-#+end_src
-***** Text
-#+begin_src emacs-lisp
-(defun my/info->org-text(beginning end)
-  "Simple workflow for reading info in emasc while taking notes on
-  org-mode"
-  (interactive "r")
-  (fm-right-frame)
-  (goto-char (point-max))
-  (insert (substring-no-properties (car kill-ring)))
-  (insert "\n")
-  (fm-left-frame))
-
-(map! :leader
-      "j f" 'my/info->org-text)
-#+end_src
-*** Send source block's content to vterm
-#+begin_src emacs-lisp
-(defun my/send-src-block-to-vterm ()
-  "Send source code's (currently on) content to vterm.
-It won't looks more than one vterm, close other ones."
-  (interactive)
-  (save-buffer)
-  (let
-      ((cur-term (if (get-buffer "vterm")
-                     "vterm"
-                   "*doom:vterm-popup:main*"))
-       (content  (org-element-property :value (org-element-at-point))))
-    (comint-send-string cur-term
-                        content)))
-
-(map! :map org-mode-map
-      :leader
-      "e s" 'my/send-src-block-to-vterm)
-#+end_src
-** xah lee
-*** Title Case
-#+begin_src emacs-lisp
-(defun xah-title-case-region-or-line (@begin @end)
-  "Title case text between nearest brackets, or current line, or text selection.
-Capitalize first letter of each word, except words like {to, of, the, a, in, or, and, …}. If a word already contains cap letters such as HTTP, URL, they are left as is.
-
-When called in a elisp program, *begin *end are region boundaries.
-URL `http://ergoemacs.org/emacs/elisp_title_case_text.html'
-Version 2017-01-11"
-  (interactive
-   (if (use-region-p)
-       (list (region-beginning) (region-end))
-     (let (
-           $p1
-           $p2
-           ($skipChars "^\"<>(){}[]""''‹›«»「」『』【】〖〗《》〈〉〔〕"))
-       (progn
-         (skip-chars-backward $skipChars (line-beginning-position))
-         (setq $p1 (point))
-         (skip-chars-forward $skipChars (line-end-position))
-         (setq $p2 (point)))
-       (list $p1 $p2))))
-  (let* (
-         ($strPairs [
-                     [" A " " a "]
-                     [" And " " and "]
-                     [" At " " at "]
-                     [" As " " as "]
-                     [" By " " by "]
-                     [" Be " " be "]
-                     [" Into " " into "]
-                     [" In " " in "]
-                     [" Is " " is "]
-                     [" It " " it "]
-                     [" For " " for "]
-                     [" Of " " of "]
-                     [" Or " " or "]
-                     [" On " " on "]
-                     [" Via " " via "]
-                     [" The " " the "]
-                     [" That " " that "]
-                     [" To " " to "]
-                     [" Vs " " vs "]
-                     [" With " " with "]
-                     [" From " " from "]
-                     ["'S " "'s "]
-                     ["'T " "'t "]
-                     ]))
-    (save-excursion
-      (save-restriction
-        (narrow-to-region @begin @end)
-        (upcase-initials-region (point-min) (point-max))
-        (let ((case-fold-search nil))
-          (mapc
-           (lambda ($x)
-             (goto-char (point-min))
-             (while
-                 (search-forward (aref $x 0) nil t)
-               (replace-match (aref $x 1) "FIXEDCASE" "LITERAL")))
-           $strPairs))))))
-
-(map! :leader
-      "j t"  'xah-title-case-region-or-line)
 #+end_src
 * Languages
 ** KILL C/C++
@@ -1232,19 +1097,14 @@ Can look at simple variables directly.
 To look at array or struct use (gud-watch).
 Can enter new value with mouse-2 or RET
 
-* Syntax highlight for common CLI programs
-I will implement these in time with consistent color scheme between different programs.
-** nmap
-#+begin_src emacs-lisp
-(use-package! nmap)
-#+end_src
 * Keybindings
 #+begin_src emacs-lisp
 (map! :leader
       :desc "Insert image from clipboard to org"
       "x" 'org-capture
       "X" 'doom/open-scratch-buffer
-      "jj" 'org-ctrl-c-ctrl-c)
+      "jj" 'org-ctrl-c-ctrl-c
+      "el" 'counsel-fzf)
 #+end_src
 
 ** Text Edit
@@ -1398,4 +1258,19 @@ Right [[https://tecosaur.github.io/emacs-config/config.html#visual-enhancements]
       (goto-char (point-min))))
 
   )
+#+end_src
+
+* My Packages
+** Syntax highlight for common CLI programs
+I will implement these in time with consistent color scheme between different programs.
+*** nmap
+#+begin_src emacs-lisp
+(use-package! nmap)
+#+end_src
+** Info Mode note taking
+#+begin_src emacs-lisp
+(use-package! info-noter
+  :config
+  (map!  :mode Info-mode
+         :n "x" 'info-heading->org-heading))
 #+end_src
