@@ -311,6 +311,18 @@
   (format "#+include: %s :lines %s :src %s" file-name line-string src-lang ))
 (my/include-file-lines-org-mode "./New.cpp" "C++" 5 10)
 
+(use-package! google-translate
+  :custom
+  (google-translate-backend-method 'curl)
+  (google-translate-default-source-language "en")
+  (google-translate-default-target-language "tr")
+  :config
+  (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130)))
+
+(map! :leader
+      :desc "Translate word"
+      "d l" 'google-translate-at-point)
+
 (defun my/notes-counsel-find-file ()
   "Foobar"
   (interactive)

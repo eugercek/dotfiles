@@ -471,16 +471,19 @@ Don't interpret every _ subscript!
             (define-key org-mode-map "*" 'electric-pair)
             (define-key org-mode-map "/" 'electric-pair)))
 #+end_src
-* Translator
-** KILL Google Translate
-#+begin_src emacs-lisp :tangle no
-(use-package google-translate
+* Translation
+** Google Translate
+You  can override default languages with the =C-u=.
+
+#+begin_src emacs-lisp
+(use-package! google-translate
   :custom
   (google-translate-backend-method 'curl)
   (google-translate-default-source-language "en")
   (google-translate-default-target-language "tr")
   :config
   (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130)))
+
 (map! :leader
       :desc "Translate word"
       "d l" 'google-translate-at-point)
