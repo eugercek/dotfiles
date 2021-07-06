@@ -722,18 +722,27 @@ M-i for insert what you select.
 `  for narrow down to projectile
 *** ui
 **** zen
-***** Writeroom width limit
+***** KILL Writeroom width limit
+CLOSED: [2021-07-06 Sal 14:32]
 I generally use lightroom for reading text-info manuals or manuals in one screen.
 I don't need 80 column restriction.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq  writeroom-width 80)
 #+end_src
-***** Change hook
-#+begin_src emacs-lisp
+***** KILL Change hook
+CLOSED: [2021-07-06 Sal 14:32]
+#+begin_src emacs-lisp :tangle no
 (setq writeroom-mode-hook
       '(writeroom-mode-set-explicitly
         +zen-enable-mixed-pitch-mode-h))
 #+end_src
+***** Org mode hook
+#+begin_src emacs-lisp
+(use-package writeroom-mode
+  :init (add-hook 'org-mode-hook 'writeroom-mode)
+  :after org)
+#+end_src
+
 **** TODO Treemacs
 Add +treemacs-git-mode
 #+begin_src emacs-lisp

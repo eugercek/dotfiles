@@ -434,11 +434,9 @@
   (setq company-tooltip-limit 10
         company-tooltip-minimum-width 80))
 
-(setq  writeroom-width 80)
-
-(setq writeroom-mode-hook
-      '(writeroom-mode-set-explicitly
-        +zen-enable-mixed-pitch-mode-h))
+(use-package writeroom-mode
+  :init (add-hook 'org-mode-hook 'writeroom-mode)
+  :after org)
 
 (setq doom-themes-treemacs-theme "doom-colors")
 (doom-themes-treemacs-config)
