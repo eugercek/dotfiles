@@ -519,38 +519,11 @@ Just correct it once.
 ;;(setq go-translate-buffer-window-config ..) ; config the result window as your wish
 #+end_src
 * Bookmark like
-** notes
 #+begin_src emacs-lisp
-(defun my/notes-counsel-find-file ()
-  "Foobar"
-  (interactive)
-  (counsel-find-file "/home/umut/Dropbox/org/Notes"))
-
 (map! :leader
-      :desc "Go to notes directory"
-      "a n" 'my/notes-counsel-find-file)
-#+end_src
-** gtd
-#+begin_src emacs-lisp
-(defun my/gtd-counsel-find-file ()
-  "Foobar"
-  (interactive)
-  (counsel-find-file "/home/umut/Dropbox/org/gtd"))
-
-(map! :leader
-      :desc "Go to notes directory"
-      "a g" 'my/gtd-counsel-find-file)
-#+end_src
-** src
-#+begin_src emacs-lisp
-(defun my/src-counsel-find-file ()
-  "Foobar"
-  (interactive)
-  (counsel-find-file "/home/umut/src/"))
-
-(map! :leader
-      :desc "Go to notes directory"
-      "a s" 'my/src-counsel-find-file)
+      "a n" '(lambda () (interactive) (counsel-find-file "/home/umut/Dropbox/org/Notes"))
+      "a g" '(lambda () (interactive) (counsel-find-file "/home/umut/Dropbox/org/gtd"))
+      "a s" '(lambda () (interactive) (counsel-find-file "/home/umut/src")))
 #+end_src
 * Functions
 ** Mine
