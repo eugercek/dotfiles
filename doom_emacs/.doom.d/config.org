@@ -6,12 +6,12 @@
 ** Sane defaults for Emacs
 Copy Pasted
 #+begin_src emacs-lisp
-(setq-default
- delete-by-moving-to-trash t
- tab-width 4
- uniquify-buffer-name-style 'forward
- window-combination-resize t
- x-stretch-cursor t)
+(setq-default delete-by-moving-to-trash t
+              tab-width 4
+              uniquify-buffer-name-style 'forward
+              window-combination-resize t
+              x-stretch-cursor t
+              confirm-kill-emacs nil)
 
 (setq undo-limit 80000000
       evil-want-fine-undo t
@@ -27,9 +27,13 @@ Copy Pasted
 #+begin_src emacs-lisp
 (toggle-frame-fullscreen)
 #+end_src
+** User Info
+#+begin_src emacs-lisp
+(setq user-full-name "Emin Umut Gerçek"
+      user-mail-address "umutgercek1999@gmail.com")
+#+end_src
 * Doom
 ** Theme
-I will handle this ugliness one day ...
 *** Light & Dark
 **** Day
 #+begin_src emacs-lisp
@@ -89,15 +93,6 @@ I will handle this ugliness one day ...
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
 #+end_src
-** User Info
-#+begin_src emacs-lisp
-(setq user-full-name "Emin Umut Gerçek"
-      user-mail-address "umutgercek1999@gmail.com")
-#+end_src
-** Better Defaults
-#+begin_src emacs-lisp
-(setq confirm-kill-emacs nil)
-#+end_src
 ** Dashboard
 #+begin_src emacs-lisp
 (setq doom-scratch-buffer-major-mode t)
@@ -112,9 +107,6 @@ I will handle this ugliness one day ...
 ** Rudimentary
 #+begin_src emacs-lisp
 (setq org-directory "~/Dropbox/Org")
-
-(after! org
-  (setq org-src-window-setup 'split-window-right))
 
 (org-autolist-mode 1)
 
@@ -591,7 +583,6 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
         (replace-match " ")))))
 
 (map! :leader
-      :desc "Go to documents directory"
       "j s" 'my/my/just-one-space-in-region)
 #+end_src
 *** Multiply With Two
@@ -652,13 +643,9 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
       "d t"  'my-compile-run-with-test
       )
 #+end_src
-** Notes :info:
-For syntax checking I'm using flycheck
-*** Flycheck
-=(global-flycheck-mode)= is already enabled in doom.
-[[https://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html#flycheck-versus-flymake][Why not flymake ?]]
 ** Scheme
-*** MIT
+*** KILL MIT
+CLOSED: [2021-07-06 Sal 18:46]
 #+begin_src emacs-lisp :tangle no
 (setq geiser-mit-binary "/usr/bin/scheme")
 (setq geiser-active-implementations '(mit))
@@ -671,17 +658,19 @@ For syntax checking I'm using flycheck
 ** C++
 *** Org default setup for C++
 #+begin_src emacs-lisp
-(setq org-babel-default-header-args:C++ '((:includes . "<bits/stdc++.h>")
-                                          (:flags . "-std=c++20")
-                                          (:namespaces . "std")))
+(setq org-babel-default-header-args:C++
+      '((:includes . "<bits/stdc++.h>")
+        (:flags . "-std=c++20")
+        (:namespaces . "std")))
 #+end_src
 *** Error List
 Run =(lsp-ui-flycheck-list)=
 ** C
 *** Org default setup for C
 #+begin_src emacs-lisp
-(setq org-babel-default-header-args:C '((:includes . "'(<stdio.h> <stdlib.h> <unistd.h> <time.h> <string.h>)")
-                                        (:flags . "-std=c99")))
+(setq org-babel-default-header-args:C
+      '((:includes . "'(<stdio.h> <stdlib.h> <unistd.h> <time.h> <string.h>)")
+        (:flags . "-std=c99")))
 #+end_src
 ** Python
 *** Keybindings
@@ -692,12 +681,10 @@ Currently SPC [j k l] is empty for me
       "j b" 'python-shell-send-buffer
       "j d" 'python-shell-send-defun)
 #+end_src
-* Packages
-** Doom Packages
-Category from init.el
-*** completion
-**** company
-***** Company Behaviour
+* Doom Modules
+** completion
+*** company
+**** Company Behaviour
 #+begin_src emacs-lisp
 (after! company
   (setq company-idle-delay 0.5)
@@ -705,7 +692,7 @@ Category from init.el
   (setq company-selection-wrap-around t);;Circular list
   (setq company-show-numbers t));; M-7 for 7nd match
 #+end_src
-***** Select with tab
+**** Select with tab
 #+begin_src emacs-lisp
 (after! company
   (define-key company-active-map (kbd "<tab>")
@@ -714,55 +701,55 @@ Category from init.el
     #'company-complete-selection))
 #+end_src
 
-***** Company ui
+**** Company ui
 #+begin_src emacs-lisp
 (after! company
   (setq company-tooltip-limit 10
         company-tooltip-minimum-width 80))
 #+end_src
 
-**** TODO ivy
+*** TODO ivy
 M-i for insert what you select.
 ~  for go home
 // for go root
 `  for narrow down to projectile
-*** ui
-**** zen
-***** KILL Writeroom width limit
+** ui
+*** zen
+**** KILL Writeroom width limit
 CLOSED: [2021-07-06 Sal 14:32]
 I generally use lightroom for reading text-info manuals or manuals in one screen.
 I don't need 80 column restriction.
 #+begin_src emacs-lisp :tangle no
 (setq  writeroom-width 80)
 #+end_src
-***** KILL Change hook
+**** KILL Change hook
 CLOSED: [2021-07-06 Sal 14:32]
 #+begin_src emacs-lisp :tangle no
 (setq writeroom-mode-hook
       '(writeroom-mode-set-explicitly
         +zen-enable-mixed-pitch-mode-h))
 #+end_src
-***** Org mode hook
+**** Org mode hook
 #+begin_src emacs-lisp
 (use-package writeroom-mode
   :init (add-hook 'org-mode-hook 'writeroom-mode)
   :after org)
 #+end_src
 
-**** TODO Treemacs
+*** TODO Treemacs
 Add +treemacs-git-mode
 #+begin_src emacs-lisp
 (setq doom-themes-treemacs-theme "doom-colors")
 (doom-themes-treemacs-config)
 #+end_src
-**** modeline
-***** GitHub
+*** modeline
+**** GitHub
 #+begin_src emacs-lisp
 (setq doom-modeline-github t)
 (setq doom-modeline-github-interval (* 30 60))
 #+end_src
-*** editor
-**** evil
+** editor
+*** evil
 #+begin_src emacs-lisp
 (setq +evil-want-o/O-to-continue-comments nil)
 
@@ -771,21 +758,21 @@ Add +treemacs-git-mode
   (setq evil-snipe-repeat-scope 'buffer)
   (setq evil-snipe-spillover-scope 'whole-buffer))
 #+end_src
-***** Proper way to deal with long lines
+**** Proper way to deal with long lines
 [[https://github.com/hlissner/doom-emacs/issues/401][Write in init.el]]
 #+begin_src emacs-lisp :tangle no
 (setq evil-respect-visual-line-mode t)
 #+end_src
-**** rotate-text
+*** rotate-text
 Use =] r= for rotate
-**** snippets
-***** Nested snippets
+*** snippets
+**** Nested snippets
 #+begin_src emacs-lisp
 (setq yas-triggers-in-field t)
 #+end_src
-*** emacs
-**** dired
-***** Continuous Preview
+** emacs
+*** dired
+**** Continuous Preview
 #+begin_src emacs-lisp
 (map!
  (:after dired
@@ -799,7 +786,7 @@ Use =] r= for rotate
   (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 #+end_src
-***** Hide dotfiles
+**** Hide dotfiles
 #+begin_src emacs-lisp
 (use-package! dired-hide-dotfiles
   :hook (dired-mode . dired-hide-dotfiles-mode)
@@ -807,7 +794,7 @@ Use =] r= for rotate
   (map! :map dired-mode-map
         :n "H" #'dired-hide-dotfiles-mode))
 #+end_src
-*** checkers
+** checkers
 #+begin_src emacs-lisp :tangle no
 (setq ispell-local-dictionary "en")
 #+end_src
@@ -816,85 +803,91 @@ Use =] r= for rotate
 rm .emacs.d/.local/etc/ispell/.pws
 #+end_src
 
-*** tools
-**** rgb
-***** hl-line-mode don't override rainbow
+** tools
+*** rgb
+**** hl-line-mode don't override rainbow
 #+begin_src elisp
 (add-hook! 'rainbow-mode-hook
   (hl-line-mode (if rainbow-mode -1 +1)))
 #+end_src
-***** TODO global rainbow mode
-***** kurecolor functions
-****** ++
+**** TODO global rainbow mode
+**** kurecolor functions
+***** ++
 kurecolor-increase-hue-by-step
 kurecolor-increase-saturation-by-step
 kurecolor-increase-brightness-by-step
-****** --
+***** --
 kurecolor-decrease-hue-by-step
 kurecolor-decrease-saturation-by-step
 kurecolor-decrease-brightness-by-step
-**** lsp
+*** lsp
 [[https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/][Lsp Features List]]
 Doom emacs's defaults are good for me
-***** Don't highlight same symbol
+**** Don't highlight same symbol
 If I want to look at same symbol then I probably want to go there
 `*` does this, also it highlight too
 #+begin_src emacs-lisp
 (setq lsp-enable-symbol-highlighting nil)
 #+end_src
-***** Code Action
+**** Code Action
 Code actions are lsp's way to fix code.
 Can run with =(lsp-execute-code-action)= ,in doom emacs SPC c a
 #+begin_src emacs-lisp :tangle no
 (setq lsp-modeline-code-actions-segments '(count icon name))
 #+end_src
-***** Breadcrumb :info:
+**** Breadcrumb :info:
 Fancy way to show where you are in header
 Run with =(lsp-headerline-breadcrumb-mode)=
-***** lsp-treemacs
+**** lsp-treemacs
 M-x =(lsp-treemacs-symbols)= for cool outline.
 M-x =(lsp-treemacs-errors-list)= Fancier way than lsp-ui-sideline
-***** lsp-ivy
+**** lsp-ivy
 Search through entire project(in headers too).
-**** lookup
+*** lookup
 | SPC g f | Look for a file , named the word under cursor |
 | SPC s O | Look online                                   |
-**** Pdf
-***** Dark Mode
+*** Pdf
+**** Dark Mode
 #+begin_src emacs-lisp
 (add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) ;Dark mode
 #+end_src
-***** Latex Viewer
+**** Latex Viewer
 #+begin_src emacs-lisp
 (setq +latex-viewers '(pdf-tools))
 #+end_src
-***** org-file-apps
+**** org-file-apps
 #+begin_src emacs-lisp
 (push '("\\.pdf\\'" . emacs) org-file-apps)
 #+end_src
-***** Look up documentation
+**** Look up documentation
 Function name + ( will show arguments in modeline + can enter them with tab.
 Just press ~K~ =(lsp-describe-thing-at-point)= for documentation.
+
+* Personal Packages
 ** Personal Packages
 *** Zeal
 #+begin_src emacs-lisp
-(use-package zeal-at-point)
-(map! :leader
-      :desc "Zeal Look Up"
-      "j z" #'zeal-at-point)
+(use-package zeal-at-point
+  :config
+  (map! :leader
+        :desc "Zeal Look Up"
+        "j z" #'zeal-at-point))
 #+end_src
-*** Buffer Position Managment (framemove)
+*** framemove
 #+begin_src emacs-lisp
 (use-package! framemove
   :config
   (setq framemove-hook-into-windmove t))
 #+end_src
 *** TODO Turkish Mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package turkish)
 (map! :leader
       :desc "Turkish last word"
-      "d t" 'turkish-correct-last-word)
+      "d t" '(lambda (x) (interactive)
+               (insert "")
+               (turkish-correct-last-word)
+               (forward-line -1))
 #+end_src
 *** info-colors
 Make info more readable with syntax highlight at least for elisp.
@@ -1008,31 +1001,21 @@ https://github.com/andreasjansson/language-detection.el#eww-syntax-highlighting
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
 #+end_src
-*** TODO Fold source code like org mode
-#+begin_src emacs-lisp
-(use-package! outshine)
-#+end_src
-*** Edit browser's text from emacs
-#+begin_src emacs-lisp
-(use-package! atomic-chrome
-  :config
-  (atomic-chrome-start-server))
-#+end_src
-
 ** Other
 *** Delimcol
 #+begin_src emacs-lisp
-(setq delimit-columns-str-before "{ ")
-(setq delimit-columns-str-after " }")
-(setq delimit-columns-str-separator ", ")
-(setq delimit-columns-before "")
-(setq delimit-columns-after "")
-(setq delimit-columns-separator " ")
-(setq delimit-columns-format 'separator)
-(setq delimit-columns-extra t)
-
-(map! :leader
-      "j [" 'delimit-columns-region)
+(use-package! delim-col
+  :config
+  (setq delimit-columns-str-before "{ "
+        delimit-columns-str-after " }"
+        delimit-columns-str-separator ", "
+        delimit-columns-before ""
+        delimit-columns-after ""
+        delimit-columns-separator " "
+        delimit-columns-format 'separator
+        delimit-columns-extra t)
+  (map! :leader
+        "j [" 'delimit-columns-region))
 #+end_src
 
 **** Usage
@@ -1063,7 +1046,6 @@ Too much evil
    '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
    ))
 #+end_src
-
 * GDB Debugger
 ** Variables
 #+begin_src emacs-lisp
@@ -1275,13 +1257,11 @@ Right [[https://tecosaur.github.io/emacs-config/config.html#visual-enhancements]
   )
 #+end_src
 * My Packages
-** Syntax highlight for common CLI programs
-I will implement these in time with consistent color scheme between different programs.
-*** nmap
+** nmap
 #+begin_src emacs-lisp
 (use-package! nmap)
 #+end_src
-** Info Mode note taking
+** info-noter
 #+begin_src emacs-lisp
 (use-package! info-noter
   :config
