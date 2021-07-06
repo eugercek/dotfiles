@@ -472,10 +472,10 @@ Don't interpret every _ subscript!
             (define-key org-mode-map "/" 'electric-pair)))
 #+end_src
 * Translation
-** Google Translate
+** KILL Google Translate
 You  can override default languages with the =C-u=.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package! google-translate
   :custom
   (google-translate-backend-method 'curl)
@@ -487,6 +487,36 @@ You  can override default languages with the =C-u=.
 (map! :leader
       :desc "Translate word"
       "d l" 'google-translate-at-point)
+#+end_src
+
+I don't use =google-translate= anymore.
+** Go translate
+#+begin_src emacs-lisp
+(use-package! go-translate
+  :config
+  (setq go-translate-token-current (cons 430675 2721866130)
+        go-translate-local-language "tr"
+        go-translate-target-language "en")
+  (map!
+      :leader "d a" 'go-translate
+      :leader "d j" 'go-translate-popup-current))
+#+end_src
+
+*** Keybindings
+| g        | refresh            |
+| q        | exit               |
+| x        | exchange languages |
+| M-n M-p, | change direction   |
+| y        | speak word         |
+*** Read This
+You can change directions with =C-n= and =C-p= in minibuffer.
+If you think your default language direction is wrong probably you've pressed =C-n= or =C-p= while selecting word to translate.
+Just correct it once.
+*** TODO Look at
+#+begin_src emacs-lisp :tangle no
+;;(setq go-translate-buffer-follow-p t)
+;;(setq go-translate-buffer-follow-p t)
+;;(setq go-translate-buffer-window-config ..) ; config the result window as your wish
 #+end_src
 * Bookmark like
 ** notes

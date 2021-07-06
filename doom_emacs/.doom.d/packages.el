@@ -52,7 +52,7 @@
 (package! turkish)
 (package! zeal-at-point)
 (package! peep-dired)
-(package! google-translate)
+(package! go-translate)
 (package! org-super-agenda)
 ;; (package! evil-terminal-cursor-changer)
 (package! doct)
