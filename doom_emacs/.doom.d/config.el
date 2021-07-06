@@ -641,9 +641,9 @@
 
 (map! :leader
       :desc "Insert image from clipboard to org"
-      "x" 'org-capture
-      "X" 'doom/open-scratch-buffer
-      "jj" 'org-ctrl-c-ctrl-c
+      "x"  'org-capture
+      "X"  'doom/open-scratch-buffer
+      "jj" '(lambda ()  (interactive) (call-interactively (key-binding (kbd "C-c C-c"))))
       "el" 'counsel-fzf)
 
 (map!

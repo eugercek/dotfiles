@@ -206,6 +206,8 @@ plantuml
 pandoc
 zeal
 texlive-scheme-full
+mpd
+mpc
 #+end_src
 *** GUI Programs
 #+begin_src text
@@ -271,7 +273,7 @@ FontFinder
 #+begin_src text
 pytest
 nose
-pip install python-language-server[all]
+python-language-server[all]
 pyright
 #+end_src
 * Gnome
