@@ -616,7 +616,8 @@
       "x"  'org-capture
       "X"  'doom/open-scratch-buffer
       "jj" '(lambda ()  (interactive) (call-interactively (key-binding (kbd "C-c C-c"))))
-      "el" 'counsel-fzf)
+      "el" 'counsel-fzf
+      "jo" 'org-clock-out)
 
 (map!
     :n "M-k" #'drag-stuff-up
