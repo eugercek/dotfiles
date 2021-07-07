@@ -1,4 +1,4 @@
 pytest
 nose
-pip install python-language-server[all]
+python-language-server[all]
 pyright

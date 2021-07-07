@@ -103,6 +103,12 @@ Copy Pasted
 
 (setq fancy-splash-image "~/.doom.d/GnuLove.png")
 #+end_src
+** Daemon
+#+begin_src emacs-lisp
+(after! persp-mode
+  (setq persp-emacsclient-init-frame-behaviour-override "main"))
+#+end_src
+
 * Org
 ** Rudimentary
 #+begin_src emacs-lisp
