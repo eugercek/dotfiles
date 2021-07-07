@@ -199,3 +199,10 @@ function school(){
 # Develop
 alias s="./server 3000"
 alias c="./client 3000"
+
+#Smalltalk
+alias pharo="~/pharolauncher/pharo-launcher"
+
+#Emacs
+alias emacs="emacsclient -c"
+alias emacst="emacsclient -t"

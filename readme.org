@@ -23,6 +23,18 @@ ln -s .config/dotfiles/doom_emacs/.doom.d/ ~/
 Just =SPC o t= and press =y=
 *** epdinfo
 ~pdf-tools-install~
+** Emacs Daemon
+#+begin_src shell
+systemctl --user enable emacs.service
+#+end_src
+*** Create alias in .bashrc
+#+begin_src shell
+alias emacs="emacsclient -c"
+alias emacst="emacsclient -t"
+#+end_src
+
+
+
 * zsh setup
 :PROPERTIES:
 :header-args: :tangle ./zsh_setup.sh
