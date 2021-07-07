@@ -24,16 +24,29 @@ Just =SPC o t= and press =y=
 *** epdinfo
 ~pdf-tools-install~
 ** Emacs Daemon
-#+begin_src shell
-systemctl --user enable emacs.service
-#+end_src
-*** Create alias in .bashrc
+In .bashrc
+
 #+begin_src shell
 alias emacs="emacsclient -c"
 alias emacst="emacsclient -t"
 #+end_src
 
+** systemd emacs.service
+#+begin_src conf :tangle ./systemd/emacs.service
+[Unit]
+Description=Emacs text editor
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 
+[Service]
+Type=forking
+ExecStart=/usr/bin/emacs --daemon
+ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
+Environment=SSH_AUTH_SOCK=%t/keyring/ssh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+#+end_src
 
 * zsh setup
 :PROPERTIES:

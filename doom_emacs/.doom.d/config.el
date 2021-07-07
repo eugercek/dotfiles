@@ -75,6 +75,9 @@
 
 (setq fancy-splash-image "~/.doom.d/GnuLove.png")
 
+(after! persp-mode
+  (setq persp-emacsclient-init-frame-behaviour-override "main"))
+
 (setq org-directory "~/Dropbox/Org")
 
 (org-autolist-mode 1)
