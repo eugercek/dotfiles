@@ -2,6 +2,7 @@
 # name: src-racket-no
 # key: rktno
 # --
+#+name: $1
 #+begin_src racket :tangle no :eval no
 $0
 #+end_src

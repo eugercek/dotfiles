@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
-# name: src-shell
+# name: src-sh
 # key: sh
 # condition: t
 # --
-#+begin_src shell
+#+begin_src sh
 $0
 #+end_src

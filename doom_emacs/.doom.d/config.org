@@ -1108,9 +1108,9 @@ Can enter new value with mouse-2 or RET
       "X"  'doom/open-scratch-buffer
       "jj" '(lambda ()  (interactive) (call-interactively (key-binding (kbd "C-c C-c"))))
       "el" 'counsel-fzf
-      "jo" 'org-clock-out)
+      "jo" 'org-clock-out
+      "jp" '+popup/raise)
 #+end_src
-
 ** Text Edit
 #+begin_src emacs-lisp
 (map!

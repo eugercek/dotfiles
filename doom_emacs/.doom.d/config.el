@@ -620,7 +620,8 @@
       "X"  'doom/open-scratch-buffer
       "jj" '(lambda ()  (interactive) (call-interactively (key-binding (kbd "C-c C-c"))))
       "el" 'counsel-fzf
-      "jo" 'org-clock-out)
+      "jo" 'org-clock-out
+      "jp" '+popup/raise)
 
 (map!
     :n "M-k" #'drag-stuff-up
