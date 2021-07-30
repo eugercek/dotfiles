@@ -298,7 +298,6 @@ https://zzamboni.org/post/my-doom-emacs-configuration-with-commentary/
   (setq org-download-image-dir "~/Documents/Assets/Download")
   (setq org-download-heading-lvl nil)
   (setq org-download-timestamp "%Y%m%d-%H%M%S_")
-  (setq org-image-actual-width 750)
   (map! :map org-mode-map
         "C-c l a y" #'zz/org-download-paste-clipboard
         "C-M-y" #'zz/org-download-paste-clipboard))
@@ -469,6 +468,20 @@ Don't interpret every _ subscript!
             (define-key org-mode-map "*" 'electric-pair)
             (define-key org-mode-map "/" 'electric-pair)))
 #+end_src
+** Plantuml
+*** Always show inline images
+#+begin_src emacs-lisp
+(add-hook 'org-babel-after-execute-hook
+          (lambda ()
+            (when org-inline-image-overlays
+              (org-redisplay-inline-images))))
+#+end_src
+*** Don't make images too big
+Probably [[https://imagemagick.org/index.php][ImageMagick]] needs to be installed in your system!
+#+begin_src emacs-lisp
+(setq org-image-actual-width 500)
+#+end_src
+
 * Translation
 ** KILL Google Translate
 You  can override default languages with the =C-u=.
