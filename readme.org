@@ -341,3 +341,108 @@ sudo dnf group install "Development Tools"
 sudo dnf install net-tools
 sudo dnf install tmux
 #+end_src
+* Literate Configs
+** Flameshot
+:PROPERTIES:
+:header-args:conf: :tangle ./flameshot/flameshot.ini
+:END:
+
+As a convention, I used lower cased letters for the bindings I've changed.
+*** General
+#+begin_src conf
+[General]
+#+end_src
+
+#+begin_src conf
+checkForUpdates=false
+copyPathAfterSave=true
+disabledTrayIcon=false
+drawThickness=2
+filenamePattern=%F-%H
+savePath=~/Pictures
+savePathFixed=false
+startupLaunch=true
+#+end_src
+
+**** Look
+#+begin_src conf
+contrastOpacity=127
+showHelp=false
+showSidePanelButton=false
+showStartupLaunchMessage=false
+buttons=@Variant(\0\0\0\x7f\0\0\0\vQList<int>\0\0\0\0\x14\0\0\0\0\0\0\0\x1\0\0\0\x2\0\0\0\x3\0\0\0\x4\0\0\0\x5\0\0\0\x6\0\0\0\x12\0\0\0\xf\0\0\0\a\0\0\0\b\0\0\0\t\0\0\0\x10\0\0\0\n\0\0\0\v\0\0\0\f\0\0\0\r\0\0\0\xe\0\0\0\x11\0\0\0\x13)
+#+end_src
+
+***** Theme
+#+begin_src conf
+uiColor=#009685
+contrastUiColor=#80faff
+drawColor=#220080
+#+end_src
+*** Bindings
+**** Default bindings
+Order is from ~flameshot config~.
+#+begin_src conf
+[Shortcuts]
+#+end_src
+***** Choose from bar
+#+begin_src conf
+TYPE_DRAWER=D
+TYPE_ARROW=A
+TYPE_SELECTION=S
+TYPE_RECTANGLE=R
+TYPE_CIRCLE=C
+TYPE_TEXT=T
+TYPE_PIXELATE=B
+#+end_src
+***** CUA
+=C-RET= is for finishing text entering.
+#+begin_src conf
+TYPE_UNDO=Ctrl+Z
+TYPE_COPY=Ctrl+C
+TYPE_SAVE=Ctrl+S
+TYPE_OPEN_APP=Ctrl+O
+TYPE_SELECT_ALL=Ctrl+A
+TYPE_EXIT=Ctrl+Q
+TYPE_COMMIT_CURRENT_TOOL=Ctrl+Return
+TYPE_TOGGLE_PANEL=Space
+#+end_src
+**** Mines
+| Pin            | =e= |
+| Circle Count   | =q= |
+| Pencil         | =x= |
+| Marker         | =z= |
+| Move selection | =w= |
+
+#+begin_src conf
+TYPE_CIRCLECOUNT=q
+TYPE_REDO=Ctrl+y
+TYPE_PIN=e
+#+end_src
+
+Hard to press
+#+begin_src conf
+TYPE_PENCIL=x
+TYPE_MARKER=z
+#+end_src
+***** Movement of selection
+#+begin_src conf
+TYPE_MOVE_DOWN=j
+TYPE_MOVE_LEFT=h
+TYPE_MOVE_RIGHT=l
+TYPE_MOVE_UP=k
+#+end_src
+
+Resize with respect to right bottom corner. In other words it moves right bottom corner.
+
+#+begin_src conf
+TYPE_RESIZE_DOWN=Shift+j
+TYPE_RESIZE_LEFT=Shift+h
+TYPE_RESIZE_RIGHT=Shift+l
+TYPE_RESIZE_UP=Shift+k
+#+end_src
+
+Escape to move with mouse
+#+begin_src conf
+TYPE_MOVESELECTION=W
+#+end_src

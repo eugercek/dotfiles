@@ -463,6 +463,9 @@
   (map! :map dired-mode-map
         :n "H" #'dired-hide-dotfiles-mode))
 
+(add-hook! 'rainbow-mode-hook
+  (hl-line-mode (if rainbow-mode -1 +1)))
+
 (setq lsp-enable-symbol-highlighting nil)
 
 (add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) ;Dark mode
@@ -764,6 +767,3 @@
   :config
   (map!  :mode Info-mode
          :n "x" 'info-heading->org-heading))
-
-(add-hook! 'rainbow-mode-hook
-  (hl-line-mode (if rainbow-mode -1 +1)))
