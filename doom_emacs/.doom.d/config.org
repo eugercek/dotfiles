@@ -481,6 +481,13 @@ Probably [[https://imagemagick.org/index.php][ImageMagick]] needs to be installe
 #+begin_src emacs-lisp
 (setq org-image-actual-width 500)
 #+end_src
+** Org Roam
+=SPC n r= it top level binding for Org Roam
+
+| ~org-roam-node-find~     | Create node                   | =SPC n r f= |
+| ~org-roam-node-insert~   | Link node (Also could create) | =SPC n r i= |
+| ~org-id-create~          | Make current heading a node   | =SPC m i=   |
+| ~org-roam-buffer-toogle~ | Show reated buffers           | =SPC n r r= |
 * Translation
 ** KILL Google Translate
 You  can override default languages with the =C-u=.
