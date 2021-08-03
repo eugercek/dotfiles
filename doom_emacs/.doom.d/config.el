@@ -78,7 +78,7 @@
 (after! persp-mode
   (setq persp-emacsclient-init-frame-behaviour-override "main"))
 
-(setq org-directory "~/Dropbox/Org")
+(setq org-directory "~/Dropbox/org")
 
 (org-autolist-mode 1)
 

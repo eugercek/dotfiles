@@ -112,7 +112,7 @@ Copy Pasted
 * Org
 ** Rudimentary
 #+begin_src emacs-lisp
-(setq org-directory "~/Dropbox/Org")
+(setq org-directory "~/Dropbox/org")
 
 (org-autolist-mode 1)
 
@@ -481,7 +481,6 @@ Probably [[https://imagemagick.org/index.php][ImageMagick]] needs to be installe
 #+begin_src emacs-lisp
 (setq org-image-actual-width 500)
 #+end_src
-
 * Translation
 ** KILL Google Translate
 You  can override default languages with the =C-u=.
