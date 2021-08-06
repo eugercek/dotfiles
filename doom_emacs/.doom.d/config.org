@@ -706,6 +706,12 @@ Currently SPC [j k l] is empty for me
       "j b" 'python-shell-send-buffer
       "j d" 'python-shell-send-defun)
 #+end_src
+** Racket
+#+begin_src emacs-lisp
+(setq org-babel-default-header-args:racket
+      '((:lang . "racket")))
+#+end_src
+
 * Doom Modules
 ** completion
 *** company

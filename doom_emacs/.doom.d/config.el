@@ -410,6 +410,9 @@
       "j b" 'python-shell-send-buffer
       "j d" 'python-shell-send-defun)
 
+(setq org-babel-default-header-args:racket
+      '((:lang . "racket")))
+
 (after! company
   (setq company-idle-delay 0.5)
   (setq company-minimum-prefix-length 1)
