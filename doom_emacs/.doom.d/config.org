@@ -99,8 +99,8 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 (setq doom-scratch-buffer-major-mode t)
 
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
-(remove-hook '+doom-dashboard-functions 'doom-dashboard-widget-footer)
-(remove-hook '+doom-dashboard-functions 'doom-dashboard-widget-loaded)
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-footer)
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-loaded)
 
 (setq fancy-splash-image "~/.doom.d/GnuLove.png")
 #+end_src
@@ -308,7 +308,7 @@ https://zzamboni.org/post/my-doom-emacs-configuration-with-commentary/
 #+begin_src emacs-lisp
 (map! :leader
       :desc "Insert image from clipboard to org"
-      "e p" 'zz/org-download-paste-clipboard)
+      "e p" #'zz/org-download-paste-clipboard)
 #+end_src
 ** Visual
 *** Pretty Entities
@@ -384,8 +384,7 @@ If really want to display inline in org mode use _{} syntax
 ** [#A] Keybindings
 #+begin_src emacs-lisp
 (map! :leader
-      :desc "org-ctrl-c-star copy"
-      "8" 'org-ctrl-c-star)
+      :desc "org-ctrl-c-star copy" "8" #'org-ctrl-c-star)
 #+end_src
 ** Latex
 *** Visual
@@ -452,23 +451,14 @@ Don't interpret every _ subscript!
   (format "#+include: %s :lines %s :src %s" file-name line-string src-lang ))
 (my/include-file-lines-org-mode "./New.cpp" "C++" 5 10)
 #+end_src
-** PROJ Automatically close emphasis markers
-[[https://www.emacswiki.org/emacs/ElectricPair][From]]
-#+begin_src emacs-lisp :tangle no
-(defun electric-pair ()
-  "If at end of line, insert character pair without surrounding spaces.
-    Otherwise, just insert the typed character."
-  (interactive)
-  (if (eolp) (let (parens-require-spaces) (insert-pair)) (self-insert-command 1)))
-
-(add-hook 'org-mode-hook
-          (lambda ()
-            (define-key org-mode-map "=" 'electric-pair)
-            (define-key org-mode-map "~" 'electric-pair)
-            (define-key org-mode-map "_" 'electric-pair)
-            (define-key org-mode-map "*" 'electric-pair)
-            (define-key org-mode-map "/" 'electric-pair)))
+** TODO Automatically close emphasis markers
+#+begin_src emacs-lisp
+(sp-local-pair
+ '(org-mode)
+ "~" "~"
+ :actions '(insert))
 #+end_src
+
 ** Plantuml
 *** Always show inline images
 #+begin_src emacs-lisp
@@ -516,8 +506,8 @@ I don't use =google-translate= anymore.
         go-translate-local-language "tr"
         go-translate-target-language "en")
   (map!
-      :leader "d a" 'go-translate
-      :leader "d j" 'go-translate-popup-current))
+      :leader "d a" #'go-translate
+      :leader "d j" #'go-translate-popup-current))
 #+end_src
 
 *** Keybindings
@@ -588,22 +578,6 @@ Very hacky but it works.
   (replace-regexp " y " " =y= " nil start end)
   (replace-regexp " n " " ~n~ " nil start end))
 #+end_src
-*** Just one space in region
-https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-region
-#+begin_src emacs-lisp
-(defun my/just-one-space-in-region (beg end)
-  "replace all whitespace in the region with single spaces"
-  (interactive "r")
-  (save-excursion
-    (save-restriction
-      (narrow-to-region beg end)
-      (goto-char (point-min))
-      (while (re-search-forward "\\s-+" nil t)
-        (replace-match " ")))))
-
-(map! :leader
-      "j s" 'my/my/just-one-space-in-region)
-#+end_src
 *** Multiply With Two
 #+begin_src emacs-lisp
 (defun my/*2 ()
@@ -657,9 +631,9 @@ Run =(lsp-ui-flycheck-list)=
 Currently SPC [j k l] is empty for me
 #+begin_src emacs-lisp
 (map! :leader
-      "j r" 'python-shell-send-region
-      "j b" 'python-shell-send-buffer
-      "j d" 'python-shell-send-defun)
+      "j r" #'python-shell-send-region
+      "j b" #'python-shell-send-buffer
+      "j d" #'python-shell-send-defun)
 #+end_src
 ** Racket
 #+begin_src emacs-lisp
@@ -763,14 +737,14 @@ Use =] r= for rotate
 (map!
  (:after dired
   (:map dired-mode-map
-   :n "RET" 'dired-find-alternate-file ;;Open in same bufer
-   "-"   'find-alternate-file)
+   :n "RET" #'dired-find-alternate-file ;;Open in same bufer
+   "-"   #'find-alternate-file)
   "C-x i" #'peep-dired))
 
-(evil-define-key 'normal peep-dired-mode-map
-  (kbd "j") 'peep-dired-next-file
-  (kbd "k") 'peep-dired-prev-file)
-(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+(evil-define-key #'normal peep-dired-mode-map
+  (kbd "j") #'peep-dired-next-file
+  (kbd "k") #'peep-dired-prev-file)
+(add-hook 'peep-dired-hook #'evil-normalize-keymaps)
 #+end_src
 **** Hide dotfiles
 #+begin_src emacs-lisp
@@ -835,7 +809,7 @@ Search through entire project(in headers too).
 *** Pdf
 **** Dark Mode
 #+begin_src emacs-lisp
-(add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) ;Dark mode
+(add-hook 'pdf-tools-enabled-hook #'pdf-view-midnight-minor-mode) ;Dark mode
 #+end_src
 **** Latex Viewer
 #+begin_src emacs-lisp
@@ -870,7 +844,7 @@ Just press ~K~ =(lsp-describe-thing-at-point)= for documentation.
 (use-package turkish)
 (map! :leader
       :desc "Turkish last word"
-      "d t" '(lambda (x) (interactive)
+      "d t" #'(lambda (x) (interactive)
                (insert "")
                (turkish-correct-last-word)
                (forward-line -1))
@@ -881,7 +855,7 @@ Make info more readable with syntax highlight at least for elisp.
 (use-package! info-colors
   :commands (info-colors-fontify-node))
 
-(add-hook 'Info-selection-hook 'info-colors-fontify-node)
+(add-hook 'Info-selection-hook #'info-colors-fontify-node)
 (add-hook 'Info-mode-hook #'mixed-pitch-mode)
 #+end_src
 *** Command Log Mode
@@ -1001,7 +975,7 @@ https://github.com/andreasjansson/language-detection.el#eww-syntax-highlighting
         delimit-columns-format 'separator
         delimit-columns-extra t)
   (map! :leader
-        "j [" 'delimit-columns-region))
+        "j [" #'delimit-columns-region))
 #+end_src
 
 **** Usage
@@ -1084,13 +1058,14 @@ Can enter new value with mouse-2 or RET
 #+begin_src emacs-lisp
 (map! :leader
       :desc "Insert image from clipboard to org"
-      "x"  'org-capture
-      "X"  'doom/open-scratch-buffer
-      "jj" (lambda ()  (interactive) (call-interactively (key-binding (kbd "C-c C-c"))))
-      "el" 'counsel-fzf
-      "jo" 'org-clock-out
-      "jp" '+popup/raise)
+      "x"  #'org-capture
+      "X"  #'doom/open-scratch-buffer
+      "jj" (lambda! (call-interactively (key-binding (kbd "C-c C-c"))))
+      "el" #'counsel-fzf
+      "jo" #'org-clock-out
+      "jp" #'+popup/raise)
 #+end_src
+
 ** Text Edit
 #+begin_src emacs-lisp
 (map!
@@ -1102,17 +1077,22 @@ Can enter new value with mouse-2 or RET
 (use-package! string-inflection
   :config
   (map! :leader
-        "ec" 'string-inflection-all-cycle))
+        "ec" #'string-inflection-all-cycle))
 #+end_src
 ** Doom Core
-*** Find file soure director :to_doom:
+*** Find file in source directory :to_doom:
 #+begin_src emacs-lisp
 (setq my/source-directory "~/src")
 (map! :leader
       :desc "Find file in source codes" "f o"  (lambda! (doom-project-find-file my/source-directory))
       :desc "Browse source codes" "f O"  (lambda! (doom-project-browse my/source-directory)))
 #+end_src
-
+*** Just one space
+Hi I'm umut
+#+begin_src emacs-lisp
+(map!
+ :n "g SPC" 'just-one-space)
+#+end_src
 * RSS
 ** Keybindings
 [[https://github.com/emacs-evil/evil-collection/blob/f2be91297029ae002d15e23510f9f686d848d7a8/modes/elfeed/evil-collection-elfeed.el][Look]]
@@ -1262,7 +1242,7 @@ Right [[https://tecosaur.github.io/emacs-config/config.html#visual-enhancements]
 (use-package! info-noter
   :config
   (map!  :mode Info-mode
-         :n "x" 'info-heading->org-heading))
+         :n "x" #'info-heading->org-heading))
 #+end_src
 * Pomodoro Setup
 Heavily inspired/copied [[https://www.youtube.com/watch?v=JbHE819kVGQ][from]]

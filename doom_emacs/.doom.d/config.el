@@ -70,8 +70,8 @@
 (setq doom-scratch-buffer-major-mode t)
 
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
-(remove-hook '+doom-dashboard-functions 'doom-dashboard-widget-footer)
-(remove-hook '+doom-dashboard-functions 'doom-dashboard-widget-loaded)
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-footer)
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-loaded)
 
 (setq fancy-splash-image "~/.doom.d/GnuLove.png")
 
@@ -217,7 +217,7 @@
 
 (map! :leader
       :desc "Insert image from clipboard to org"
-      "e p" 'zz/org-download-paste-clipboard)
+      "e p" #'zz/org-download-paste-clipboard)
 
 (setq org-pretty-entities t)
 
@@ -270,8 +270,7 @@
 (add-hook 'org-mode-hook (lambda () (org-pretty-symbols-mode)))
 
 (map! :leader
-      :desc "org-ctrl-c-star copy"
-      "8" 'org-ctrl-c-star)
+      :desc "org-ctrl-c-star copy" "8" #'org-ctrl-c-star)
 
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))
 
@@ -308,6 +307,11 @@
   (format "#+include: %s :lines %s :src %s" file-name line-string src-lang ))
 (my/include-file-lines-org-mode "./New.cpp" "C++" 5 10)
 
+(sp-local-pair
+ '(org-mode)
+ "~" "~"
+ :actions '(insert))
+
 (add-hook 'org-babel-after-execute-hook
           (lambda ()
             (when org-inline-image-overlays
@@ -321,8 +325,8 @@
         go-translate-local-language "tr"
         go-translate-target-language "en")
   (map!
-      :leader "d a" 'go-translate
-      :leader "d j" 'go-translate-popup-current))
+      :leader "d a" #'go-translate
+      :leader "d j" #'go-translate-popup-current))
 
 (defun my/curly-quoation-to-normal-quoation()
   "Change any curly quotation mark to normal quoation mark"
@@ -364,19 +368,6 @@
   (replace-regexp " y " " =y= " nil start end)
   (replace-regexp " n " " ~n~ " nil start end))
 
-(defun my/just-one-space-in-region (beg end)
-  "replace all whitespace in the region with single spaces"
-  (interactive "r")
-  (save-excursion
-    (save-restriction
-      (narrow-to-region beg end)
-      (goto-char (point-min))
-      (while (re-search-forward "\\s-+" nil t)
-        (replace-match " ")))))
-
-(map! :leader
-      "j s" 'my/my/just-one-space-in-region)
-
 (defun my/*2 ()
   (interactive)
   (skip-chars-backward "0-9")
@@ -401,9 +392,9 @@
         (:flags . "-std=c99")))
 
 (map! :leader
-      "j r" 'python-shell-send-region
-      "j b" 'python-shell-send-buffer
-      "j d" 'python-shell-send-defun)
+      "j r" #'python-shell-send-region
+      "j b" #'python-shell-send-buffer
+      "j d" #'python-shell-send-defun)
 
 (setq org-babel-default-header-args:racket
       '((:lang . "racket")))
@@ -446,14 +437,14 @@
 (map!
  (:after dired
   (:map dired-mode-map
-   :n "RET" 'dired-find-alternate-file ;;Open in same bufer
-   "-"   'find-alternate-file)
+   :n "RET" #'dired-find-alternate-file ;;Open in same bufer
+   "-"   #'find-alternate-file)
   "C-x i" #'peep-dired))
 
-(evil-define-key 'normal peep-dired-mode-map
-  (kbd "j") 'peep-dired-next-file
-  (kbd "k") 'peep-dired-prev-file)
-(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+(evil-define-key #'normal peep-dired-mode-map
+  (kbd "j") #'peep-dired-next-file
+  (kbd "k") #'peep-dired-prev-file)
+(add-hook 'peep-dired-hook #'evil-normalize-keymaps)
 
 (use-package! dired-hide-dotfiles
   :hook (dired-mode . dired-hide-dotfiles-mode)
@@ -466,7 +457,7 @@
 
 (setq lsp-enable-symbol-highlighting nil)
 
-(add-hook 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode) ;Dark mode
+(add-hook 'pdf-tools-enabled-hook #'pdf-view-midnight-minor-mode) ;Dark mode
 
 (setq +latex-viewers '(pdf-tools))
 
@@ -485,7 +476,7 @@
 (use-package! info-colors
   :commands (info-colors-fontify-node))
 
-(add-hook 'Info-selection-hook 'info-colors-fontify-node)
+(add-hook 'Info-selection-hook #'info-colors-fontify-node)
 (add-hook 'Info-mode-hook #'mixed-pitch-mode)
 
 (use-package! command-log-mode)
@@ -589,7 +580,7 @@
         delimit-columns-format 'separator
         delimit-columns-extra t)
   (map! :leader
-        "j [" 'delimit-columns-region))
+        "j [" #'delimit-columns-region))
 
 (eval-after-load "artist"
   '(define-key artist-mode-map [(down-mouse-3)] 'artist-mouse-choose-operation))
@@ -623,12 +614,12 @@
 
 (map! :leader
       :desc "Insert image from clipboard to org"
-      "x"  'org-capture
-      "X"  'doom/open-scratch-buffer
-      "jj" (lambda ()  (interactive) (call-interactively (key-binding (kbd "C-c C-c"))))
-      "el" 'counsel-fzf
-      "jo" 'org-clock-out
-      "jp" '+popup/raise)
+      "x"  #'org-capture
+      "X"  #'doom/open-scratch-buffer
+      "jj" (lambda! (call-interactively (key-binding (kbd "C-c C-c"))))
+      "el" #'counsel-fzf
+      "jo" #'org-clock-out
+      "jp" #'+popup/raise)
 
 (map!
     :n "M-k" #'drag-stuff-up
@@ -637,12 +628,15 @@
 (use-package! string-inflection
   :config
   (map! :leader
-        "ec" 'string-inflection-all-cycle))
+        "ec" #'string-inflection-all-cycle))
 
 (setq my/source-directory "~/src")
 (map! :leader
       :desc "Find file in source codes" "f o"  (lambda! (doom-project-find-file my/source-directory))
       :desc "Browse source codes" "f O"  (lambda! (doom-project-browse my/source-directory)))
+
+(map!
+ :n "g SPC" 'just-one-space)
 
 (setq rmh-elfeed-org-files
       '("~/Dropbox/rss.org"))
@@ -769,7 +763,7 @@
 (use-package! info-noter
   :config
   (map!  :mode Info-mode
-         :n "x" 'info-heading->org-heading))
+         :n "x" #'info-heading->org-heading))
 
 (map! :leader
       (:prefix-map ("j" . "Personal")
