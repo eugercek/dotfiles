@@ -370,12 +370,29 @@
   (replace-regexp " y " " =y= " nil start end)
   (replace-regexp " n " " ~n~ " nil start end))
 
-(defun my/*2 ()
+(defmacro my/math-op (operation default-value)
+  `(let ((num (thing-at-point 'number))
+          (other-num (if (null current-prefix-arg)
+                           ,default-value
+                         current-prefix-arg)))
+      (skip-chars-backward "0-9")
+      (replace-match (number-to-string (,operation num other-num)))))
+
+(defun my/interactive-multiply ()
   (interactive)
-  (skip-chars-backward "0-9")
-  (or (looking-at "[0-9]+")
-      (error "No number at point"))
-  (replace-match (number-to-string (* (string-to-number (match-string 0) 2)))))
+  (my/math-op * 2))
+
+(defun my/interactive-divide ()
+  (interactive)
+  (my/math-op / 2))
+
+(defun my/interactive-summation ()
+  (interactive)
+  (my/math-op + 0))
+
+(defun my/interactive-substition ()
+  (interactive)
+  (my/math-op - 0))
 
 (defun my//2 ()
   (interactive)
@@ -639,6 +656,16 @@
 
 (map!
  :n "g SPC" 'just-one-space)
+
+(map! :leader
+      "o." #'my/open-directory)
+
+(map! :leader
+      (:prefix ("a" . "Actions")
+       "8" #'my/interactive-multiply ; S-8 is *
+       "/" #'my/interactive-divide
+       "=" #'my/interactive-summation
+       "-" #'my/interactive-substition))
 
 (setq rmh-elfeed-org-files
       '("~/Dropbox/rss.org"))
