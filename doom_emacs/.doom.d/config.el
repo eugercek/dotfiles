@@ -398,6 +398,17 @@
       (error "No number at point"))
   (replace-match (number-to-string (/ (string-to-number (match-string 0)) 2))))
 
+(defun just-one-space-in-region (beg end)
+  "Replace all whitespaces in the region to a space."
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (while (re-search-forward "\\s-+" nil t)
+        (replace-match " "))
+      (insert "\n"))))
+
 (setq org-babel-default-header-args:C++
       '((:includes . "<bits/stdc++.h>")
         (:flags . "-std=c++20")
@@ -490,8 +501,6 @@
 (add-hook 'pdf-tools-enabled-hook #'pdf-view-midnight-minor-mode) ;Dark mode
 
 (setq +latex-viewers '(pdf-tools))
-
-(push '("\\.pdf\\'" . emacs) org-file-apps)
 
 (use-package! zeal-at-point)
 
@@ -604,9 +613,7 @@
         delimit-columns-after ""
         delimit-columns-separator " "
         delimit-columns-format 'separator
-        delimit-columns-extra t)
-  (map! :leader
-        "j [" #'delimit-columns-region))
+        delimit-columns-extra t))
 
 (eval-after-load "artist"
   '(define-key artist-mode-map [(down-mouse-3)] 'artist-mouse-choose-operation))
@@ -621,8 +628,8 @@
    '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
    ))
 
-(setq gdb-many-windows t)
-(setq gdb-show-main t)
+(setq gdb-many-windows t
+      gdb-show-main t )
 (add-hook 'gud-mode-hook
           (lambda ()
             (tool-bar-mode 1)
@@ -665,11 +672,14 @@
        "-" #'my/interactive-substition
        "c" #'string-inflection-all-cycle
        "t" #'go-translate
-       "z" #'zeal-at-point))
+       "z" #'zeal-at-point
+       "SPC" #'just-one-space-in-region
+       "l" #'delimit-columns-region ; Creates list))
 
 (map! :leader
       (:prefix ("j" . "JIH") ; Just In Home row
       "j" (lambda! (call-interactively (key-binding (kbd "C-c C-c"))))
+      "e" #'eros-eval-last-sexp
       "o" #'org-clock-out ; clock Out
       "r" #'+popup/raise ; Raise
       "t" #'go-translate-popup-current))

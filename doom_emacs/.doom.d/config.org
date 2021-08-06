@@ -606,6 +606,21 @@ Very hacky but it works.
       (error "No number at point"))
   (replace-match (number-to-string (/ (string-to-number (match-string 0)) 2))))
 #+end_src
+** Just one space in region
+[[https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-region][From]]
+#+begin_src emacs-lisp
+(defun just-one-space-in-region (beg end)
+  "Replace all whitespaces in the region to a space."
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (while (re-search-forward "\\s-+" nil t)
+        (replace-match " "))
+      (insert "\n"))))
+#+end_src
+
 * Languages
 ** Scheme
 *** KILL MIT
@@ -638,7 +653,6 @@ Run =(lsp-ui-flycheck-list)=
 #+end_src
 ** Python
 *** Keybindings
-Currently SPC [j k l] is empty for me
 #+begin_src emacs-lisp
 (map! :leader
       "j r" #'python-shell-send-region
@@ -839,13 +853,6 @@ Search through entire project(in headers too).
 #+begin_src emacs-lisp
 (setq +latex-viewers '(pdf-tools))
 #+end_src
-**** org-file-apps
-#+begin_src emacs-lisp
-(push '("\\.pdf\\'" . emacs) org-file-apps)
-#+end_src
-**** Look up documentation
-Function name + ( will show arguments in modeline + can enter them with tab.
-Just press ~K~ =(lsp-describe-thing-at-point)= for documentation.
 
 * Personal Packages
 ** Personal Packages
@@ -889,9 +896,7 @@ Make info more readable with syntax highlight at least for elisp.
   :config
   (setq nov-save-place-file (concat doom-cache-dir "nov-places")))
 #+end_src
-*** rotate
-Use =rotate-window= and =rotate-layout=
-*** Convert every other file to .org
+*** org-pandoc-import
 #+begin_src emacs-lisp
 (use-package! org-pandoc-import :after org)
 #+end_src
@@ -975,7 +980,7 @@ https://github.com/andreasjansson/language-detection.el#eww-syntax-highlighting
 (setq shr-external-rendering-functions
       '((pre . eww-tag-pre)))
 #+end_src
-*** Make keybindings more efficent
+*** Keyfreq
 #+begin_src emacs-lisp
 (use-package! keyfreq)
 (keyfreq-mode 1)
@@ -993,13 +998,12 @@ https://github.com/andreasjansson/language-detection.el#eww-syntax-highlighting
         delimit-columns-after ""
         delimit-columns-separator " "
         delimit-columns-format 'separator
-        delimit-columns-extra t)
-  (map! :leader
-        "j [" #'delimit-columns-region))
+        delimit-columns-extra t))
 #+end_src
 
+
 **** Usage
-1. Use ~my/just-one-space-region~
+1. Use =SPC a SPC=
 2. Select region then use it
 #+begin_example
 1 2 3 4 5
@@ -1029,8 +1033,8 @@ Too much evil
 * GDB Debugger
 ** Variables
 #+begin_src emacs-lisp
-(setq gdb-many-windows t)
-(setq gdb-show-main t)
+(setq gdb-many-windows t
+      gdb-show-main t )
 (add-hook 'gud-mode-hook
           (lambda ()
             (tool-bar-mode 1)
@@ -1117,7 +1121,9 @@ Hi I'm umut
        "-" #'my/interactive-substition
        "c" #'string-inflection-all-cycle
        "t" #'go-translate
-       "z" #'zeal-at-point))
+       "z" #'zeal-at-point
+       "SPC" #'just-one-space-in-region
+       "l" #'delimit-columns-region ; Creates list))
 #+end_src
 ** Faster Bindings
 These are better places for frequently used keybindings.
@@ -1125,6 +1131,7 @@ These are better places for frequently used keybindings.
 (map! :leader
       (:prefix ("j" . "JIH") ; Just In Home row
       "j" (lambda! (call-interactively (key-binding (kbd "C-c C-c"))))
+      "e" #'eros-eval-last-sexp
       "o" #'org-clock-out ; clock Out
       "r" #'+popup/raise ; Raise
       "t" #'go-translate-popup-current))
