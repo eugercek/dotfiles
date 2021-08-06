@@ -22,12 +22,12 @@
 
 (defun my/day-additonals ()
   (interactive)
-    (custom-set-faces!
-      '(region     :background "#faf2ff")
-      '(org-block-begin-line :background "#fafaf8")
-      '(org-block-end-line   :background "#fafaf8"))
-    (setq doom-one-light-comment-bg t
-          doom-one-light-brighter-comments t))
+  (custom-set-faces!
+    '(region     :background "#faf2ff")
+    '(org-block-begin-line :background "#fafaf8")
+    '(org-block-end-line   :background "#fafaf8"))
+  (setq doom-one-light-comment-bg t
+        doom-one-light-brighter-comments t))
 
 (defun my/night-additonals ()
   (interactive)
@@ -56,7 +56,7 @@
 
 (if (eq (my/day-or-night) 'day)
     (my/day-additonals)
-    (my/night-additonals))
+  (my/night-additonals))
 
 ;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
 (setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
@@ -87,7 +87,7 @@
 (setq org-log-done 'time)
 
 (remove-hook! '(org-mode-hook text-mode-hook)
-              #'display-line-numbers-mode)
+  #'display-line-numbers-mode)
 
 (after! org-clock
   (setq org-clock-persist t))  ;; Doom emacs sets to 'history
@@ -369,11 +369,11 @@
 
 (defmacro my/math-op (operation default-value)
   `(let ((num (thing-at-point 'number))
-          (other-num (if (null current-prefix-arg)
-                           ,default-value
-                         current-prefix-arg)))
-      (skip-chars-backward "0-9")
-      (replace-match (number-to-string (,operation num other-num)))))
+         (other-num (if (null current-prefix-arg)
+                        ,default-value
+                      current-prefix-arg)))
+     (skip-chars-backward "0-9")
+     (replace-match (number-to-string (,operation num other-num)))))
 
 (defun my/interactive-multiply ()
   (interactive)
@@ -417,11 +417,6 @@
 (setq org-babel-default-header-args:C
       '((:includes . "'(<stdio.h> <stdlib.h> <unistd.h> <time.h> <string.h>)")
         (:flags . "-std=c99")))
-
-(map! :leader
-      "j r" #'python-shell-send-region
-      "j b" #'python-shell-send-buffer
-      "j d" #'python-shell-send-defun)
 
 (setq org-babel-default-header-args:racket
       '((:lang . "racket")))
@@ -495,8 +490,8 @@
                 ("Doom Emacs issues" "https://github.com/hlissner/doom-emacs/issues?q=is%%3Aissue+%s")
                 ("MDN"               "https://developer.mozilla.org/en-US/search?q=%s")
                 ("Wolfram alpha"     "https://wolframalpha.com/input/?i=%s")
-              (when (featurep! :lang rust)
-                '(("Rust Docs" "https://doc.rust-lang.org/std/?search=%s"))))))
+                (when (featurep! :lang rust)
+                  '(("Rust Docs" "https://doc.rust-lang.org/std/?search=%s"))))))
 
 (add-hook 'pdf-tools-enabled-hook #'pdf-view-midnight-minor-mode) ;Dark mode
 
@@ -661,8 +656,8 @@
         :desc "Open elfeed" "o e"  #'elfeed))
 
 (map!
-    :n "M-k" #'drag-stuff-up
-    :n "M-j" #'drag-stuff-down)
+ :n "M-k" #'drag-stuff-up
+ :n "M-j" #'drag-stuff-down)
 
 (map! :leader
       (:prefix ("a" . "actions")
@@ -674,15 +669,15 @@
        "t" #'go-translate
        "z" #'zeal-at-point
        "SPC" #'just-one-space-in-region
-       "l" #'delimit-columns-region ; Creates list))
+       "l" #'delimit-columns-region))
 
 (map! :leader
       (:prefix ("j" . "JIH") ; Just In Home row
-      "j" (lambda! (call-interactively (key-binding (kbd "C-c C-c"))))
-      "e" #'eros-eval-last-sexp
-      "o" #'org-clock-out ; clock Out
-      "r" #'+popup/raise ; Raise
-      "t" #'go-translate-popup-current))
+       "j" (lambda! (call-interactively (key-binding (kbd "C-c C-c"))))
+       "e" #'eros-eval-last-sexp
+       "o" #'org-clock-out ; clock Out
+       "r" #'+popup/raise ; Raise
+       "t" #'go-translate-popup-current))
 
 (setq rmh-elfeed-org-files
       '("~/Dropbox/rss.org"))

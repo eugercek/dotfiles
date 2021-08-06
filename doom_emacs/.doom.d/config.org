@@ -40,12 +40,12 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 #+begin_src emacs-lisp
 (defun my/day-additonals ()
   (interactive)
-    (custom-set-faces!
-      '(region     :background "#faf2ff")
-      '(org-block-begin-line :background "#fafaf8")
-      '(org-block-end-line   :background "#fafaf8"))
-    (setq doom-one-light-comment-bg t
-          doom-one-light-brighter-comments t))
+  (custom-set-faces!
+    '(region     :background "#faf2ff")
+    '(org-block-begin-line :background "#fafaf8")
+    '(org-block-end-line   :background "#fafaf8"))
+  (setq doom-one-light-comment-bg t
+        doom-one-light-brighter-comments t))
 #+end_src
 **** Night
 #+begin_src emacs-lisp
@@ -78,7 +78,7 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 
 (if (eq (my/day-or-night) 'day)
     (my/day-additonals)
-    (my/night-additonals))
+  (my/night-additonals))
 #+end_src
 ** Font
 *** Main fonts
@@ -122,7 +122,7 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 (setq org-log-done 'time)
 
 (remove-hook! '(org-mode-hook text-mode-hook)
-              #'display-line-numbers-mode)
+  #'display-line-numbers-mode)
 #+end_src
 ** Org clock
 #+begin_src emacs-lisp
@@ -575,11 +575,11 @@ Very hacky but it works.
 #+begin_src emacs-lisp
 (defmacro my/math-op (operation default-value)
   `(let ((num (thing-at-point 'number))
-          (other-num (if (null current-prefix-arg)
-                           ,default-value
-                         current-prefix-arg)))
-      (skip-chars-backward "0-9")
-      (replace-match (number-to-string (,operation num other-num)))))
+         (other-num (if (null current-prefix-arg)
+                        ,default-value
+                      current-prefix-arg)))
+     (skip-chars-backward "0-9")
+     (replace-match (number-to-string (,operation num other-num)))))
 
 (defun my/interactive-multiply ()
   (interactive)
@@ -653,7 +653,7 @@ Run =(lsp-ui-flycheck-list)=
 #+end_src
 ** Python
 *** Keybindings
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (map! :leader
       "j r" #'python-shell-send-region
       "j b" #'python-shell-send-buffer
@@ -747,8 +747,6 @@ Add +treemacs-git-mode
 #+begin_src emacs-lisp :tangle no
 (setq evil-respect-visual-line-mode t)
 #+end_src
-*** rotate-text
-Use =] r= for rotate
 *** snippets
 **** Nested snippets
 #+begin_src emacs-lisp
@@ -840,8 +838,8 @@ Search through entire project(in headers too).
                 ("Doom Emacs issues" "https://github.com/hlissner/doom-emacs/issues?q=is%%3Aissue+%s")
                 ("MDN"               "https://developer.mozilla.org/en-US/search?q=%s")
                 ("Wolfram alpha"     "https://wolframalpha.com/input/?i=%s")
-              (when (featurep! :lang rust)
-                '(("Rust Docs" "https://doc.rust-lang.org/std/?search=%s"))))))
+                (when (featurep! :lang rust)
+                  '(("Rust Docs" "https://doc.rust-lang.org/std/?search=%s"))))))
 #+end_src
 
 *** Pdf
@@ -872,9 +870,9 @@ Search through entire project(in headers too).
 (map! :leader
       :desc "Turkish last word"
       "d t" #'(lambda (x) (interactive)
-               (insert "")
-               (turkish-correct-last-word)
-               (forward-line -1))
+                (insert "")
+                (turkish-correct-last-word)
+                (forward-line -1))
 #+end_src
 *** info-colors
 Make info more readable with syntax highlight at least for elisp.
@@ -1108,8 +1106,8 @@ Hi I'm umut
 *** Normal Mode
 #+begin_src emacs-lisp
 (map!
-    :n "M-k" #'drag-stuff-up
-    :n "M-j" #'drag-stuff-down)
+ :n "M-k" #'drag-stuff-up
+ :n "M-j" #'drag-stuff-down)
 #+end_src
 ** Actions
 #+begin_src emacs-lisp
@@ -1123,18 +1121,18 @@ Hi I'm umut
        "t" #'go-translate
        "z" #'zeal-at-point
        "SPC" #'just-one-space-in-region
-       "l" #'delimit-columns-region ; Creates list))
+       "l" #'delimit-columns-region))
 #+end_src
 ** Faster Bindings
 These are better places for frequently used keybindings.
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix ("j" . "JIH") ; Just In Home row
-      "j" (lambda! (call-interactively (key-binding (kbd "C-c C-c"))))
-      "e" #'eros-eval-last-sexp
-      "o" #'org-clock-out ; clock Out
-      "r" #'+popup/raise ; Raise
-      "t" #'go-translate-popup-current))
+       "j" (lambda! (call-interactively (key-binding (kbd "C-c C-c"))))
+       "e" #'eros-eval-last-sexp
+       "o" #'org-clock-out ; clock Out
+       "r" #'+popup/raise ; Raise
+       "t" #'go-translate-popup-current))
 #+end_src
 
 * RSS
