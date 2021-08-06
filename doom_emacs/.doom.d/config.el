@@ -325,10 +325,7 @@
   :config
   (setq go-translate-token-current (cons 430675 2721866130)
         go-translate-local-language "tr"
-        go-translate-target-language "en")
-  (map!
-      :leader "d a" #'go-translate
-      :leader "d j" #'go-translate-popup-current))
+        go-translate-target-language "en"))
 
 (defun my/curly-quoation-to-normal-quoation()
   "Change any curly quotation mark to normal quoation mark"
@@ -482,11 +479,7 @@
 
 (push '("\\.pdf\\'" . emacs) org-file-apps)
 
-(use-package zeal-at-point
-  :config
-  (map! :leader
-        :desc "Zeal Look Up"
-        "j z" #'zeal-at-point))
+(use-package! zeal-at-point)
 
 (use-package! framemove
   :config
@@ -631,24 +624,6 @@
 
 (set-fringe-style (quote (24 . 24)))
 
-(map! :leader
-      :desc "Insert image from clipboard to org"
-      "x"  #'org-capture
-      "X"  #'doom/open-scratch-buffer
-      "jj" (lambda! (call-interactively (key-binding (kbd "C-c C-c"))))
-      "el" #'counsel-fzf
-      "jo" #'org-clock-out
-      "jp" #'+popup/raise)
-
-(map!
-    :n "M-k" #'drag-stuff-up
-    :n "M-j" #'drag-stuff-down)
-
-(use-package! string-inflection
-  :config
-  (map! :leader
-        "ec" #'string-inflection-all-cycle))
-
 (setq my/source-directory "~/src/")
 (map! :leader
       :desc "Find file in source codes" "f o"  (lambda! (doom-project-find-file my/source-directory))
@@ -660,12 +635,30 @@
 (map! :leader
       "o." #'my/open-directory)
 
+(when (featurep! :app rss)
+  (map! :leader
+        :desc "Open elfeed" "o e"  #'elfeed))
+
+(map!
+    :n "M-k" #'drag-stuff-up
+    :n "M-j" #'drag-stuff-down)
+
 (map! :leader
-      (:prefix ("a" . "Actions")
+      (:prefix ("a" . "actions")
        "8" #'my/interactive-multiply ; S-8 is *
        "/" #'my/interactive-divide
        "=" #'my/interactive-summation
-       "-" #'my/interactive-substition))
+       "-" #'my/interactive-substition
+       "c" #'string-inflection-all-cycle
+       "t" #'go-translate
+       "z" #'zeal-at-point))
+
+(map! :leader
+      (:prefix ("j" . "JIH") ; Just In Home row
+      "j" (lambda! (call-interactively (key-binding (kbd "C-c C-c"))))
+      "o" #'org-clock-out ; clock Out
+      "r" #'+popup/raise ; Raise
+      "t" #'go-translate-popup-current))
 
 (setq rmh-elfeed-org-files
       '("~/Dropbox/rss.org"))
