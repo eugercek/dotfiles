@@ -630,7 +630,7 @@
       :desc "Insert image from clipboard to org"
       "x"  'org-capture
       "X"  'doom/open-scratch-buffer
-      "jj" '(lambda ()  (interactive) (call-interactively (key-binding (kbd "C-c C-c"))))
+      "jj" (lambda ()  (interactive) (call-interactively (key-binding (kbd "C-c C-c"))))
       "el" 'counsel-fzf
       "jo" 'org-clock-out
       "jp" '+popup/raise)
@@ -643,6 +643,10 @@
   :config
   (map! :leader
         "ec" 'string-inflection-all-cycle))
+
+(setq my/src-dir "~/src")
+(map! :leader
+      "f i"  (lambda! (doom-project-browse my/src-dir)))
 
 (setq rmh-elfeed-org-files
       '("~/Dropbox/rss.org"))
@@ -770,3 +774,12 @@
   :config
   (map!  :mode Info-mode
          :n "x" 'info-heading->org-heading))
+
+(map! :leader
+      (:prefix-map ("j" . "Personal")
+       (:prefix ("p" . "Pomdoro")
+        :desc "Start" "s" (lambda! (org-timer-set-timer 25))
+        :desc "Quit" "q" (lambda! (org-timer-stop))
+        :desc "Toggle (Pause/Continue)" "t" (lambda! (org-timer-pause-or-continue)))))
+
+(setq org-clock-sound "/tmp/birds.wav")

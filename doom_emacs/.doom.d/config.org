@@ -1131,7 +1131,7 @@ Can enter new value with mouse-2 or RET
       :desc "Insert image from clipboard to org"
       "x"  'org-capture
       "X"  'doom/open-scratch-buffer
-      "jj" '(lambda ()  (interactive) (call-interactively (key-binding (kbd "C-c C-c"))))
+      "jj" (lambda ()  (interactive) (call-interactively (key-binding (kbd "C-c C-c"))))
       "el" 'counsel-fzf
       "jo" 'org-clock-out
       "jp" '+popup/raise)
@@ -1149,6 +1149,13 @@ Can enter new value with mouse-2 or RET
   (map! :leader
         "ec" 'string-inflection-all-cycle))
 #+end_src
+** Find file soure director
+#+begin_src emacs-lisp
+(setq my/src-dir "~/src")
+(map! :leader
+      "f i"  (lambda! (doom-project-browse my/src-dir)))
+#+end_src
+
 * RSS
 ** Keybindings
 [[https://github.com/emacs-evil/evil-collection/blob/f2be91297029ae002d15e23510f9f686d848d7a8/modes/elfeed/evil-collection-elfeed.el][Look]]
@@ -1299,4 +1306,18 @@ Right [[https://tecosaur.github.io/emacs-config/config.html#visual-enhancements]
   :config
   (map!  :mode Info-mode
          :n "x" 'info-heading->org-heading))
+#+end_src
+* Pomodoro Setup
+Heavily inspired/copied [[https://www.youtube.com/watch?v=JbHE819kVGQ][from]]
+** Keybindings
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("j" . "Personal")
+       (:prefix ("p" . "Pomdoro")
+        :desc "Start" "s" (lambda! (org-timer-set-timer 25))
+        :desc "Quit" "q" (lambda! (org-timer-stop))
+        :desc "Toggle (Pause/Continue)" "t" (lambda! (org-timer-pause-or-continue)))))
+#+end_src
+#+begin_src emacs-lisp
+(setq org-clock-sound "/tmp/birds.wav")
 #+end_src
