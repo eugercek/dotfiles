@@ -52,3 +52,6 @@
            :repo "eugercek/info-noter.el"))
 
 (package! try)
+(package! org-pomodoro
+  :recipe (:host github
+           :repo "eugercek/org-pomodoro"))

@@ -762,14 +762,12 @@
 
 (use-package! info-noter
   :config
-  (map!  :mode Info-mode
-         :n "x" #'info-heading->org-heading))
+  (map! :mode Info-mode
+        :n "x" #'info-heading->org-heading))
 
-(map! :leader
-      (:prefix-map ("j" . "Personal")
-       (:prefix ("p" . "Pomdoro")
-        :desc "Start" "s" (lambda! (org-timer-set-timer 25))
-        :desc "Quit" "q" (lambda! (org-timer-stop))
-        :desc "Toggle (Pause/Continue)" "t" (lambda! (org-timer-pause-or-continue)))))
-
-(setq org-clock-sound "/tmp/birds.wav")
+(org-pomodoro-play-sound :start)
+(use-package! org-pomodoro
+  :config
+  (when (executable-find "ffplay")
+    (setq org-pomodoro-audio-player "/usr/bin/ffplay")
+    (setq org-pomodoro-default-args "-volume 70 -autoexit -nodisp")))
