@@ -473,6 +473,20 @@
 
 (setq lsp-enable-symbol-highlighting nil)
 
+(setq +lookup-provider-url-alist
+      (append '(("Google"            +lookup--online-backend-google "https://google.com/search?q=%s")
+                ("Wikipedia"         "https://wikipedia.org/search-redirect.php?language=en&go=Go&search=%s")
+                ("Youtube"           "https://youtube.com/results?aq=f&oq=&search_query=%s")
+                ("DevDocs.io"        "https://devdocs.io/#q=%s")
+                ("StackOverflow"     "https://stackoverflow.com/search?q=%s")
+                ("Github"            "https://github.com/search?ref=simplesearch&q=%s")
+                ("DuckDuckGo"        +lookup--online-backend-duckduckgo "https://duckduckgo.com/?q=%s")
+                ("Doom Emacs issues" "https://github.com/hlissner/doom-emacs/issues?q=is%%3Aissue+%s")
+                ("MDN"               "https://developer.mozilla.org/en-US/search?q=%s")
+                ("Wolfram alpha"     "https://wolframalpha.com/input/?i=%s")
+              (when (featurep! :lang rust)
+                '(("Rust Docs" "https://doc.rust-lang.org/std/?search=%s"))))))
+
 (add-hook 'pdf-tools-enabled-hook #'pdf-view-midnight-minor-mode) ;Dark mode
 
 (setq +latex-viewers '(pdf-tools))
