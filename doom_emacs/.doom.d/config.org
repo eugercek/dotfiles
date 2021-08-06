@@ -24,8 +24,9 @@ Copy Pasted
   (load custom-file))
 #+end_src
 ** Maximize on boot
+Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 #+begin_src emacs-lisp
-(toggle-frame-fullscreen)
+(add-to-list 'default-frame-alist '(fullscreen . fullboth))
 #+end_src
 ** User Info
 #+begin_src emacs-lisp

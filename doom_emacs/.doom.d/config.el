@@ -15,7 +15,7 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(toggle-frame-fullscreen)
+(add-to-list 'default-frame-alist '(fullscreen . fullboth))
 
 (setq user-full-name "Emin Umut Gerçek"
       user-mail-address "umutgercek1999@gmail.com")
