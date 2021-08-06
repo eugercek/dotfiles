@@ -324,11 +324,6 @@
       :leader "d a" 'go-translate
       :leader "d j" 'go-translate-popup-current))
 
-(map! :leader
-      "a n" '(lambda () (interactive) (counsel-find-file "/home/umut/Dropbox/org/Notes"))
-      "a g" '(lambda () (interactive) (counsel-find-file "/home/umut/Dropbox/org/gtd"))
-      "a s" '(lambda () (interactive) (counsel-find-file "/home/umut/src")))
-
 (defun my/curly-quoation-to-normal-quoation()
   "Change any curly quotation mark to normal quoation mark"
   (interactive)
@@ -644,9 +639,10 @@
   (map! :leader
         "ec" 'string-inflection-all-cycle))
 
-(setq my/src-dir "~/src")
+(setq my/source-directory "~/src")
 (map! :leader
-      "f i"  (lambda! (doom-project-browse my/src-dir)))
+      :desc "Find file in source codes" "f o"  (lambda! (doom-project-find-file my/source-directory))
+      :desc "Browse source codes" "f O"  (lambda! (doom-project-browse my/source-directory)))
 
 (setq rmh-elfeed-org-files
       '("~/Dropbox/rss.org"))

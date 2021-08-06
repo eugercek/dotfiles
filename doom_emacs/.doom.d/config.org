@@ -535,13 +535,6 @@ Just correct it once.
 ;;(setq go-translate-buffer-follow-p t)
 ;;(setq go-translate-buffer-window-config ..) ; config the result window as your wish
 #+end_src
-* Bookmark like
-#+begin_src emacs-lisp
-(map! :leader
-      "a n" '(lambda () (interactive) (counsel-find-file "/home/umut/Dropbox/org/Notes"))
-      "a g" '(lambda () (interactive) (counsel-find-file "/home/umut/Dropbox/org/gtd"))
-      "a s" '(lambda () (interactive) (counsel-find-file "/home/umut/src")))
-#+end_src
 * Functions
 ** Mine
 *** TODO Curly to Normal Quote
@@ -629,45 +622,6 @@ https://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-reg
   (replace-match (number-to-string (/ (string-to-number (match-string 0)) 2))))
 #+end_src
 * Languages
-** KILL C/C++
-#+begin_src emacs-lisp :tangle no
-(defun my-compile-run ()
-  (interactive)
-  (save-buffer)
-  (if (get-buffer "vterm")
-      (setq cur-term "vterm")
-    (setq cur-term "*doom:vterm-popup:main*")
-    )
-  (comint-send-string cur-term
-                      (concat "clear"
-                              "\n"
-                              "g++ *.cpp"
-                              ";"
-                              "./a.out"
-                              "\n")))
-
-(defun my-compile-run-with-test ()
-  (interactive)
-  (save-buffer)
-  (if (get-buffer "vterm")
-      (setq cur-term "vterm")
-    (setq cur-term "*doom:vterm-popup:main*")
-    )
-  (comint-send-string cur-term (concat "clear"
-                                       "\n"
-                                       "g++ "
-                                       (buffer-name)
-                                       ";"
-                                       "./a.out"
-                                       "<test"
-                                       "\n")))
-
-(map! :leader
-      :desc "Compile and Run in vterm buffer"
-      "d c"  'my-compile-run
-      "d t"  'my-compile-run-with-test
-      )
-#+end_src
 ** Scheme
 *** KILL MIT
 CLOSED: [2021-07-06 Sal 18:46]
@@ -1149,11 +1103,13 @@ Can enter new value with mouse-2 or RET
   (map! :leader
         "ec" 'string-inflection-all-cycle))
 #+end_src
-** Find file soure director
+** Doom Core
+*** Find file soure director :to_doom:
 #+begin_src emacs-lisp
-(setq my/src-dir "~/src")
+(setq my/source-directory "~/src")
 (map! :leader
-      "f i"  (lambda! (doom-project-browse my/src-dir)))
+      :desc "Find file in source codes" "f o"  (lambda! (doom-project-find-file my/source-directory))
+      :desc "Browse source codes" "f O"  (lambda! (doom-project-browse my/source-directory)))
 #+end_src
 
 * RSS
