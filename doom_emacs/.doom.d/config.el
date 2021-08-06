@@ -21,13 +21,16 @@
       user-mail-address "umutgercek1999@gmail.com")
 
 (defun my/day-additonals ()
-  (custom-set-faces!
-    '(region     :background "#f5f5ff")
-    '(org-block-begin-line :background "#fafaf8")
-    '(org-block-end-line   :background "#fafaf8")))
+  (interactive)
+    (custom-set-faces!
+      '(region     :background "#faf2ff")
+      '(org-block-begin-line :background "#fafaf8")
+      '(org-block-end-line   :background "#fafaf8"))
+    (setq doom-one-light-comment-bg t
+          doom-one-light-brighter-comments t))
 
 (defun my/night-additonals ()
-  (interactive )
+  (interactive)
   (progn
     (custom-set-faces!
       '(region     :background "#094A5A")
@@ -35,8 +38,7 @@
       '(org-block-end-line   :background "#002b3a"))
 
     (setq doom-solarized-dark-brighter-text t
-          doom-solarized-dark-brighter-comments t
-          doom-themes-enable-bold t)))
+          doom-solarized-dark-brighter-comments t)))
 
 (setq my/current-time (string-to-number (format-time-string "%H")))
 
@@ -765,7 +767,6 @@
   (map! :mode Info-mode
         :n "x" #'info-heading->org-heading))
 
-(org-pomodoro-play-sound :start)
 (use-package! org-pomodoro
   :config
   (when (executable-find "ffplay")
