@@ -1082,7 +1082,7 @@ Can enter new value with mouse-2 or RET
 ** Doom Core
 *** Find file in source directory :to_doom:
 #+begin_src emacs-lisp
-(setq my/source-directory "~/src")
+(setq my/source-directory "~/src/")
 (map! :leader
       :desc "Find file in source codes" "f o"  (lambda! (doom-project-find-file my/source-directory))
       :desc "Browse source codes" "f O"  (lambda! (doom-project-browse my/source-directory)))

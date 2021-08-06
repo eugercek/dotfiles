@@ -630,7 +630,7 @@
   (map! :leader
         "ec" #'string-inflection-all-cycle))
 
-(setq my/source-directory "~/src")
+(setq my/source-directory "~/src/")
 (map! :leader
       :desc "Find file in source codes" "f o"  (lambda! (doom-project-find-file my/source-directory))
       :desc "Browse source codes" "f O"  (lambda! (doom-project-browse my/source-directory)))
