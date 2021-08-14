@@ -623,3 +623,12 @@ mapkey(';n', 'Go to next episode',
            window.location = new_url;
        });
 #+end_src
+* vscode extension
+** Export
+#+begin_src sh :tangle vscode-extensions
+code --list-extensions > vscode-extensions
+#+end_src
+** Import
+#+begin_src sh
+cat vscode-extensions |% { code --install-extension $_}
+#+end_src
