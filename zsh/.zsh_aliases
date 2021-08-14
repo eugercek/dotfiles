@@ -211,3 +211,9 @@ alias pharo="~/pharolauncher/pharo-launcher"
 #Emacs
 alias emacs="emacsclient -c"
 alias emacst="emacsclient -t"
+
+# C#
+alias d="dotnet"
+alias db="dotnet build"
+alias dr="dotnet run"
+alias dn="dotnet new"
