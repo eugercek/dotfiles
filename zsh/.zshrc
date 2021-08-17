@@ -140,4 +140,4 @@ export EDITOR="/usr/bin/vim"
 
 export PATH="$HOME/.poetry/bin:$PATH"
 #Nix Try
-source $HOME/.nix-profile/etc/profile.d/nix.sh
+#source $HOME/.nix-profile/etc/profile.d/nix.sh

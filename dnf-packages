@@ -1,5 +1,3 @@
-git-instaweb
-
 htop
 tree
 vim
@@ -21,10 +19,8 @@ inxi
 cloc
 the_silver_searcher
 xdotool
-bashtop
 stress
 pdfgrep
-gh
 ripgrep
 docker
 
@@ -34,8 +30,6 @@ plantuml
 pandoc
 zeal
 texlive-scheme-full
-mpd
-mpc
 
 qbittorrent
 okular
@@ -56,8 +50,10 @@ sbcl
 
 nodejs
 
-firewall-config
-
 nmap
 
+git-instaweb
+
 overpass-fonts
+
+gnome-tweaks

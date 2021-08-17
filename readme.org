@@ -5,7 +5,9 @@
 #+BEGIN_SRC sh :tangle install_system.sh :noweb yes
 ./zsh_setup.sh
 ./create_links.sh
-<<install_all_packages>>
+<<install-dnf-packages>>
+<<install-flatpak-packages>>
+<<install-pip-packages>>
 #+END_SRC
 * Installing Doom Emacs :manual:
 Only manually download this!
@@ -56,24 +58,9 @@ WantedBy=default.target
 #+begin_src sh
 sudo dnf install zsh
 #+end_src
-
-#+RESULTS:
-
 ** Change zsh to default shell
 #+begin_src shell
 chsh -s /bin/zsh
-#+end_src
-** Install powerlevel10k prompt
-https://github.com/romkatv/powerlevel10k#oh-my-zsh
-#+begin_src sh
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-#+end_src
-** Install Font for powerlevel10k
-https://github.com/romkatv/powerlevel10k#manual-font-installation
-Preferences -> Selected profile -> Text > Text Appereance -> Custom Font :  Select MesloLGS NF Regular.
-** Install Needed packages
-#+begin_src sh
-sudo dnf install fzf zsh-autosuggestions zsh-syntax-highlighting
 #+end_src
 ** Install oh-my-zsh
 https://ohmyz.sh/#install
@@ -81,7 +68,20 @@ https://ohmyz.sh/#install
 #+begin_src sh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 #+end_src
-** Install zsh-autosuggestions
+** Install Font for powerlevel10k
+https://github.com/romkatv/powerlevel10k#manual-font-installation
+Preferences -> Selected profile -> Text > Text Appereance -> Custom Font :  Select MesloLGS NF Regular.
+** Zsh Packages
+*** Install needed dnf packages for zsh packages
+#+begin_src sh
+sudo dnf install fzf zsh-autosuggestions zsh-syntax-highlighting
+#+end_src
+*** Install powerlevel10k prompt
+https://github.com/romkatv/powerlevel10k#oh-my-zsh
+#+begin_src sh
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+#+end_src
+*** Install zsh-autosuggestions
 https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md#oh-my-zsh
 
 #+begin_src sh
@@ -89,7 +89,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 #+end_src
 
 #+RESULTS:
-** Install zsh-syntax-highlight
+*** Install zsh-syntax-highlight
 https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md#oh-my-zsh
 
 #+begin_src sh
@@ -181,49 +181,50 @@ C/C++
 *** Surfingkeys
 Add  =https://raw.githubusercontent.com/EminUmutGercek/.dotfiles/master/surfingkeys= to  =Load settings from:=
 * Install packages
-#+NAME: install_all_packages
+** dnf
+#+NAME: install-dnf-packages
 #+begin_src sh
-dnf install $(cat dnf_packages)
+sudo dnf install $(cat dnf-packages)
 #+end_src
-** Add dnf Repos
-#+begin_src bash
-sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-#+end_src
-** dnf packages
+*** packages
 :PROPERTIES:
-:header-args: :tangle ./dnf_packages
+:header-args: :tangle ./dnf-packages
 :END:
-*** Terminal
+**** Terminal
+***** Important
 #+begin_src text
-htop
 tree
 vim
 ImageMagick
+youtube-dl
+acpi
+tldr
+lm_sensors
+the_silver_searcher
+ripgrep
+docker
+xclip
+#+end_src
+
+**** Other
+#+begin_src text
+htop
 cmatrix
 cowsay
 figlet
 lolcat
-youtube-dl
-acpi
 speedtest-cli
-tldr
-lm_sensors
 neofetch
 glances
 telnet
 hugo
 inxi
 cloc
-the_silver_searcher
 xdotool
-bashtop
 stress
 pdfgrep
-gh
-ripgrep
-docker
 #+end_src
-*** Emacs
+**** Emacs
 #+begin_src text
 emacs
 libvterm
@@ -231,22 +232,20 @@ plantuml
 pandoc
 zeal
 texlive-scheme-full
-mpd
-mpc
 #+end_src
-*** GUI Programs
+**** GUI Programs
 #+begin_src text
 qbittorrent
 okular
 flameshot
 kruler
 #+end_src
-*** Programming Languages
-**** Python
+**** Programming Languages
+***** Python
 #+begin_src text
 bpython
 #+end_src
-**** C/C++
+***** C/C++
 #+begin_src text
 cmake
 libtool
@@ -254,35 +253,43 @@ clang
 meson
 valgrind
 #+end_src
-**** Lisp
+***** Lisp
 #+begin_src text
 rlwrap
 #+end_src
-**** Common Lisp
+****** Common Lisp
 #+begin_src text
 sbcl
 #+end_src
-**** Javascript
+***** Javascript
 #+begin_src text
 nodejs
 #+end_src
-*** Fedora specific
-#+begin_src text
-firewall-config
-#+end_src
-*** Cyber Security
+**** Cyber Security
 #+begin_src text
 nmap
 #+end_src
-*** Git
+**** Git :fedora_specific:
 #+begin_src shell
 git-instaweb
 #+end_src
-*** Fonts
+**** Fonts
 #+begin_src text
 overpass-fonts
 #+end_src
+**** Gnome
+#+begin_src text
+gnome-tweaks
+#+end_src
 ** flatpak
+#+NAME: install-flatpak-packages
+#+begin_src sh
+flatpak install $(cat flatpak-packages)
+#+end_src
+*** packages
+:PROPERTIES:
+:header-args: :tangle ./flatpak-packages
+:END:
 #+begin_src text
 Discord
 Dropbox
@@ -291,9 +298,26 @@ Spotify
 Peek
 FontFinder
 #+end_src
-** pip packages
+** snap
+#+NAME: install-snap-packages
+#+begin_src sh
+sudo snap install $(cat snap-packages)
+#+end_src
+*** pakcages
 :PROPERTIES:
-:header-args: :tangle ./pip_packages
+:header-args: :tangle ./snap-packages
+:END:
+#+begin_src text
+code --classic
+#+end_src
+** pip packages
+#+NAME: install-pip-packages
+#+begin_src sh
+dnf install $(cat pip-packages)
+#+end_src
+*** packages
+:PROPERTIES:
+:header-args: :tangle ./pip-packages
 :END:
 #+begin_src text
 pytest
@@ -328,7 +352,6 @@ extensions@abteil.org
 vim-altTab@kokong.info
 #+end_example
 * Fedora Settings
-** TOOD Remove nano
 ** Fonts
 #+begin_src text
 sudo dnf install curl cabextract xorg-x11-font-utils fontconfig

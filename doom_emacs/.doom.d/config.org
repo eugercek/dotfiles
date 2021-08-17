@@ -37,7 +37,7 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 ** Theme
 *** Light & Dark
 **** Day
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp : tangle no
 (defun my/day-additonals ()
   (interactive)
   (custom-set-faces!
@@ -48,7 +48,7 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
         doom-one-light-brighter-comments t))
 #+end_src
 **** Night
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (defun my/night-additonals ()
   (interactive)
   (progn
@@ -61,7 +61,7 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
           doom-solarized-dark-brighter-comments t)))
 #+end_src
 **** Find Day or Night
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq my/current-time (string-to-number (format-time-string "%H")))
 
 (defun my/day-or-night ()
@@ -82,7 +82,7 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 #+end_src
 ** Font
 *** Main fonts
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
 (setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
       doom-variable-pitch-font (font-spec :family "Overpass" :size 24))
@@ -115,7 +115,7 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 * Org
 ** Rudimentary
 #+begin_src emacs-lisp
-(setq org-directory "~/Dropbox/org")
+(setq org-directory "~/Dropbox/org/")
 
 (org-autolist-mode 1)
 

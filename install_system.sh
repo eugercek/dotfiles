@@ -1,3 +1,5 @@
 ./zsh_setup.sh
 ./create_links.sh
-dnf install $(cat dnf_packages)
+sudo dnf install $(cat dnf-packages)
+flatpak install $(cat flatpak-packages)
+dnf install $(cat pip-packages)

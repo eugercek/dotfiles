@@ -29,42 +29,6 @@
   (setq doom-one-light-comment-bg t
         doom-one-light-brighter-comments t))
 
-(defun my/night-additonals ()
-  (interactive)
-  (progn
-    (custom-set-faces!
-      '(region     :background "#094A5A")
-      '(org-block-begin-line :background "#002b3a")
-      '(org-block-end-line   :background "#002b3a"))
-
-    (setq doom-solarized-dark-brighter-text t
-          doom-solarized-dark-brighter-comments t)))
-
-(setq my/current-time (string-to-number (format-time-string "%H")))
-
-(defun my/day-or-night ()
-  (if
-      (and
-       (< 5 my/current-time)
-       (< my/current-time 20))
-      'day
-    'night))
-
-(setq doom-theme (if (eq (my/day-or-night) 'day)
-                     'doom-one-light
-                   'doom-solarized-dark))
-
-(if (eq (my/day-or-night) 'day)
-    (my/day-additonals)
-  (my/night-additonals))
-
-;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
-(setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
-      doom-variable-pitch-font (font-spec :family "Overpass" :size 24))
-;; doom-big-font (font-spec :family "Ubuntu" :size 24)
-;; doom-serif-font (font-spec :family "Noto Serif SC" :size 24)
-;; doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
-
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
@@ -80,7 +44,7 @@
 (after! persp-mode
   (setq persp-emacsclient-init-frame-behaviour-override "main"))
 
-(setq org-directory "~/Dropbox/org")
+(setq org-directory "~/Dropbox/org/")
 
 (org-autolist-mode 1)
 
