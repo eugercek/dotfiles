@@ -14,3 +14,4 @@ ln -s $base/zsh/.zsh_aliases ~/
 ln -s $base/tmux/.tmux.conf ~/
 ln -s $base/systemd/emacs.service ~/.config/systemd/user
 ln -s $base/flameshot/flameshot.ini ~/.config/flameshot/
+ln -s $base/doom_emacs/.doom.d/ ~/
