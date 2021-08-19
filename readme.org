@@ -206,9 +206,10 @@ the_silver_searcher
 ripgrep
 docker
 xclip
+cronie
 #+end_src
 
-**** Other
+***** Other
 #+begin_src text
 htop
 cmatrix
@@ -267,6 +268,12 @@ sbcl
 #+begin_src text
 nodejs
 #+end_src
+***** C# .NET
+#+begin_src text
+dotnet-sdk-5.0
+dotnet-runtime-5.0
+#+end_src
+
 **** Cyber Security
 #+begin_src text
 nmap
@@ -359,6 +366,12 @@ vim-altTab@kokong.info
 sudo dnf install curl cabextract xorg-x11-font-utils fontconfig
 sudo rpm -i https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm 
 #+end_src
+** Cronjobs
+Make sure that =cronnie= is installed via dnf.
+#+begin_src sh
+systemctl enable crond.service
+#+end_src
+
 * CentOS Server Setup
 #+begin_src bash
 sudo dnf install git
