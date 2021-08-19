@@ -215,6 +215,7 @@ alias pharo="~/pharolauncher/pharo-launcher"
 #Emacs
 alias emacs="emacsclient -c"
 alias emacst="emacsclient -t"
+alias magit='emacsclient -c  -e \(magit-status\)'
 
 # C#
 alias d="dotnet"

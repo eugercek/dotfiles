@@ -141,3 +141,6 @@ export EDITOR="/usr/bin/vim"
 export PATH="$HOME/.poetry/bin:$PATH"
 #Nix Try
 #source $HOME/.nix-profile/etc/profile.d/nix.sh
+#
+export EDITOR="emacsclient -t"
+export VISUAL="emacsclient -t"

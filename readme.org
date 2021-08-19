@@ -50,6 +50,8 @@ Restart=on-failure
 WantedBy=default.target
 #+end_src
 
+Also assign a keybinding for ~emacsclient -c~
+
 * zsh setup
 :PROPERTIES:
 :header-args: :tangle ./zsh_setup.sh
