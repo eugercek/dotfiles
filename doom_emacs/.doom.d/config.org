@@ -1298,34 +1298,46 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
 #+end_src
 * IRC setup
 #+begin_src emacs-lisp
+(load "~/Dropbox/secret.el")
+
+(require 'erc)
+
+(erc-autojoin-mode)
+
+(setq erc-autojoin-channels-alist
+      '(("irc.libera.chat" "#emacs" "#linux")))
+
 (setq erc-server "irc.libera.chat"
-      erc-nick "eugercek"
       erc-user-full-name "Emin Umut Gerçek"
       erc-track-shorten-start 8
-      erc-kill-buffer-on-part t)
+      erc-autojoin-timing 'ident)
+      ;; erc-kill-buffer-on-part t)
 #+end_src
-**** Visual
+
+** Visual
 #+begin_src emacs-lisp
 (setq erc-fill-column 120 ;; Wraps text to 120 character
       erc-fill-function 'erc-fill-static ;; How 2nd line of message will be shown
       erc-fill-static-center 20) ;; With above all messages will start be on same column
 #+end_src
-**** Hide people's actions
+** Hide people's actions
 #+begin_src emacs-lisp
 (setq erc-hide-list '("JOIN" "NICK" "PART" "QUIT" "MODE" "AWAY"))
 #+end_src
-**** Don't show server things
+** Don't show server things
 #+begin_src emacs-lisp
 (setq erc-track-exclude-server-buffer t)
 #+end_src
 
-**** Multiple Frame
+** Multiple Frame
 #+begin_src emacs-lisp
 (setq erc-track-visibility nil) ; Only use the selected frame for visibility
 #+end_src
-**** Autojoin
+** Autojoin
 #+begin_src emacs-lisp
-(setq erc-autojoin-channels-alist
-      '(("irc.libera.chat"
-         "#fedora-dotnet"))
+(erc-tls
+ :server erc-server
+ :port 6697
+ :nick erc-nick
+ :password erc-password)
 #+end_src

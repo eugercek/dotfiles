@@ -143,4 +143,4 @@ export PATH="$HOME/.poetry/bin:$PATH"
 #source $HOME/.nix-profile/etc/profile.d/nix.sh
 #
 export EDITOR="emacsclient -t"
-export VISUAL="emacsclient -t"
+export VISUAL="emacsclient -c"

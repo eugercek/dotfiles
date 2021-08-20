@@ -207,6 +207,8 @@ ripgrep
 docker
 xclip
 cronie
+aspell
+aspell-en
 #+end_src
 
 ***** Other
@@ -318,6 +320,7 @@ sudo snap install $(cat snap-packages)
 :END:
 #+begin_src text
 code --classic
+sqlitebrowser
 #+end_src
 ** pip packages
 #+NAME: install-pip-packages

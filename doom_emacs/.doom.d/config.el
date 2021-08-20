@@ -776,11 +776,20 @@
     (setq org-pomodoro-audio-player "/usr/bin/ffplay")
     (setq org-pomodoro-default-args "-volume 70 -autoexit -nodisp")))
 
+(load "~/Dropbox/secret.el")
+
+(require 'erc)
+
+(erc-autojoin-mode)
+
+(setq erc-autojoin-channels-alist
+      '(("irc.libera.chat" "#emacs" "#linux")))
+
 (setq erc-server "irc.libera.chat"
-      erc-nick "eugercek"
       erc-user-full-name "Emin Umut Gerçek"
       erc-track-shorten-start 8
-      erc-kill-buffer-on-part t)
+      erc-autojoin-timing 'ident)
+      ;; erc-kill-buffer-on-part t)
 
 (setq erc-fill-column 120 ;; Wraps text to 120 character
       erc-fill-function 'erc-fill-static ;; How 2nd line of message will be shown
@@ -792,6 +801,8 @@
 
 (setq erc-track-visibility nil) ; Only use the selected frame for visibility
 
-(setq erc-autojoin-channels-alist
-      '(("irc.libera.chat"
-         "#fedora-dotnet"))
+(erc-tls
+ :server erc-server
+ :port 6697
+ :nick erc-nick
+ :password erc-password)

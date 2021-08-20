@@ -93,11 +93,14 @@ function wallp(){
 	feh --bg-fill /usr/share/wallpapers/Mine/Astranout.jpg
 }
 
+# Only audio
 function dowmus(){
 	url=$(xclip -selection c -o)
 	youtube-dl -ciw -o '%(title)s.%(ext)s'  --extract-audio --yes-playlist  --audio-format mp3 $url
 
 }
+
+# Video + Auidio
 function dowfrom(){
 	url=$(xclip -selection c -o)
 	youtube-dl -ciw -o '%(title)s.%(ext)s'  --yes-playlist --playlist-start $1 $url

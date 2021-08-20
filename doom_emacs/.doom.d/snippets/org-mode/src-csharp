@@ -1,0 +1,6 @@
+# key: cs
+# name: src-csharp
+# --
+#+begin_src csharp
+$0
+#+end_src
