@@ -321,7 +321,7 @@
       "d e" 'my/error-line)
 
 (defun my/open-directory ()
-  "Opens a folder with xdg-open"
+  "Opens a directory with xdg-open"
   (interactive)
   (shell-command "xdg-open ."))
 
@@ -806,3 +806,14 @@
  :port 6697
  :nick erc-nick
  :password erc-password)
+
+(setq deft-directory "~/Dropbox/org/Notes"
+      deft-default-extension "md"
+      deft-use-filename-as-title t)
+
+(defun my/current-find-in-notes ()
+  (interactive)
+  (doom-project-find-file "~/Dropbox/org/Notes"))
+
+(map! :leader
+      "nd" #'my/current-find-in-notes)

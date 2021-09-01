@@ -229,13 +229,17 @@ xdotool
 stress
 pdfgrep
 #+end_src
+***** Shiny/Neo
+#+begin_src sh
+bat
+#+end_src
+
 **** Emacs
 #+begin_src text
 emacs
 libvterm
 plantuml
 pandoc
-zeal
 texlive-scheme-full
 #+end_src
 **** GUI Programs
@@ -308,6 +312,8 @@ Flatseal
 Spotify
 Peek
 FontFinder
+Postman
+zeal
 #+end_src
 ** snap
 #+NAME: install-snap-packages

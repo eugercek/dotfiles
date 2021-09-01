@@ -81,6 +81,8 @@ plugins=(
 	zsh-syntax-highlighting
 	fzf
 	colorize
+	docker
+	docker-compose
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -143,4 +145,4 @@ export PATH="$HOME/.poetry/bin:$PATH"
 #source $HOME/.nix-profile/etc/profile.d/nix.sh
 #
 export EDITOR="emacsclient -t"
-export VISUAL="emacsclient -c"
+export VISUAL="emacsclient -t"

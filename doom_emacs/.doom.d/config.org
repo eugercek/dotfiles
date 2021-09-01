@@ -558,7 +558,7 @@ One day fix this too...
 ** Open current directory
 #+begin_src emacs-lisp
 (defun my/open-directory ()
-  "Opens a folder with xdg-open"
+  "Opens a directory with xdg-open"
   (interactive)
   (shell-command "xdg-open ."))
 #+end_src
@@ -1086,7 +1086,6 @@ Can enter new value with mouse-2 or RET
       :desc "Browse source codes" "f O"  (lambda! (doom-project-browse my/source-directory)))
 #+end_src
 *** Just one space
-Hi I'm umut
 #+begin_src emacs-lisp
 (map!
  :n "g SPC" 'just-one-space)
@@ -1134,7 +1133,6 @@ These are better places for frequently used keybindings.
        "r" #'+popup/raise ; Raise
        "t" #'go-translate-popup-current))
 #+end_src
-
 * RSS
 ** Keybindings
 [[https://github.com/emacs-evil/evil-collection/blob/f2be91297029ae002d15e23510f9f686d848d7a8/modes/elfeed/evil-collection-elfeed.el][Look]]
@@ -1340,4 +1338,17 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
  :port 6697
  :nick erc-nick
  :password erc-password)
+#+end_src
+* Try area
+#+begin_src emacs-lisp
+(setq deft-directory "~/Dropbox/org/Notes"
+      deft-default-extension "md"
+      deft-use-filename-as-title t)
+
+(defun my/current-find-in-notes ()
+  (interactive)
+  (doom-project-find-file "~/Dropbox/org/Notes"))
+
+(map! :leader
+      "nd" #'my/current-find-in-notes)
 #+end_src

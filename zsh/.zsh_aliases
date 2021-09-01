@@ -103,7 +103,7 @@ function dowmus(){
 # Video + Auidio
 function dowfrom(){
 	url=$(xclip -selection c -o)
-	youtube-dl -ciw -o '%(title)s.%(ext)s'  --yes-playlist --playlist-start $1 $url
+	youtube-dl -ciw -o '%(playlist_index)2d-%(title)s.%(ext)s'  --yes-playlist --playlist-start $1 $url
 }
 
 function sub(){
@@ -218,10 +218,16 @@ alias pharo="~/pharolauncher/pharo-launcher"
 #Emacs
 alias emacs="emacsclient -c"
 alias emacst="emacsclient -t"
-alias magit='emacsclient -c  -e \(magit-status\)'
+alias magit='emacsclient -c  -e \(magit-status\) &'
 
 # C#
 alias d="dotnet"
 alias db="dotnet build"
 alias dr="dotnet run"
 alias dn="dotnet new"
+
+# Sysemd
+alias sy="sudo systemctl"
+alias systar="sudo systemctl start"
+alias systop="sudo systemctl stop"
+alias sydae="sudo systemctl daemon-reload"
