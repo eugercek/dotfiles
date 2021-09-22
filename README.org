@@ -1,14 +1,12 @@
 #+TITLE: System Install Steps
 
 
-* Call other scripts
-#+BEGIN_SRC sh :tangle install_system.sh :noweb yes
-./zsh_setup.sh
-./create_links.sh
-<<install-dnf-packages>>
-<<install-flatpak-packages>>
-<<install-pip-packages>>
-#+END_SRC
+* Scripts
+** Install configs
+#+begin_src sh :tangle ./scripts/install-configs.sh :shebang "#!/bin/bash"
+stow -D * -t ~
+stow * -t ~
+#+end_src
 * Installing Doom Emacs :manual:
 Only manually download this!
 *Download Sauce Code Pro*
@@ -51,10 +49,9 @@ WantedBy=default.target
 #+end_src
 
 Also assign a keybinding for ~emacsclient -c~
-
 * zsh setup
 :PROPERTIES:
-:header-args: :tangle ./zsh_setup.sh
+:header-args:    :tangle ./scripts/zsh_setup.sh :shebang "#!/bin/bash"
 :END:
 ** Install zsh
 #+begin_src sh
@@ -136,40 +133,6 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 - Chrome
 Video & Audio
 Audio Pan
-Video Speed Controller :config:
-| Show/hide | controller | V  |   0 |
-| Decrease  | speed      | S  | 0.1 |
-| Increase  | speed      | D  | 0.1 |
-| Rewind    | Z          | 10 |     |
-| Advance   | X          | 10 |     |
-| Reset     | speed      | R  |   1 |
-| Preferred | speed      | G  |   1 |
-| Rewind    | H          | 10 |     |
-Volume Booster
-Theme
-Dark Reader
-Material DevTools Theme Collection
-BehindTheOverlay
-Chrome extension source viewer
-EditThisCookie
-Extension Manager
-GNOME Shell integration
-Google Dictionary (by Google)
-Grammarly for Chrome
-JSON Formatter
-Midnight Lizard
-MyBib: Free Citation Generator
-Relay: Chat on Every Website
-Surfingkeys :config:
-Add https://raw.githubusercontent.com/EminUmutGercek/.dotfiles/master/surfingkeys to Load Settings from
-uBlock Origin
-Touch VPN - Secure and unlimited VPN
-Vimium
-Wappalyzer
-WhatRuns
-Wikiwand: Wikipedia Modernized
-YouTube Playlist Duration
-C/C++
 ** Configs
 *** Video Speed Controller
 | Show/hide | controller | V  |   0 |
@@ -182,179 +145,6 @@ C/C++
 | Rewind    | H          | 10 |     |
 *** Surfingkeys
 Add  =https://raw.githubusercontent.com/EminUmutGercek/.dotfiles/master/surfingkeys= to  =Load settings from:=
-* Install packages
-** dnf
-#+NAME: install-dnf-packages
-#+begin_src sh
-sudo dnf install $(cat ./packages/dnf-packages)
-#+end_src
-*** packages
-:PROPERTIES:
-:header-args: :tangle ./packages/dnf-packages
-:END:
-**** Terminal
-***** Important
-#+begin_src text
-tree
-vim
-ImageMagick
-youtube-dl
-acpi
-tldr
-lm_sensors
-the_silver_searcher
-ripgrep
-docker
-xclip
-cronie
-aspell
-aspell-en
-#+end_src
-
-***** Other
-#+begin_src text
-htop
-cmatrix
-cowsay
-figlet
-lolcat
-speedtest-cli
-neofetch
-glances
-telnet
-hugo
-inxi
-cloc
-xdotool
-stress
-pdfgrep
-#+end_src
-***** Shiny/Neo
-#+begin_src sh
-bat
-#+end_src
-
-**** Emacs
-#+begin_src text
-emacs
-libvterm
-plantuml
-pandoc
-texlive-scheme-full
-#+end_src
-**** GUI Programs
-#+begin_src text
-qbittorrent
-okular
-flameshot
-kruler
-#+end_src
-**** Programming Languages
-***** Python
-#+begin_src text
-bpython
-#+end_src
-***** C/C++
-#+begin_src text
-cmake
-libtool
-clang
-meson
-valgrind
-#+end_src
-***** Lisp
-#+begin_src text
-rlwrap
-#+end_src
-****** Common Lisp
-#+begin_src text
-sbcl
-#+end_src
-***** Javascript
-#+begin_src text
-nodejs
-#+end_src
-***** C# .NET
-#+begin_src text
-dotnet-sdk-5.0
-dotnet-runtime-5.0
-#+end_src
-
-**** Cyber Security
-#+begin_src text
-nmap
-#+end_src
-**** Git :fedora_specific:
-#+begin_src shell
-git-instaweb
-#+end_src
-**** Fonts
-#+begin_src text
-overpass-fonts
-#+end_src
-**** Gnome
-#+begin_src text
-gnome-tweaks
-#+end_src
-** flatpak
-#+NAME: install-flatpak-packages
-#+begin_src sh
-flatpak install $(cat ./packages/flatpak-packages)
-#+end_src
-*** packages
-:PROPERTIES:
-:header-args: :tangle ./packages/flatpak-packages
-:END:
-#+begin_src text
-Discord
-Dropbox
-Flatseal
-Spotify
-Peek
-FontFinder
-Postman
-zeal
-#+end_src
-** snap
-#+NAME: install-snap-packages
-#+begin_src sh
-sudo snap install $(cat ./packages/snap-packages)
-#+end_src
-*** pakcages
-:PROPERTIES:
-:header-args: :tangle ./packages/snap-packages
-:END:
-#+begin_src text
-code --classic
-sqlitebrowser
-#+end_src
-** pip packages
-#+NAME: install-pip-packages
-#+begin_src sh
-dnf install $(cat ./packages/pip-packages)
-#+end_src
-*** packages
-:PROPERTIES:
-:header-args: :tangle ./packages/pip-packages
-:END:
-#+begin_src text
-pytest
-nose
-python-language-server[all]
-pyright
-#+end_src
-* Fedora Settings
-** Fonts
-#+begin_src text
-sudo dnf install curl cabextract xorg-x11-font-utils fontconfig
-sudo rpm -i https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm 
-#+end_src
-** Cronjobs
-Make sure that =cronnie= is installed via dnf.
-#+begin_src sh
-systemctl enable crond.service
-#+end_src
-
 * Literate Configs
 ** Flameshot
 :PROPERTIES:
@@ -645,4 +435,214 @@ code --list-extensions > vscode-extensions
 ** Import
 #+begin_src sh : tangle no
 cat vscode-extensions | { code --install-extension $_}
+#+end_src
+* Stow
+** =.stow-local-ignore=
+#+begin_src text :tangle .stow-local-ignore
+scripts
+old
+systemd
+vscode
+*.org
+*.js
+#+end_src
+* Fedora
+** Fedora packages
+*** dnf
+:PROPERTIES:
+:header-args: :tangle ./packages/dnf-packages
+:END:
+**** Terminal
+***** Important
+#+begin_src text
+tree
+vim
+ImageMagick
+youtube-dl
+acpi
+tldr
+lm_sensors
+the_silver_searcher
+ripgrep
+docker
+xclip
+cronie
+aspell
+aspell-en
+#+end_src
+
+***** Other
+#+begin_src text
+htop
+cmatrix
+cowsay
+figlet
+lolcat
+speedtest-cli
+neofetch
+glances
+telnet
+hugo
+inxi
+cloc
+xdotool
+stress
+pdfgrep
+#+end_src
+***** Shiny/Neo
+#+begin_src sh
+bat
+#+end_src
+
+**** Emacs
+#+begin_src text
+emacs
+libvterm
+plantuml
+pandoc
+texlive-scheme-full
+#+end_src
+**** GUI Programs
+#+begin_src text
+qbittorrent
+okular
+flameshot
+kruler
+#+end_src
+**** Programming Languages
+***** Python
+#+begin_src text
+bpython
+#+end_src
+***** C/C++
+#+begin_src text
+cmake
+libtool
+clang
+meson
+valgrind
+#+end_src
+***** Lisp
+#+begin_src text
+rlwrap
+#+end_src
+****** Common Lisp
+#+begin_src text
+sbcl
+#+end_src
+***** Javascript
+#+begin_src text
+nodejs
+#+end_src
+***** C# .NET
+#+begin_src text
+dotnet-sdk-5.0
+dotnet-runtime-5.0
+#+end_src
+
+**** Cyber Security
+#+begin_src text
+nmap
+#+end_src
+**** Git :fedora_specific:
+#+begin_src shell
+git-instaweb
+#+end_src
+**** Fonts
+#+begin_src text
+overpass-fonts
+#+end_src
+**** Gnome
+#+begin_src text
+gnome-tweaks
+#+end_src
+*** flatpak
+:PROPERTIES:
+:header-args: :tangle ./packages/flatpak-packages
+:END:
+#+begin_src text
+Discord
+Dropbox
+Flatseal
+Spotify
+Peek
+FontFinder
+Postman
+zeal
+#+end_src
+*** snap
+:PROPERTIES:
+:header-args: :tangle ./packages/snap-packages
+:END:
+#+begin_src text
+code --classic
+sqlitebrowser
+#+end_src
+*** pip packages
+:PROPERTIES:
+:header-args: :tangle ./packages/pip-packages
+:END:
+#+begin_src text
+pytest
+nose
+python-language-server[all]
+pyright
+#+end_src
+** Fedora Settings
+*** Fonts
+#+begin_src text
+sudo dnf install curl cabextract xorg-x11-font-utils fontconfig
+sudo rpm -i https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
+#+end_src
+*** Cronjobs
+Make sure that =cronnie= is installed via dnf.
+#+begin_src sh
+systemctl enable crond.service
+#+end_src
+* Arch
+** Old
+*** pacman
+#+begin_src text :tangle ./packages/pacman-packages
+nvidia-settings
+pacman-contrib
+pactree
+ttf-unifont
+gnupg
+powerline-fonts
+tree
+emacs
+acpi
+ttf-hack
+vim
+arandr
+alacritty
+imagemagick
+tty-clock
+cmatrix
+cowsay
+figlet
+lolcat
+anki
+youtube-dl
+mpv
+speedtest-cli
+bluez-hid2hci
+pulseaudio-bluetooth
+python-pip
+bpython
+alsamixer
+qbittorrent
+tldr
+libvterm
+#+end_src
+*** yay
+#+begin_src text :tangle ./packages/yay-packages
+powerline-fonts-git
+ttf-unifont
+siji-git ttf-unifont
+ptpython
+nushell
+powershell
+zoom
+stress-ng
 #+end_src
