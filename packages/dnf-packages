@@ -1,34 +1,40 @@
-htop
 tree
 vim
 ImageMagick
+youtube-dl
+acpi
+tldr
+lm_sensors
+the_silver_searcher
+ripgrep
+docker
+xclip
+cronie
+aspell
+aspell-en
+
+htop
 cmatrix
 cowsay
 figlet
 lolcat
-youtube-dl
-acpi
 speedtest-cli
-tldr
-lm_sensors
 neofetch
 glances
 telnet
 hugo
 inxi
 cloc
-the_silver_searcher
 xdotool
 stress
 pdfgrep
-ripgrep
-docker
+
+bat
 
 emacs
 libvterm
 plantuml
 pandoc
-zeal
 texlive-scheme-full
 
 qbittorrent
@@ -49,6 +55,9 @@ rlwrap
 sbcl
 
 nodejs
+
+dotnet-sdk-5.0
+dotnet-runtime-5.0
 
 nmap
 

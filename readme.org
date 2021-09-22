@@ -186,11 +186,11 @@ Add  =https://raw.githubusercontent.com/EminUmutGercek/.dotfiles/master/surfingk
 ** dnf
 #+NAME: install-dnf-packages
 #+begin_src sh
-sudo dnf install $(cat dnf-packages)
+sudo dnf install $(cat ./packages/dnf-packages)
 #+end_src
 *** packages
 :PROPERTIES:
-:header-args: :tangle ./dnf-packages
+:header-args: :tangle ./packages/dnf-packages
 :END:
 **** Terminal
 ***** Important
@@ -299,11 +299,11 @@ gnome-tweaks
 ** flatpak
 #+NAME: install-flatpak-packages
 #+begin_src sh
-flatpak install $(cat flatpak-packages)
+flatpak install $(cat ./packages/flatpak-packages)
 #+end_src
 *** packages
 :PROPERTIES:
-:header-args: :tangle ./flatpak-packages
+:header-args: :tangle ./packages/flatpak-packages
 :END:
 #+begin_src text
 Discord
@@ -318,11 +318,11 @@ zeal
 ** snap
 #+NAME: install-snap-packages
 #+begin_src sh
-sudo snap install $(cat snap-packages)
+sudo snap install $(cat ./packages/snap-packages)
 #+end_src
 *** pakcages
 :PROPERTIES:
-:header-args: :tangle ./snap-packages
+:header-args: :tangle ./packages/snap-packages
 :END:
 #+begin_src text
 code --classic
@@ -331,11 +331,11 @@ sqlitebrowser
 ** pip packages
 #+NAME: install-pip-packages
 #+begin_src sh
-dnf install $(cat pip-packages)
+dnf install $(cat ./packages/pip-packages)
 #+end_src
 *** packages
 :PROPERTIES:
-:header-args: :tangle ./pip-packages
+:header-args: :tangle ./packages/pip-packages
 :END:
 #+begin_src text
 pytest
@@ -343,32 +343,6 @@ nose
 python-language-server[all]
 pyright
 #+end_src
-* Gnome
-** Gnome Extensions
-*** Fedora
-#+BEGIN_SRC sh  :results verbatim
-gnome-extensions list --enabled
-#+END_SRC
-
-#+RESULTS:
-#+begin_example
-scroll-workspaces@gfxmonk.net
-drive-menu@gnome-shell-extensions.gcampax.github.com
-sound-output-device-chooser@kgshank.net
-remove-dropdown-arrows@mpdeimos.com
-appindicatorsupport@rgcjonas.gmail.com
-remove-alt-tab-delay@tetrafox.pw
-extensions-sync@elhan.io
-alternate-tab@gnome-shell-extensions.gcampax.github.com
-clipboard-indicator@tudmotu.com
-putWindow@clemens.lab21.org
-color-picker@tuberry
-nightthemeswitcher@romainvigier.fr
-timepp@zagortenay333
-refresh-wifi@kgshank.net
-extensions@abteil.org
-vim-altTab@kokong.info
-#+end_example
 * Fedora Settings
 ** Fonts
 #+begin_src text
@@ -381,13 +355,6 @@ Make sure that =cronnie= is installed via dnf.
 systemctl enable crond.service
 #+end_src
 
-* CentOS Server Setup
-#+begin_src bash
-sudo dnf install git
-sudo dnf group install "Development Tools"
-sudo dnf install net-tools
-sudo dnf install tmux
-#+end_src
 * Literate Configs
 ** Flameshot
 :PROPERTIES:
@@ -670,12 +637,12 @@ mapkey(';n', 'Go to next episode',
            window.location = new_url;
        });
 #+end_src
-* vscode extension
+* vscode extensions :manual:
 ** Export
-#+begin_src sh :tangle vscode-extensions
+#+begin_src sh :tangle no
 code --list-extensions > vscode-extensions
 #+end_src
 ** Import
-#+begin_src sh
-cat vscode-extensions |% { code --install-extension $_}
+#+begin_src sh : tangle no
+cat vscode-extensions | { code --install-extension $_}
 #+end_src
