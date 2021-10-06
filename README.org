@@ -469,6 +469,8 @@ xclip
 cronie
 aspell
 aspell-en
+translate-shell
+ascii
 #+end_src
 
 ***** Other
@@ -501,6 +503,7 @@ libvterm
 plantuml
 pandoc
 texlive-scheme-full
+fd-find
 #+end_src
 **** GUI Programs
 #+begin_src text
@@ -508,6 +511,7 @@ qbittorrent
 okular
 flameshot
 kruler
+hexchat
 #+end_src
 **** Programming Languages
 ***** Python
@@ -556,6 +560,10 @@ overpass-fonts
 #+begin_src text
 gnome-tweaks
 #+end_src
+**** Xorg
+#+begin_src text
+xkill
+#+end_src
 *** flatpak
 :PROPERTIES:
 :header-args: :tangle ./packages/flatpak-packages
@@ -569,6 +577,7 @@ Peek
 FontFinder
 Postman
 zeal
+Kooha
 #+end_src
 *** snap
 :PROPERTIES:
@@ -598,6 +607,44 @@ sudo rpm -i https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore
 Make sure that =cronnie= is installed via dnf.
 #+begin_src sh
 systemctl enable crond.service
+#+end_src
+** Keybindings
+| Super + I | Invert Colors |
+
+*** Navigation
+| Super + h         | Move to workspace on the left          |
+| Super + l         | Move to workspace on the right         |
+
+| Super + Shift + l | Move window one workspace to the left  |
+| Super + Shift + h | Move window one workspace to the right |
+
+
+| Super + Shift + 1 | Move window to workspace 1 |
+| Super + Shift + 2 | Move window to workspace 2 |
+| Super + Shift + 3 | Move window to workspace 3 |
+| Super + Shift + 4 | Move window to workspace 4 |
+
+| Super + 1 | Switch to workspace 1 |
+| Super + 2 | Switch to workspace 2 |
+| Super + 3 | Switch to workspace 3 |
+| Super + 4 | Switch to workspace 4 |
+
+| Super + o | Swtich window directly *other* |
+
+*** Windows
+| Super + x | Close |
+| Super + m | Maximize |
+*** Custom
+| Super + ; | ~/usr/bin/guake -t~        |
+| Super + , | ~/usr/bin/emacsclient -c~  |
+| Print     | ~/usr/bin/flameshot gui~ |
+** Copr
+#+begin_src text
+taw/element
+#+end_src
+*** Package
+#+begin_src text
+element
 #+end_src
 * Arch
 ** Old
