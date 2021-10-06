@@ -478,7 +478,7 @@ Probably [[https://imagemagick.org/index.php][ImageMagick]] needs to be installe
 | ~org-roam-buffer-toogle~ | Show reated buffers           | =SPC n r r= |
 * Translation
 ** KILL Google Translate
-You  can override default languages with the =C-u=.
+You can override default languages with the =C-u=.
 
 #+begin_src emacs-lisp :tangle no
 (use-package! google-translate
@@ -540,8 +540,7 @@ One day fix this too...
 
   (goto-char (point-min))
   (while (search-forward """ nil t)
-    (replace-match "\""))
-  )
+    (replace-match "\"")))
 #+end_src
 ** TODO Debug Functions
 #+begin_src emacs-lisp
@@ -1111,6 +1110,7 @@ Can enter new value with mouse-2 or RET
 ** Actions
 #+begin_src emacs-lisp
 (map! :leader
+      :nv "a" nil ; Remove embark's keybinding
       (:prefix ("a" . "actions")
        "8" #'my/interactive-multiply ; S-8 is *
        "/" #'my/interactive-divide

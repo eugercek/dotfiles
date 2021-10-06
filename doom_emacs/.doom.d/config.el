@@ -307,8 +307,7 @@
 
   (goto-char (point-min))
   (while (search-forward """ nil t)
-    (replace-match "\""))
-  )
+    (replace-match "\"")))
 
 (defun my/error-line ()
   "Create an error message in C++"
@@ -624,6 +623,7 @@
  :n "M-j" #'drag-stuff-down)
 
 (map! :leader
+      :nv "a" nil ; Remove embark's keybinding
       (:prefix ("a" . "actions")
        "8" #'my/interactive-multiply ; S-8 is *
        "/" #'my/interactive-divide

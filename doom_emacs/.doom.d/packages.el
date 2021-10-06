@@ -4,7 +4,11 @@
 (package! turkish)
 (package! zeal-at-point)
 (package! peep-dired)
-(package! go-translate)
+(package! go-translate
+  :recipe (:host github
+           :repo "lorniu/go-translate")
+  :pin "ea63d0ad9816aa1c478c66bd1ff9978e8330d3cb")
+
 (package! org-super-agenda)
 ;; (package! evil-terminal-cursor-changer)
 (package! doct)

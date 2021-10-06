@@ -10,7 +10,9 @@
         +childframe)
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy
+       ;; (ivy
+       ;;  +icons)
+       (vertico
         +icons)
 
        :ui
