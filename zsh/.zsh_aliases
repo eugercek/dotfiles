@@ -231,3 +231,27 @@ alias sy="sudo systemctl"
 alias systar="sudo systemctl start"
 alias systop="sudo systemctl stop"
 alias sydae="sudo systemctl daemon-reload"
+
+
+function fixsub(){
+         for i in *.srt; do
+             [ -f "$i" ] || break
+
+             #Ç
+
+             #Ğ
+             sed -i 's/ð/ğ/g' $i
+
+             #I
+             sed -i 's/ý/ı/g' $i
+             sed -i 's/Ý/I/g' $i
+
+             #Ö
+
+             #Ş
+             sed -i 's/þ/ş/g' $i
+             sed -i 's/Þ/Ş/g' $i
+
+             #Ü
+         done
+}
