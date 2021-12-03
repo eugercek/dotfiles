@@ -255,3 +255,24 @@ function fixsub(){
              #Ü
          done
 }
+
+#Dosbox
+function debug(){
+	dosbox ~/dosbox/DEBUG.EXE
+}
+
+#Control webcam
+function kill_webcam(){
+    sudo modprobe -r uvcvideo
+}
+
+function open_webcam(){
+    sudo modprobe uvcvideo
+}
+
+alias setclip="xclip -r -selection c"
+alias getclip="xclip -selection c -o"
+
+function cpwd(){
+	pwd | setclip
+}
