@@ -263,39 +263,57 @@ Hints.characters = 'fjdkrueisl'; // Home row without pinky
 cmap('<Ctrl-j>', '<Tab>');
 cmap('<Ctrl-k>', '<Shift-Tab>');
 #+end_src
-*** Handle video speed controller collisions
+*** Variable configs
 #+begin_src js
-function alt_key(default_key){
-    return ',' + default_key;
-}
+settings.hintAlign = "left";
+//Hints.characters = 'yuiophjklnm'; // for right hand
+Hints.characters = "fjdkrueisl"; // Home row without pinky
 
-var vsc_keys = ['v', 's', 'd', 'h', 'l', 'r']; //Video Speed Controller Keys
-var youtube_keys = ['i', 'f', 'c', '0'];
-var block_sites = ["netflix.com", "youtube.com", ".*dizi.*", ".*film.*" , ".*anime.*", "udemy.com"];
+let videoKeys = ["v", "s", "d", "h", "l", "r"]; //Video Speed Controller Keys
+let youtubeKeys = ["i", "f", "c", "0"];
+let blockSites = [
+  "netflix.com",
+  "youtube.com",
+  ".*dizi.*",
+  ".*film.*",
+  ".*anime.*",
+  "udemy.com",
+];
 
-var block_for_vsc= new RegExp(block_sites.join("|"), "i");
-var block_for_youtube= new RegExp(block_sites.join("|"), "i");
-
-
-//Add Alternatives
-vsc_keys.forEach(item => map(alt_key(item), item, block_for_vsc));
-youtube_keys.forEach(item => map(alt_key(item), item));
-
-//Remove Keys
-vsc_keys.forEach(item => unmap(item, block_for_vsc));
-youtube_keys.forEach(item => unmap(item, block_for_youtube));
+const leaderKey = ",";
 #+end_src
-*** Vimium Like bindings
+*** Util functions
+[[https://github.com/brookhong/Surfingkeys/blob/master/src/content_scripts/common/api.js#L132][map]] handles bad domain
 #+begin_src js
-//Normal Tabs
-map('J', 'E');
-map('K', 'R');
-var j_k_character=0;
+const alt_key = (key) => leaderKey + key;
 
-map('H', 'S');
-map(';o', '<Ctrl-6>');
-map('L', 'D');
-map('F', 'gf');
+// `map` handles bad domain
+const key = (newKey, oldKey, domain) => {
+  if (newKey) {
+    map(newKey, oldKey, domain);
+  }
+  unmap(oldKey);
+};
+
+#+end_src
+*** Handle video keybinding collisions
+#+begin_src js
+let videoBlockedKeys = new RegExp(blockSites.join("|"), "i");
+let youtubeBlockedKeys = new RegExp(blockSites.join("|"), "i");
+
+videoKeys.forEach((i) => map(alt_key(i), i, videoBlockedKeys));
+youtubeKeys.forEach((i) => map(alt_key(i), i, youtubeBlockedKeys));
+
+videoKeys.forEach((i) => unmap(i, videoBlockedKeys));
+youtubeKeys.forEach((i) => unmap(i, youtubeBlockedKeys));
+#+end_src
+*** Remap for vimium like bindings
+#+begin_src js
+key("K", "R");
+key("H", "S");
+key(";o", "<Ctrl-6>");
+key("L", "D");
+key("F", "gf");
 #+end_src
 
 **** Unmaps
@@ -399,33 +417,42 @@ mapkey('eH', 'Outdent/Promote a tree', () => {
     });
 });
 #+end_src
-*** Yank image's source URL
+*** New Functionalities
+**** Yank image's source URL
 #+begin_src js
 mapkey('ye', 'Copy src URL of an image', function() {
-    Hints.create('img[src]', function(element, event) {
+    Hints.create('img[src]',(element, event) =>  {
         Clipboard.write(element.src);
     });
 });
 
 mapkey('yme', 'Copy multiple link URLs to the clipboard', function() {
-    var linksToYank = [];
+    let linksToYank = [];
     Hints.create('img[src]', function(element) {
         linksToYank.push(element.src);
         Clipboard.write(linksToYank.join('\n'));
     }, {multipleHits: true});
 });
 #+end_src
-*** Go to next episode
+**** Go to next episode
 #+begin_src js
 mapkey(';n', 'Go to next episode',
        function next_episode(){
            base_url = window.location.href
-           ep_no = base_url.match(/(\d+)(?!.*\d)/)[0]
+           ep_no = base_url.match(/(\d+)(?!.*\d)/)[0];
            new_ep = parseInt(ep_no, 10) + 1;
            n = base_url.lastIndexOf(ep_no);
            new_url = base_url.slice(0, n) + base_url.slice(n).replace(ep_no, new_ep);
            window.location = new_url;
        });
+#+end_src
+**** Copy title and url for org mode
+#+begin_src js
+mapkey(";c", "Copy title and url for org mode", () => {
+  let url = document.URL;
+  let title = document.title;
+  Clipboard.write(`[[${url}][${title}]]`);
+});
 #+end_src
 * vscode extensions :manual:
 ** Export
