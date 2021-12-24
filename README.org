@@ -309,6 +309,7 @@ youtubeKeys.forEach((i) => unmap(i, youtubeBlockedKeys));
 #+end_src
 *** Remap for vimium like bindings
 #+begin_src js
+key("J", "E");
 key("K", "R");
 key("H", "S");
 key(";o", "<Ctrl-6>");
@@ -316,16 +317,19 @@ key("L", "D");
 key("F", "gf");
 #+end_src
 
-**** Unmaps
+*** Remove bindings
+**** Remove unnecessary bindings
 #+begin_src js
-unmap('<Ctrl-j>');
-unmap('<Ctrl-h>');
-unmap('E');
-unmap('R');
-unmap('S');
-unmap('<Ctrl-6>');
-unmap('D');
-unmap('gf');
+unmap("<Ctrl-j>");
+unmap("<Ctrl-h>");
+unmap(";m")
+#+end_src
+
+**** Remove Duplicate bindings
+***** Mouse Click
+#+begin_src js
+unmap("C")
+unmap("<Ctrl-i>")
 #+end_src
 
 *** KILL Firefox treestyle tab
@@ -454,6 +458,47 @@ mapkey(";c", "Copy title and url for org mode", () => {
   Clipboard.write(`[[${url}][${title}]]`);
 });
 #+end_src
+*** Binding TODOs
+These are the bindings I'm currently trying to getting used to..
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+**** Mouse Click
+***** TODO Look at
+| =[[= | Click on the previous link on current page |
+| =]]= | Click on the next link on current page     |
+***** IDEA Getting used to
+| =;fs= | Display hints to focus scrollable elements |
+| =;di= | Download image                             |
+| =af=  | Open a link in active new tab              |
+| =O=   | Open detected links from text              |
+| =q=   | Click on an Image or a button              |
+**** Tabs
+***** TODO Look at
+| =;gt= | Gather filtered tabs into current window |
+| =;gw= | Gather all tabs into current window      |
+
+***** IDEA Geting used to
+| =T=       | Choose a tab     |
+****** Zoom
+| =zr= | zoom reset |
+| =zi= | zoom in    |
+| =zo= | zoom out   |
+****** Tab operations (browser level)
+| =<Alt-p>= | Pin current tab              |
+| =<Alt-m>= | Mute current tab             |
+| =on=      | Open new tab (=<Control-t>=) |
+***** HOLD Will get used to
+| =yt=  | Duplicate current tab               |
+| =yT=  | Duplicate current tab in background |
+| =g0=  | Go to the first tab                 |
+| =g$=  | Go to the last tab                  |
+| =gx0= | Close all tabs on left              |
+| =gxt= | Close tab on left                   |
+| =gxT= | Close tab on right                  |
+| =gx$= | Close all tabs on right             |
+| =gxx= | Close all tabs except current one   |
+
 * vscode extensions :manual:
 ** Export
 #+begin_src sh :tangle no

@@ -41,20 +41,19 @@ youtubeKeys.forEach((i) => map(alt_key(i), i, youtubeBlockedKeys));
 videoKeys.forEach((i) => unmap(i, videoBlockedKeys));
 youtubeKeys.forEach((i) => unmap(i, youtubeBlockedKeys));
 
+key("J", "E");
 key("K", "R");
 key("H", "S");
 key(";o", "<Ctrl-6>");
 key("L", "D");
 key("F", "gf");
 
-unmap('<Ctrl-j>');
-unmap('<Ctrl-h>');
-unmap('E');
-unmap('R');
-unmap('S');
-unmap('<Ctrl-6>');
-unmap('D');
-unmap('gf');
+unmap("<Ctrl-j>");
+unmap("<Ctrl-h>");
+unmap(";m")
+
+unmap("C")
+unmap("<Ctrl-i>")
 
 mapkey('ye', 'Copy src URL of an image', function() {
     Hints.create('img[src]',(element, event) =>  {
