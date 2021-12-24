@@ -468,27 +468,32 @@ These are the bindings I'm currently trying to getting used to..
 | =[[= | Click on the previous link on current page |
 | =]]= | Click on the next link on current page     |
 ***** IDEA Getting used to
-| =;fs= | Display hints to focus scrollable elements |
-| =;di= | Download image                             |
-| =af=  | Open a link in active new tab              |
-| =O=   | Open detected links from text              |
-| =q=   | Click on an Image or a button              |
+#+tblname: mouse-click-current
+| Keybinding | Description                                |
+|------------+--------------------------------------------|
+| =;fs=      | Display hints to focus scrollable elements |
+| =;di=      | Download image                             |
+| =af=       | Open a link in active new tab              |
+| =O=        | Open detected links from text              |
+| =q=        | Click on an Image or a button              |
 **** Tabs
 ***** TODO Look at
 | =;gt= | Gather filtered tabs into current window |
 | =;gw= | Gather all tabs into current window      |
 
 ***** IDEA Geting used to
-| =T=       | Choose a tab     |
-****** Zoom
-| =zr= | zoom reset |
-| =zi= | zoom in    |
-| =zo= | zoom out   |
-****** Tab operations (browser level)
+#+tblname: tabs-current
+| =T=       | Choose a tab                 |
+|-----------+------------------------------|
+| =zr=      | zoom reset                   |
+| =zi=      | zoom in                      |
+| =zo=      | zoom out                     |
+|-----------+------------------------------|
 | =<Alt-p>= | Pin current tab              |
 | =<Alt-m>= | Mute current tab             |
 | =on=      | Open new tab (=<Control-t>=) |
 ***** HOLD Will get used to
+#+name: tabs-current
 | =yt=  | Duplicate current tab               |
 | =yT=  | Duplicate current tab in background |
 | =g0=  | Go to the first tab                 |
@@ -498,6 +503,20 @@ These are the bindings I'm currently trying to getting used to..
 | =gxT= | Close tab on right                  |
 | =gx$= | Close all tabs on right             |
 | =gxx= | Close all tabs except current one   |
+*** Create currently training bindings popup
+#+begin_src js :var mouse=mouse-click-current tabs=tabs-current :results output
+const showCurrentTrainingBindings = () => {
+    const messages = [...mouse, ...tabs].map(row => ( {
+            binding: row[0].slice(1, -1),
+            description: row[1]
+        }))
+        .map(obj => `${obj.binding}\t\t\t\t${obj.description}`)
+
+    Front.showPopup(`<h1>${messages.join('<br>')} </h1>`);
+}
+
+mapkey(";?", "Show currently training keybindings", showCurrentTrainingBindings);
+#+end_src
 
 * vscode extensions :manual:
 ** Export

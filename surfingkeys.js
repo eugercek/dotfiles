@@ -84,3 +84,17 @@ mapkey(";c", "Copy title and url for org mode", () => {
   let title = document.title;
   Clipboard.write(`[[${url}][${title}]]`);
 });
+
+var mouse=[["=;fs=", "Display hints to focus scrollable elements"], ["=;di=", "Download image"], ["=af=", "Open a link in active new tab"], ["=O=", "Open detected links from text"], ["=q=", "Click on an Image or a button"]];
+var tabs=[["=T=", "Choose a tab"], ["=zr=", "zoom reset"], ["=zi=", "zoom in"], ["=zo=", "zoom out"], ["=<Alt-p>=", "Pin current tab"], ["=<Alt-m>=", "Mute current tab"], ["=on=", "Open new tab (=<Control-t>=)"]];
+const showCurrentTrainingBindings = () => {
+    const messages = [...mouse, ...tabs].map(row => ( {
+            binding: row[0].slice(1, -1),
+            description: row[1]
+        }))
+        .map(obj => `${obj.binding}\t\t\t\t${obj.description}`)
+
+    Front.showPopup(`<h1>${messages.join('<br>')} </h1>`);
+}
+
+mapkey(";?", "Show currently training keybindings", showCurrentTrainingBindings);
