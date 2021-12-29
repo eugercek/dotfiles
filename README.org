@@ -258,16 +258,16 @@ TYPE_MOVESELECTION=W
 #+begin_src js
 settings.hintAlign = "left";
 //Hints.characters = 'yuiophjklnm'; // for right hand
-Hints.characters = 'fjdkrueisl'; // Home row without pinky
+api.Hints.characters = 'fjdkrueisl'; // Home row without pinky
 
-cmap('<Ctrl-j>', '<Tab>');
-cmap('<Ctrl-k>', '<Shift-Tab>');
+api.cmap('<Ctrl-j>', '<Tab>');
+api.cmap('<Ctrl-k>', '<Shift-Tab>');
 #+end_src
 *** Variable configs
 #+begin_src js
 settings.hintAlign = "left";
 //Hints.characters = 'yuiophjklnm'; // for right hand
-Hints.characters = "fjdkrueisl"; // Home row without pinky
+api.Hints.characters = "fjdkrueisl"; // Home row without pinky
 
 let videoKeys = ["v", "s", "d", "h", "l", "r"]; //Video Speed Controller Keys
 let youtubeKeys = ["i", "f", "c", "0"];
@@ -290,9 +290,9 @@ const alt_key = (key) => leaderKey + key;
 // `map` handles bad domain
 const key = (newKey, oldKey, domain) => {
   if (newKey) {
-    map(newKey, oldKey, domain);
+    api.map(newKey, oldKey, domain);
   }
-  unmap(oldKey);
+  api.unmap(oldKey);
 };
 
 #+end_src
@@ -301,11 +301,11 @@ const key = (newKey, oldKey, domain) => {
 let videoBlockedKeys = new RegExp(blockSites.join("|"), "i");
 let youtubeBlockedKeys = new RegExp(blockSites.join("|"), "i");
 
-videoKeys.forEach((i) => map(alt_key(i), i, videoBlockedKeys));
-youtubeKeys.forEach((i) => map(alt_key(i), i, youtubeBlockedKeys));
+videoKeys.forEach((i) => api.map(alt_key(i), i, videoBlockedKeys));
+youtubeKeys.forEach((i) => api.map(alt_key(i), i, youtubeBlockedKeys));
 
-videoKeys.forEach((i) => unmap(i, videoBlockedKeys));
-youtubeKeys.forEach((i) => unmap(i, youtubeBlockedKeys));
+videoKeys.forEach((i) => api.unmap(i, videoBlockedKeys));
+youtubeKeys.forEach((i) => api.unmap(i, youtubeBlockedKeys));
 #+end_src
 *** Remap for vimium like bindings
 #+begin_src js
@@ -320,16 +320,16 @@ key("F", "gf");
 *** Remove bindings
 **** Remove unnecessary bindings
 #+begin_src js
-unmap("<Ctrl-j>");
-unmap("<Ctrl-h>");
-unmap(";m")
+api.unmap("<Ctrl-j>");
+api.unmap("<Ctrl-h>");
+api.unmap(";m")
 #+end_src
 
 **** Remove Duplicate bindings
 ***** Mouse Click
 #+begin_src js
-unmap("C")
-unmap("<Ctrl-i>")
+api.unmap("C")
+api.unmap("<Ctrl-i>")
 #+end_src
 
 *** KILL Firefox treestyle tab
@@ -424,13 +424,13 @@ mapkey('eH', 'Outdent/Promote a tree', () => {
 *** New Functionalities
 **** Yank image's source URL
 #+begin_src js
-mapkey('ye', 'Copy src URL of an image', function() {
+api.mapkey('ye', 'Copy src URL of an image', function() {
     Hints.create('img[src]',(element, event) =>  {
         Clipboard.write(element.src);
     });
 });
 
-mapkey('yme', 'Copy multiple link URLs to the clipboard', function() {
+api.mapkey('yme', 'Copy multiple link URLs to the clipboard', function() {
     let linksToYank = [];
     Hints.create('img[src]', function(element) {
         linksToYank.push(element.src);
@@ -440,7 +440,7 @@ mapkey('yme', 'Copy multiple link URLs to the clipboard', function() {
 #+end_src
 **** Go to next episode
 #+begin_src js
-mapkey(';n', 'Go to next episode',
+api.mapkey(';n', 'Go to next episode',
        function next_episode(){
            base_url = window.location.href
            ep_no = base_url.match(/(\d+)(?!.*\d)/)[0];
@@ -452,7 +452,7 @@ mapkey(';n', 'Go to next episode',
 #+end_src
 **** Copy title and url for org mode
 #+begin_src js
-mapkey(";c", "Copy title and url for org mode", () => {
+api.mapkey(";c", "Copy title and url for org mode", () => {
   let url = document.URL;
   let title = document.title;
   Clipboard.write(`[[${url}][${title}]]`);
@@ -515,7 +515,7 @@ const showCurrentTrainingBindings = () => {
     Front.showPopup(`<h1>${messages.join('<br>')} </h1>`);
 }
 
-mapkey(";?", "Show currently training keybindings", showCurrentTrainingBindings);
+api.mapkey(";?", "Show currently training keybindings", showCurrentTrainingBindings);
 #+end_src
 
 * vscode extensions :manual:
