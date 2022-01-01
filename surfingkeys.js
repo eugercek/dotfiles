@@ -51,13 +51,18 @@ key("F", "gf");
 api.unmap("<Ctrl-j>");
 api.unmap("<Ctrl-h>");
 api.unmap(";m")
+api.unmap(";m")
+
+
+//
+api.unmap("e")
 
 api.unmap("C")
 api.unmap("<Ctrl-i>")
 
 api.mapkey('ye', 'Copy src URL of an image', function() {
     Hints.create('img[src]',(element, event) =>  {
-        Clipboard.write(element.src);
+        api.Clipboard.write(element.src);
     });
 });
 
@@ -65,7 +70,7 @@ api.mapkey('yme', 'Copy multiple link URLs to the clipboard', function() {
     let linksToYank = [];
     Hints.create('img[src]', function(element) {
         linksToYank.push(element.src);
-        Clipboard.write(linksToYank.join('\n'));
+        api.Clipboard.write(linksToYank.join('\n'));
     }, {multipleHits: true});
 });
 
@@ -82,7 +87,7 @@ api.mapkey(';n', 'Go to next episode',
 api.mapkey(";c", "Copy title and url for org mode", () => {
   let url = document.URL;
   let title = document.title;
-  Clipboard.write(`[[${url}][${title}]]`);
+  api.Clipboard.write(`[[${url}][${title}]]`);
 });
 
 const showCurrentTrainingBindings = () => {
@@ -96,3 +101,14 @@ const showCurrentTrainingBindings = () => {
 }
 
 api.mapkey(";?", "Show currently training keybindings", showCurrentTrainingBindings);
+
+api.mapkey(
+  "ec",
+  "GitHub Clone Repo (HTTPS)",
+  () => {
+    const gitURL = `${document.URL}.git`;
+    const terminalCommand = `git clone ${gitURL}`;
+    api.Clipboard.write(terminalCommand);
+  },
+  { domain: /github.com/i }
+);
