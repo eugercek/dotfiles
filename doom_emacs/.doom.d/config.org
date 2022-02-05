@@ -3,6 +3,11 @@
 #+EMAIL: umutgercek1999@gmail.com
 
 * Non doom
+** User Info
+#+begin_src emacs-lisp
+(setq user-full-name "Emin Umut Gerçek"
+      user-mail-address "umutgercek1999@gmail.com")
+#+end_src
 ** Sane defaults for Emacs
 Copy Pasted
 #+begin_src emacs-lisp
@@ -27,11 +32,6 @@ Copy Pasted
 Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 #+begin_src emacs-lisp
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
-#+end_src
-** User Info
-#+begin_src emacs-lisp
-(setq user-full-name "Emin Umut Gerçek"
-      user-mail-address "umutgercek1999@gmail.com")
 #+end_src
 * Doom
 ** Theme
@@ -82,10 +82,10 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 #+end_src
 ** Font
 *** Main fonts
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 ;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
-(setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
-      doom-variable-pitch-font (font-spec :family "Overpass" :size 24))
+;; (setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
+(setq doom-variable-pitch-font (font-spec :family "Spectral" :size 24))
 ;; doom-big-font (font-spec :family "Ubuntu" :size 24)
 ;; doom-serif-font (font-spec :family "Noto Serif SC" :size 24)
 ;; doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
@@ -111,7 +111,6 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 (after! persp-mode
   (setq persp-emacsclient-init-frame-behaviour-override "main"))
 #+end_src
-
 * Org
 ** Rudimentary
 #+begin_src emacs-lisp
@@ -121,8 +120,9 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 
 (setq org-log-done 'time)
 
-(remove-hook! '(org-mode-hook text-mode-hook)
-  #'display-line-numbers-mode)
+(remove-hook! text-mode #'display-line-numbers-mode)
+
+(setq-hook! 'org-mode-hook company-idle-delay nil)
 #+end_src
 ** Org clock
 #+begin_src emacs-lisp
@@ -205,84 +205,13 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
                            :order 90)
                           (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
 #+end_src
-** KILL Old Capture
-#+begin_src emacs-lisp :tangle no
-(setq org-capture-templates '(
-                              ("t" "Todo")
-                              ("tn" "No time" entry
-                               (file+headline "~/Dropbox/org/gtd/inbox.org" "Tasks")
-                               "* TODO %^{Description} %^g\n  %?")
-                              ("tt" "With time" entry
-                               (file+headline "~/Dropbox/org/gtd/agenda.org" "Tasks")
-                               "* TODO %^{Description} %^g\n \%^t\n  %?")
-
-
-                              ("T" "Tickler" entry
-                               (file+headline "~/Dropbox/org/gtd/tickler.org" "Tickler")
-                               "* %i%? \n %U")
-
-                              ("n" "Simple Notes" entry
-                               (file+headline "~/Dropbox/org/gtd/inbox.org" "Notes")
-                               "* %^{Description} %^g\n  %?")
-
-                              ("j" "Journal" entry
-                               (file+datetree "~/Dropbox/org/gtd/journal.org")
-                               "* %U %?" :clock-in t :clock-keep t)
-
-                              ("w" "Word" entry
-                               (file+datetree "~/Dropbox/org/gtd/words.org")
-                               "* %U %?" :clock-in t :clock-keep t)
-
-                              ("l" "Log")
-
-                              ("ls" "Log SICP/LISP daily" entry
-                               (file+olp+datetree "~/Dropbox/org/gtd/log.org" "SICP")
-                               "* %<%H:%M>\n%^{minute}p%^{page}p%?" :jump-to-captured t :immediate-finish t)
-
-                              ("lu" "Log UNIX daily" entry
-                               (file+olp+datetree "~/Dropbox/org/gtd/log.org" "UNIX")
-                               "* %<%H:%M> %^{Topic}\n%^{minute|60}p" :immediate-finish t)
-
-                              ("r" "Resource")
-
-                              ("ri" "Internet" entry
-                               (file+olp "~/Dropbox/org/gtd/inbox.org" "Resources" "Internet")
-                               "* [[%c][%^{Name of link}]] %^g\n%U\n")))
-#+end_src
 ** TODO Capture
 #+begin_src emacs-lisp
-(setq org-capture-templates '(("t" "Todo")
-                              ("tn" "No time" entry
-                               (file+headline "~/Dropbox/org/gtd/inbox.org" "Tasks")
-                               "* TODO %^{Description} %^g\n  %?")
-                              ("tt" "With time" entry
-                               (file+headline "~/Dropbox/org/gtd/agenda.org" "Tasks")
-                               "* TODO %^{Description} %^g\n \%^t\n  %?")
-
-                              ("T" "Tickler" entry
-                               (file+headline "~/Dropbox/org/gtd/tickler.org" "Tickler")
-                               "* %i%? \n %U")
-
-                              ("j" "Journal" entry
+(setq org-capture-templates '(("j" "Journal" entry
                                (file+datetree "~/Dropbox/org/gtd/journal.org")
-                               "* %U %?" :clock-in t :clock-keep t)
-
-                              ("l" "Log")
-
-                              ("ls" "Log SICP daily" entry
-                               (file+olp+datetree "~/Dropbox/org/gtd/sicp.org" "Log")
-                               "* %<%H:%M>\n%^{minute}p%^{page}p%^{current-page}p%?" :jump-to-captured t :immediate-finish t)
-
-                              ("lu" "Log UNIX daily" entry
-                               (file+olp+datetree "~/Dropbox/org/gtd/log.org" "UNIX")
-                               "* %<%H:%M> %^{Topic}\n%^{minute|60}p" :immediate-finish t)
-
-                              ("r" "Resource")
-
-                              ("ri" "Internet" entry
-                               (file+olp "~/Dropbox/org/gtd/inbox.org" "Resources" "Internet")
-                               "* [[%c][%^{Name of link}]] %^g\n%U\n")))
+                               "* %U %?" :clock-in t :clock-keep t)))
 #+end_src
+
 ** org-download
 https://zzamboni.org/post/my-doom-emacs-configuration-with-commentary/
 #+begin_src emacs-lisp
@@ -329,16 +258,6 @@ If really want to display inline in org mode use _{} syntax
 #+begin_src emacs-lisp
 (setq org-hide-emphasis-markers t)
 #+end_src
-**** Org emphasis list
-#+begin_src emacs-lisp
-(setq org-emphasis-alist
-      '(("*" bold)
-        ("/" italic)
-        ("_" underline)
-        ("=" org-verbatim verbatim)
-        ("~" org-code verbatim)))
-;; ("+" (:strike-through t))))
-#+end_src
 **** WAIT Unhide emphasis interactively
 #+begin_src emacs-lisp
 (use-package! org-appear
@@ -380,8 +299,10 @@ If really want to display inline in org mode use _{} syntax
 #+end_src
 ** [#A] Keybindings
 #+begin_src emacs-lisp
-(map! :leader
-      :desc "org-ctrl-c-star copy" "8" #'org-ctrl-c-star)
+(map! :map org-mode-map
+      :after org
+      :localleader
+      :desc "org-ctrl-c-star" "8" #'org-ctrl-c-star)
 #+end_src
 ** Latex
 *** Visual
@@ -411,8 +332,8 @@ Snippet is [[https://stackoverflow.com/questions/21005885/export-org-mode-code-b
 *** TeX-like syntax
 Don't interpret every _ subscript!
 
-| F_1   | ❌ |
-| F_{1} | ✔  |
+| F_1 | ❌ |
+| F_{1}  | ✔  |
 #+begin_src emacs-lisp
 (setq org-export-with-sub-superscripts '{})
 #+end_src
@@ -448,14 +369,6 @@ Don't interpret every _ subscript!
   (format "#+include: %s :lines %s :src %s" file-name line-string src-lang ))
 (my/include-file-lines-org-mode "./New.cpp" "C++" 5 10)
 #+end_src
-** TODO Automatically close emphasis markers
-#+begin_src emacs-lisp
-(sp-local-pair
- '(org-mode)
- "~" "~"
- :actions '(insert))
-#+end_src
-
 ** Plantuml
 *** Always show inline images
 #+begin_src emacs-lisp
@@ -469,7 +382,7 @@ Probably [[https://imagemagick.org/index.php][ImageMagick]] needs to be installe
 #+begin_src emacs-lisp
 (setq org-image-actual-width 500)
 #+end_src
-** Org Roam
+** PROJ Org Roam
 =SPC n r= it top level binding for Org Roam
 
 | ~org-roam-node-find~     | Create node                   | =SPC n r f= |
@@ -670,32 +583,32 @@ Run =(lsp-ui-flycheck-list)=
 **** Company Behaviour
 #+begin_src emacs-lisp
 (after! company
-  (setq company-idle-delay 0.5)
-  (setq company-minimum-prefix-length 1)
-  (setq company-selection-wrap-around t);;Circular list
-  (setq company-show-numbers t));; M-7 for 7nd match
+  (setq company-idle-delay 0.2
+        company-minimum-prefix-length 2
+        company-selection-wrap-around t ;;Circular list
+        company-show-numbers t)) ;; M-7 for 7nd match
 #+end_src
 **** Select with tab
 #+begin_src emacs-lisp
 (after! company
-  (define-key company-active-map (kbd "<tab>")
-    #'company-complete-selection)
-  (define-key company-active-map (kbd "TAB")
-    #'company-complete-selection))
+  (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
+  (define-key company-active-map (kbd "TAB") #'company-complete-selection))
 #+end_src
 
-**** Company ui
+**** Company UI
 #+begin_src emacs-lisp
 (after! company
   (setq company-tooltip-limit 10
         company-tooltip-minimum-width 80))
 #+end_src
-
-*** TODO ivy
-M-i for insert what you select.
-~  for go home
-// for go root
-`  for narrow down to projectile
+**** Keybindings
+| Keybind | Description                          |
+|---------+--------------------------------------|
+| =C-j=     | (evil) Go to next candidate          |
+| =C-k=     | (evil) Go to previous candidate      |
+| =C-h=     | Display documentation (if available) |
+| =C-s=     | Filter candidates                    |
+| =C-S-s=   | Search candidates with helm/ivy      |
 ** ui
 *** zen
 **** KILL Writeroom width limit
@@ -1284,7 +1197,7 @@ Right [[https://tecosaur.github.io/emacs-config/config.html#visual-enhancements]
   (map! :mode Info-mode
         :n "x" #'info-heading->org-heading))
 #+end_src
-* Pomodoro Setup
+** Pomodoro Setup
 You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in order to use =org-pomodoro-default-args=.
 
 #+begin_src emacs-lisp
@@ -1347,7 +1260,7 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
 
 (defun my/current-find-in-notes ()
   (interactive)
-  (doom-project-find-file "~/Dropbox/org/Notes"))
+  (doom-project-find-file "~/Dropbox/org/Notes/"))
 
 (map! :leader
       "nd" #'my/current-find-in-notes)
