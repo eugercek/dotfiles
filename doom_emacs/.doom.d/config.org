@@ -34,51 +34,18 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
 #+end_src
 * Doom
-** Theme
-*** Light & Dark
-**** Day
-#+begin_src emacs-lisp : tangle no
-(defun my/day-additonals ()
-  (interactive)
-  (custom-set-faces!
-    '(region     :background "#faf2ff")
-    '(org-block-begin-line :background "#fafaf8")
-    '(org-block-end-line   :background "#fafaf8"))
-  (setq doom-one-light-comment-bg t
-        doom-one-light-brighter-comments t))
-#+end_src
-**** Night
-#+begin_src emacs-lisp :tangle no
-(defun my/night-additonals ()
-  (interactive)
-  (progn
-    (custom-set-faces!
-      '(region     :background "#094A5A")
-      '(org-block-begin-line :background "#002b3a")
-      '(org-block-end-line   :background "#002b3a"))
+** TODO Theme
+#+begin_src emacs-lisp
+(use-package! circadian
+  :config
+  (setq calendar-latitude 39.928410)
+  (setq calendar-longitude 32.834960)
+  (setq circadian-themes '((:sunrise . doom-one-light)
+                           (:sunset . doom-solarized-dark-high-contrast )
+                           ("24:00" . doom-ir-black)))
+  (circadian-setup))
 
-    (setq doom-solarized-dark-brighter-text t
-          doom-solarized-dark-brighter-comments t)))
-#+end_src
-**** Find Day or Night
-#+begin_src emacs-lisp :tangle no
-(setq my/current-time (string-to-number (format-time-string "%H")))
-
-(defun my/day-or-night ()
-  (if
-      (and
-       (< 5 my/current-time)
-       (< my/current-time 20))
-      'day
-    'night))
-
-(setq doom-theme (if (eq (my/day-or-night) 'day)
-                     'doom-one-light
-                   'doom-solarized-dark))
-
-(if (eq (my/day-or-night) 'day)
-    (my/day-additonals)
-  (my/night-additonals))
+(add-hook 'circadian-after-load-theme-hook #'solaire-mode-reset)
 #+end_src
 ** Font
 *** Main fonts
@@ -297,7 +264,7 @@ If really want to display inline in org mode use _{} syntax
 
 (add-hook 'org-mode-hook (lambda () (org-pretty-symbols-mode)))
 #+end_src
-** [#A] Keybindings
+** Keybindings
 #+begin_src emacs-lisp
 (map! :map org-mode-map
       :after org
@@ -390,24 +357,6 @@ Probably [[https://imagemagick.org/index.php][ImageMagick]] needs to be installe
 | ~org-id-create~          | Make current heading a node   | =SPC m i=   |
 | ~org-roam-buffer-toogle~ | Show reated buffers           | =SPC n r r= |
 * Translation
-** KILL Google Translate
-You can override default languages with the =C-u=.
-
-#+begin_src emacs-lisp :tangle no
-(use-package! google-translate
-  :custom
-  (google-translate-backend-method 'curl)
-  (google-translate-default-source-language "en")
-  (google-translate-default-target-language "tr")
-  :config
-  (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130)))
-
-(map! :leader
-      :desc "Translate word"
-      "d l" 'google-translate-at-point)
-#+end_src
-
-I don't use =google-translate= anymore.
 ** Go translate
 #+begin_src emacs-lisp
 (use-package! go-translate
@@ -531,6 +480,14 @@ Very hacky but it works.
       (while (re-search-forward "\\s-+" nil t)
         (replace-match " "))
       (insert "\n"))))
+#+end_src
+** Search in notes directory
+#+begin_src emacs-lisp
+(defun eug/search-notes ()
+  "Search in MY notes file."
+  (interactive)
+  (let ((default-directory "~/Dropbox/org/Notes"))
+    (call-interactively #'+vertico/project-search-from-cwd)))
 #+end_src
 
 * Languages
@@ -1013,6 +970,12 @@ Can enter new value with mouse-2 or RET
   (map! :leader
         :desc "Open elfeed" "o e"  #'elfeed))
 #+end_src
+*** Search in notes directory
+#+begin_src emacs-lisp
+(map! :leader
+      :desc "Find text in notes ")
+#+end_src
+
 ** Evil Mode
 *** Normal Mode
 #+begin_src emacs-lisp

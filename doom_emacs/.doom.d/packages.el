@@ -59,3 +59,8 @@
 (package! org-pomodoro
   :recipe (:host github
            :repo "eugercek/org-pomodoro"))
+
+
+(package! circadian
+  :recipe (:host github
+           :repo "guidoschmidt/circadian.el"))
