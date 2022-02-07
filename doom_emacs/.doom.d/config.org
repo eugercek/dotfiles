@@ -1208,47 +1208,36 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
 #+begin_src emacs-lisp
 (load "~/Dropbox/secret.el")
 
-(require 'erc)
+(use-package! erc
+  :commands (erc erc-tls)
+  :config
+  (setq erc-server "irc.libera.chat"
+        erc-autojoin-channels-alist '(("libera.chat" "#emacs" "#fedora"))
+        erc-user-full-name "Emin Umut Gerçek"
+        erc-track-shorten-start 8
+        erc-autojoin-timing 'ident
 
-(erc-autojoin-mode)
+        erc-fill-column 120 ;; Wraps text to 120 character
+        erc-fill-function 'erc-fill-static ;; How 2nd line of message will be shown
+        erc-fill-static-center 20 ;; With above all messages will start be on same column
 
-(setq erc-autojoin-channels-alist
-      '(("irc.libera.chat" "#emacs" "#linux")))
+        erc-modules (append erc-modules
+                            '(capab-identify
+                              notify
+                              notifications))
 
-(setq erc-server "irc.libera.chat"
-      erc-user-full-name "Emin Umut Gerçek"
-      erc-track-shorten-start 8
-      erc-autojoin-timing 'ident)
-      ;; erc-kill-buffer-on-part t)
-#+end_src
+        erc-hide-list '("JOIN" "NICK" "PART" "QUIT" "MODE" "AWAY")
 
-** Visual
-#+begin_src emacs-lisp
-(setq erc-fill-column 120 ;; Wraps text to 120 character
-      erc-fill-function 'erc-fill-static ;; How 2nd line of message will be shown
-      erc-fill-static-center 20) ;; With above all messages will start be on same column
-#+end_src
-** Hide people's actions
-#+begin_src emacs-lisp
-(setq erc-hide-list '("JOIN" "NICK" "PART" "QUIT" "MODE" "AWAY"))
-#+end_src
-** Don't show server things
-#+begin_src emacs-lisp
-(setq erc-track-exclude-server-buffer t)
-#+end_src
+        erc-track-visibility nil))
 
-** Multiple Frame
-#+begin_src emacs-lisp
-(setq erc-track-visibility nil) ; Only use the selected frame for visibility
-#+end_src
-** Autojoin
-#+begin_src emacs-lisp
 (erc-tls
  :server erc-server
  :port 6697
  :nick erc-nick
  :password erc-password)
+
 #+end_src
+
 * Try area
 #+begin_src emacs-lisp
 (setq deft-directory "~/Dropbox/org/Notes"

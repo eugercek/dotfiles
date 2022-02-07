@@ -803,3 +803,6 @@ powershell
 zoom
 stress-ng
 #+end_src
+* TODO Network
+- Add DNS
+- Add Disable ipv6
