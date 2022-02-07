@@ -1216,39 +1216,61 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
     (setq org-pomodoro-default-args "-volume 70 -autoexit -nodisp")))
 #+end_src
 * IRC setup
+** Core ERC
 #+begin_src emacs-lisp
 (load "~/Dropbox/secret.el")
-
 (use-package! erc
   :commands (erc erc-tls)
   :config
   (setq erc-server "irc.libera.chat"
-        erc-autojoin-channels-alist '(("libera.chat" "#emacs" "#fedora"))
-        erc-user-full-name "Emin Umut Gerçek"
-        erc-track-shorten-start 8
-        erc-autojoin-timing 'ident
+        erc-user-full-name "Emin Umut Gerçek")
 
-        erc-fill-column 120 ;; Wraps text to 120 character
+  (setq erc-autojoin-channels-alist '(("libera.chat" "#test"))
+        erc-autojoin-timing 'ident)
+
+  (setq erc-fill-column 100
         erc-fill-function 'erc-fill-static ;; How 2nd line of message will be shown
-        erc-fill-static-center 20 ;; With above all messages will start be on same column
+        erc-fill-static-center 0)           ;; Prefix space before username)
 
-        erc-modules (append erc-modules
-                            '(capab-identify
-                              notify
-                              notifications))
+  (add-to-list 'erc-modules
+               'capab-identify)
 
-        erc-hide-list '("JOIN" "NICK" "PART" "QUIT" "MODE" "AWAY")
+  ;; Hide IRC actions in messages
+  (setq erc-hide-list
+        '("JOIN" "NICK" "PART" "QUIT" "MODE" "AWAY"))
 
-        erc-track-visibility nil))
+  ;; Track & Modeline
+  (setq erc-track-shorten-start 8
+        erc-track-exclude nil ;;  TODO
+        erc-track-visibility nil ;; Multiple Frames
+        erc-track-exclude-server-buffer t
+        erc-track-exclude-types '("JOIN" "NICK" "QUIT" "MODE" "AWAY"))
 
-(erc-tls
- :server erc-server
- :port 6697
- :nick erc-nick
- :password erc-password)
+  ;; Track/Untrack People
+  (setq erc-pals nil ;; Track, highlight username
+        erc-fools nil ;; Don't track, fade username
+        erc-keywords nil) ;; Highlight these
 
+  ;; Send notifications on PRIVMSG or nickname mentions
+  (add-to-list 'erc-modules
+               'notifications)
+
+  ;; Notify when the online status of certain users changes
+  (add-to-list 'erc-modules
+               'notify))
+
+  (erc-tls
+   :server erc-server
+   :port 6697
+   :nick erc-nick
+   :password erc-password)
 #+end_src
-
+** Highlight Nicknames
+#+begin_src emacs-lisp
+(use-package! erc-hl-nicks
+  :after erc
+  :config (add-to-list 'erc-modules 'hl-nicks))
+#+end_src
 * Try area
 #+begin_src emacs-lisp
 (setq deft-directory "~/Dropbox/org/Notes"

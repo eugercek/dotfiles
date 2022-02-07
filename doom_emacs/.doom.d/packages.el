@@ -64,3 +64,7 @@
 (package! circadian
   :recipe (:host github
            :repo "guidoschmidt/circadian.el"))
+
+(package! erc-hl-nicks
+  :recipe (:host github
+           :repo "leathekd/erc-hl-nicks"))
