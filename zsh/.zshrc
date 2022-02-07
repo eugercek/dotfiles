@@ -146,3 +146,4 @@ export PATH="$HOME/.poetry/bin:$PATH"
 #
 # export EDITOR="emacsclient -t"
 # export VISUAL="emacsclient -t"
+export SYSTEMD_COLORS="1"

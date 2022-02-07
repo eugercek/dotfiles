@@ -52,7 +52,8 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 #+begin_src emacs-lisp
 ;; (setq doom-font (font-spec :family "SauceCodePro Nerd Font" :size 17))
 ;; (setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
-(setq doom-variable-pitch-font (font-spec :family "Spectral" :size 24))
+(setq doom-variable-pitch-font (font-spec :family "Spectral" :size 24)
+      doom-unicode-font (font-spec :family "JuliaMono"))
 ;; doom-big-font (font-spec :family "Ubuntu" :size 24)
 ;; doom-serif-font (font-spec :family "Noto Serif SC" :size 24)
 ;; doom-variable-pitch-font (font-spec :family "Ubuntu" :size 17))
@@ -561,12 +562,12 @@ Run =(lsp-ui-flycheck-list)=
 **** Keybindings
 | Keybind | Description                          |
 |---------+--------------------------------------|
-| =C-j=     | (evil) Go to next candidate          |
-| =C-k=     | (evil) Go to previous candidate      |
-| =C-h=     | Display documentation (if available) |
-| =C-s=     | Filter candidates                    |
-| =C-S-s=   | Search candidates with helm/ivy      |
-** ui
+| =C-j=   | (evil) Go to next candidate          |
+| =C-k=   | (evil) Go to previous candidate      |
+| =C-h=   | Display documentation (if available) |
+| =C-s=   | Filter candidates                    |
+| =C-S-s= | Search candidates with helm/ivy      |
+** UI
 *** zen
 **** KILL Writeroom width limit
 CLOSED: [2021-07-06 Sal 14:32]
@@ -645,6 +646,13 @@ Add +treemacs-git-mode
   (map! :map dired-mode-map
         :n "H" #'dired-hide-dotfiles-mode))
 #+end_src
+** term
+*** vterm
+#+begin_src emacs-lisp
+(after! vterm
+  (set-evil-initial-state! 'vterm-mode 'insert))
+#+end_src
+
 ** checkers
 #+begin_src emacs-lisp :tangle no
 (setq ispell-local-dictionary "en")
@@ -653,7 +661,6 @@ Add +treemacs-git-mode
 #+begin_src shell :tangle no :eval no
 rm .emacs.d/.local/etc/ispell/.pws
 #+end_src
-
 ** tools
 *** rgb
 **** hl-line-mode don't override rainbow
@@ -946,6 +953,12 @@ To look at array or struct use (gud-watch).
 Can enter new value with mouse-2 or RET
 
 * Keybindings
+#+begin_src emacs-lisp
+(map!
+ :n "g [" #'+workspace:switch-previous
+ :n "g ]" #'+workspace:switch-next)
+#+end_src
+
 ** Doom Core :to_doom:
 *** Find file in source directory
 #+begin_src emacs-lisp
@@ -1013,10 +1026,10 @@ These are better places for frequently used keybindings.
 ** Keybindings
 [[https://github.com/emacs-evil/evil-collection/blob/f2be91297029ae002d15e23510f9f686d848d7a8/modes/elfeed/evil-collection-elfeed.el][Look]]
 Most important ones for me.
-| =U=         | Unread          |
-| =RET=       | Open in Emacs   |
+| =U=           | Unread          |
+| =RET=         | Open in Emacs   |
 | =S-RET=  =go= | Open in Browser |
-| =s=         | Filter          |
+| =s=           | Filter          |
 ** Delete sources
 #+begin_src shell :eval no :tangle no
 rm -rf ~/.emacs.d/.local/elfeed
@@ -1155,10 +1168,31 @@ Right [[https://tecosaur.github.io/emacs-config/config.html#visual-enhancements]
 #+end_src
 ** info-noter
 #+begin_src emacs-lisp
+(defun info-text->org-text ()
+  "TODO"
+  (interactive)
+  (let ((text (thing-at-point 'sentence t))
+        (buf (get-info-noter-org-file-name nil)))
+    (with-current-buffer buf
+      (goto-char (point-max))
+      (insert text)
+      (newline))))
+
+#+end_src
+
+#+begin_src emacs-lisp
 (use-package! info-noter
   :config
   (map! :mode Info-mode
-        :n "x" #'info-heading->org-heading))
+        :n "h" #'info-heading->org-heading
+        :n "t" #'info-text->org-text))
+
+(add-hook! Info-mode
+  (map! :map Info-mode-map
+        :n "g[" #'+workspace:switch-previous
+        :n "g]" #'+workspace:switch-next
+        :n "gT" #'+workspace:switch-previous
+        :n "gt" #'+workspace:switch-next))
 #+end_src
 ** Pomodoro Setup
 You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in order to use =org-pomodoro-default-args=.
