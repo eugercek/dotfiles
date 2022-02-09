@@ -36,6 +36,13 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 * Doom
 ** Theme
 #+begin_src emacs-lisp
+(defun eug/apply-theme-changes ()
+  "TODO"
+  (cond ((eq doom-theme 'doom-one-light )
+         (custom-set-faces!
+           '(region    :background "#F2F5FF")
+           '(org-block :background "#fdfdfd")))))
+
 (use-package! circadian
   :config
   (setq calendar-latitude 39.928410)
@@ -43,10 +50,13 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
   (setq circadian-themes '((:sunrise . doom-one-light)
                            (:sunset . doom-solarized-dark-high-contrast)
                            ("24:00" . doom-acario-dark)))
+
+  (add-hook 'circadian-after-load-theme-hook #'solaire-mode-reset)
   (circadian-setup))
 
-(add-hook 'circadian-after-load-theme-hook #'solaire-mode-reset)
+(eug/apply-theme-changes)
 #+end_src
+
 ** Font
 Check if all wanted fonts are installed on the system.
 #+begin_src emacs-lisp
@@ -84,6 +94,9 @@ Check if all wanted fonts are installed on the system.
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-loaded)
 
 (setq fancy-splash-image "~/.doom.d/GnuLove.png")
+
+(setq doom-fallback-buffer-name "► Doom"
+      +doom-dashboard-name "► Doom")
 #+end_src
 ** Daemon
 #+begin_src emacs-lisp
@@ -661,7 +674,8 @@ Add +treemacs-git-mode
 *** vterm
 #+begin_src emacs-lisp
 (after! vterm
-  (set-evil-initial-state! 'vterm-mode 'insert))
+  (set-evil-initial-state! 'vterm-mode 'insert)
+  (add-hook! vterm-mode #'goto-address-mode))
 #+end_src
 
 ** checkers
@@ -1031,7 +1045,8 @@ These are better places for frequently used keybindings.
        "e" #'eros-eval-last-sexp
        "o" #'org-clock-out ; clock Out
        "r" #'+popup/raise ; Raise
-       "t" #'go-translate-popup-current))
+       "t" #'go-translate-popup-current
+       "p" #'evil-switch-to-windows-last-buffer))
 #+end_src
 * RSS
 ** Keybindings
@@ -1215,7 +1230,7 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
     (setq org-pomodoro-audio-player "/usr/bin/ffplay")
     (setq org-pomodoro-default-args "-volume 70 -autoexit -nodisp")))
 #+end_src
-* IRC setup
+* IRC
 ** Core ERC
 #+begin_src emacs-lisp
 (load "~/Dropbox/secret.el")
@@ -1258,12 +1273,6 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
   ;; Notify when the online status of certain users changes
   (add-to-list 'erc-modules
                'notify))
-
-  (erc-tls
-   :server erc-server
-   :port 6697
-   :nick erc-nick
-   :password erc-password)
 #+end_src
 ** Highlight Nicknames
 #+begin_src emacs-lisp
@@ -1271,6 +1280,32 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
   :after erc
   :config (add-to-list 'erc-modules 'hl-nicks))
 #+end_src
+** Image
+#+begin_src emacs-lisp
+(use-package! erc-image
+  :after erc
+  :config
+  (setq erc-image-inline-rescale 300)
+  (add-to-list 'erc-modules 'image))
+#+end_src
+** Connect to IRC
+#+begin_src emacs-lisp
+(defun eug/count-emacs-instances ()
+  "Return number of emasc instances.
+Not frames!"
+  (string-to-number
+   (shell-command-to-string
+    "ps -C emacs --no-headers | wc -l")))
+
+(when (eq 1 (eug/count-emacs-instances))
+  (progn (message "I'm in")
+         (erc-tls
+          :server erc-server
+          :port 6697
+          :nick irc-nick
+          :password irc-password)))
+#+end_src
+
 * Try area
 #+begin_src emacs-lisp
 (setq deft-directory "~/Dropbox/org/Notes"
