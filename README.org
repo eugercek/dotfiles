@@ -806,3 +806,5 @@ stress-ng
 * TODO Network
 - Add DNS
 - Add Disable ipv6
+* ~/bin
+Put programs here

@@ -8,12 +8,16 @@
    _    _    _              _              _    _    _    _ )
 |#
 
+;;; Config
+
 (defcfg
- input  (device-file "/dev/input/by-path/platform-i8042-serio-0-event-kbd")
+  input  (device-file "/dev/input/by-path/platform-i8042-serio-0-event-kbd")
   output (uinput-sink "My KMonad output")
 
   fallthrough true
   allow-cmd true)
+
+;;; Source
 
 (defsrc
   grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
@@ -22,16 +26,23 @@
   lsft z    x    c    v    b    n    m    ,    .    /    rsft
   lctl lmet lalt           spc            ralt rmet cmp  rctl)
 
-(defalias
-  mt  (multi-tap 300 a 300 b 300 c 300 d e)
-  ;; Command Leader
-  vl (tap-next caps (layer-toggle vim)))
+;;; Aliases
 
+(defalias
+  ;; Command Leader
+  lea (tap-next caps (around (layer-toggle vim)
+                      (layer-toggle command)))
+
+  ;; Open application
+  em (cmd-button "wmctrl -a emacs || emacsclient -c")
+  br (cmd-button "wmctrl -a chrome || chrome"))
+
+;;; Layers
 
 (deflayer base
   grv  1    2    3    4    5    6   7    8    9    0    -    =    bspc
-  tab  0    w    e    r    t    y    u    i    o    p    [    ]    \
-  @vl  a    s    d    f    g    h    j    k    l    ;    '    ret
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  @lea  a    s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    c    v    b    n    m    ,    .    /    rsft
   lctl lmet lalt           spc            ralt rmet cmp  rctl)
 
@@ -42,3 +53,11 @@
    _    _    _    _    _    _  left  down  up   right  _    _    _
    _    _    _    _    _    _    _     _    _     _    _    _
    _    _    _              _               _     _    _    _ )
+
+(deflayer command
+;;grv   1    2    3    4    5    6    7    8    9    0    -    =    bspc
+   _    _    _    _    _    _    _    _    _    _    _    _    _    _
+   _    _    _   @em   _    _    _    _    _    _    _    _    _    _
+   _    _    _    _    _    _    _    _    _    _    _    _    _
+   _    _    _    _    _   @br   _    _    _    _    _    _
+   _    _    _              _              _    _    _    _ )
