@@ -51,15 +51,20 @@
 (package! elfeed-goodies)
 (package! dired-hide-dotfiles)
 (package! string-inflection)
-(package! info-noter
-  :recipe (:host github
-           :repo "eugercek/info-noter.el"))
 
 (package! try)
 (package! org-pomodoro
   :recipe (:host github
            :repo "eugercek/org-pomodoro"))
 
+;; (package! kbd-mode
+;;   :recipe (:host github
+;;            :repo "eugercek/kbd-mode"
+;;            :branch "demo-buffer"))
+
+(package! kbd-mode
+  :recipe (:local-repo "~/src/kbd-mode"
+           :build  (:not compile)))
 
 (package! circadian
   :recipe (:host github
@@ -68,3 +73,11 @@
 (package! erc-hl-nicks
   :recipe (:host github
            :repo "leathekd/erc-hl-nicks"))
+
+(package! info-noter
+  :recipe (:local-repo "~/src/info-noter"
+           :build  (:not compile)))
+
+(package! erc-image
+  :recipe (:local-repo "~/git/erc-image.el"
+           :build (:not compile)))
