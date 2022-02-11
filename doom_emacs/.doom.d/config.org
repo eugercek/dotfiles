@@ -105,7 +105,7 @@ Check if all wanted fonts are installed on the system.
         :n "gt" #'+workspace:switch-next))
 #+end_src
 * Org
-** Rudimentary
+** Vanilla Org
 #+begin_src emacs-lisp
 (setq org-directory "~/Dropbox/org/")
 
@@ -114,8 +114,9 @@ Check if all wanted fonts are installed on the system.
 (setq org-log-done 'time)
 
 (remove-hook! text-mode #'display-line-numbers-mode)
-
 (setq-hook! 'org-mode-hook company-idle-delay nil)
+
+(setq org-indirect-buffer-display 'other-window)
 #+end_src
 ** Org clock
 #+begin_src emacs-lisp
@@ -200,9 +201,10 @@ Check if all wanted fonts are installed on the system.
 #+end_src
 ** TODO Capture
 #+begin_src emacs-lisp
-(setq org-capture-templates '(("j" "Journal" entry
-                               (file+datetree "~/Dropbox/org/gtd/journal.org")
-                               "* %U %?" :clock-in t :clock-keep t)))
+(setq org-capture-templates
+      '(("j" "Journal" entry
+         (file+datetree "~/Dropbox/org/gtd/journal.org")
+         "* %U %?" :clock-in t :clock-keep t)))
 #+end_src
 
 ** org-download
@@ -290,13 +292,6 @@ If really want to display inline in org mode use _{} syntax
 
 (add-hook 'org-mode-hook (lambda () (org-pretty-symbols-mode)))
 #+end_src
-** Keybindings
-#+begin_src emacs-lisp
-(map! :map org-mode-map
-      :after org
-      :localleader
-      :desc "org-ctrl-c-star" "8" #'org-ctrl-c-star)
-#+end_src
 ** Latex
 *** Visual
 **** Please bigger latex preview
@@ -337,7 +332,7 @@ Don't interpret every _ subscript!
 ** Macros
 *** Insert order of picture
 #+begin_src emacs-lisp
-(defun my/insert-picture-order()
+(defun eug/ginsert-picture-order()
   "Insert order of picture"
   (interactive)
   (setq current-cursor (point))
@@ -355,12 +350,12 @@ Don't interpret every _ subscript!
 | ‘#+INCLUDE: "~/.emacs" :lines "10-"’  | Include lines from 10 to EOF       |
 
 #+begin_src emacs-lisp
-(defun my/include-file-lines-org-mode (file-name src-lang begin end)
+(defun eug/ginclude-file-lines-org-mode (file-name src-lang begin end)
   "Insert file's lines as source block ing org mode"
   (setq real-end (+ end 1))
   (setq line-string (format "%d-%d" begin real-end))
   (format "#+include: %s :lines %s :src %s" file-name line-string src-lang ))
-(my/include-file-lines-org-mode "./New.cpp" "C++" 5 10)
+(eug/ginclude-file-lines-org-mode "./New.cpp" "C++" 5 10)
 #+end_src
 ** Plantuml
 *** Always show inline images
@@ -371,7 +366,7 @@ Don't interpret every _ subscript!
               (org-redisplay-inline-images))))
 #+end_src
 *** Don't make images too big
-Probably [[https://imagemagick.org/index.php][ImageMagick]] needs to be installed in your system!
+Probably [[https://imagemagick.org/index.php][ImageMagick]] needs to be installed in your system! Or not (Emacs 27.2)
 #+begin_src emacs-lisp
 (setq org-image-actual-width 500)
 #+end_src
@@ -412,7 +407,7 @@ Just correct it once.
 ** TODO Curly to Normal Quote
 One day fix this too...
 #+begin_src emacs-lisp
-(defun my/curly-quoation-to-normal-quoation()
+(defun eug/gcurly-quoation-to-normal-quoation()
   "Change any curly quotation mark to normal quoation mark"
   (interactive)
   (goto-char (point-min))
@@ -432,7 +427,7 @@ One day fix this too...
 #+end_src
 ** TODO Debug Functions
 #+begin_src emacs-lisp
-(defun my/error-line ()
+(defun eug/gerror-line ()
   "Create an error message in C++"
   (interactive)
   (move-beginning-of-line nil)
@@ -440,19 +435,19 @@ One day fix this too...
 
 (map! :leader
       :desc "Create an error message in C++"
-      "d e" 'my/error-line)
+      "d e" 'eug/gerror-line)
 #+end_src
 ** Open current directory
 #+begin_src emacs-lisp
-(defun my/open-directory ()
-  "Opens a directory with xdg-open"
+(defun eug/open-directory ()
+  "Open current directory with xdg-open."
   (interactive)
   (shell-command "xdg-open ."))
 #+end_src
 ** TODO Org Table y n
 Very hacky but it works.
 #+begin_src emacs-lisp
-(defun my/org-table-color-y-n (start end)
+(defun eug/gorg-table-color-y-n (start end)
   "Make =y= s green and n s red with =y= and ~n~"
   (interactive "r")
   (replace-regexp " y " " =y= " nil start end)
@@ -460,7 +455,7 @@ Very hacky but it works.
 #+end_src
 ** Do mathematical operation under cursor
 #+begin_src emacs-lisp
-(defmacro my/math-op (operation default-value)
+(defmacro eug/gmath-op (operation default-value)
   `(let ((num (thing-at-point 'number))
          (other-num (if (null current-prefix-arg)
                         ,default-value
@@ -468,25 +463,25 @@ Very hacky but it works.
      (skip-chars-backward "0-9")
      (replace-match (number-to-string (,operation num other-num)))))
 
-(defun my/interactive-multiply ()
+(defun eug/ginteractive-multiply ()
   (interactive)
-  (my/math-op * 2))
+  (eug/gmath-op * 2))
 
-(defun my/interactive-divide ()
+(defun eug/ginteractive-divide ()
   (interactive)
-  (my/math-op / 2))
+  (eug/gmath-op / 2))
 
-(defun my/interactive-summation ()
+(defun eug/ginteractive-summation ()
   (interactive)
-  (my/math-op + 0))
+  (eug/gmath-op + 0))
 
-(defun my/interactive-substition ()
+(defun eug/ginteractive-substition ()
   (interactive)
-  (my/math-op - 0))
+  (eug/gmath-op - 0))
 #+end_src
 ** Divide With Two
 #+begin_src emacs-lisp
-(defun my//2 ()
+(defun eug/g/2 ()
   (interactive)
   (skip-chars-backward "0-9")
   (or (looking-at "[0-9]+")
@@ -514,6 +509,9 @@ Very hacky but it works.
   (interactive)
   (let ((default-directory "~/Dropbox/org/Notes"))
     (call-interactively #'+vertico/project-search-from-cwd)))
+
+(map! :leader
+      "s n" #'eug/search-notes)
 #+end_src
 
 * Languages
@@ -648,14 +646,14 @@ Add +treemacs-git-mode
 (setq yas-triggers-in-field t)
 #+end_src
 ** emacs
-*** dired
+*** Dired
 **** Continuous Preview
 #+begin_src emacs-lisp
 (map!
  (:after dired
   (:map dired-mode-map
    :n "RET" #'dired-find-alternate-file ;;Open in same bufer
-   "-"   #'find-alternate-file)
+   :n "-"   #'find-alternate-file)
   "C-x i" #'peep-dired))
 
 (evil-define-key #'normal peep-dired-mode-map
@@ -671,6 +669,17 @@ Add +treemacs-git-mode
   (map! :map dired-mode-map
         :n "H" #'dired-hide-dotfiles-mode))
 #+end_src
+**** Add bindings
+#+begin_src emacs-lisp
+(map! :map dired-mode-map)
+#+end_src
+**** Clean interface
+#+begin_src emacs-lisp
+(add-hook! dired-mode
+  (dired-hide-details-mode 1)
+  (writeroom-mode))
+#+end_src
+
 ** term
 *** vterm
 #+begin_src emacs-lisp
@@ -952,7 +961,7 @@ Too much evil
 #+end_src
 ** Simple quit function from debugger
 #+begin_src emacs-lisp
-(defun my/gud-quit ()
+(defun eug/ggud-quit ()
   (interactive)
   (tool-bar-mode -1)
   (let ((kill-buffer-query-functions nil))
@@ -998,10 +1007,10 @@ Can enter new value with mouse-2 or RET
 ** Doom Core :to_doom:
 *** Find file in source directory
 #+begin_src emacs-lisp
-(setq my/source-directory "~/src/")
+(setq eug/gsource-directory "~/src/")
 (map! :leader
-      :desc "Find file in source codes" "f o"  (lambda! (doom-project-find-file my/source-directory))
-      :desc "Browse source codes" "f O"  (lambda! (doom-project-browse my/source-directory)))
+      :desc "Find file in source codes" "f o"  (lambda! (doom-project-find-file eug/gsource-directory))
+      :desc "Browse source codes" "f O"  (lambda! (doom-project-browse eug/gsource-directory)))
 #+end_src
 *** Just one space
 #+begin_src emacs-lisp
@@ -1011,7 +1020,7 @@ Can enter new value with mouse-2 or RET
 *** Open Directory
 #+begin_src emacs-lisp
 (map! :leader
-      "o." #'my/open-directory)
+      "o." #'eug/open-directory)
 #+end_src
 *** Open elfeed
 #+begin_src emacs-lisp
@@ -1037,10 +1046,10 @@ Can enter new value with mouse-2 or RET
 (map! :leader
       :nv "a" nil ; Remove embark's keybinding
       (:prefix ("a" . "actions")
-       "8" #'my/interactive-multiply ; S-8 is *
-       "/" #'my/interactive-divide
-       "=" #'my/interactive-summation
-       "-" #'my/interactive-substition
+       "8" #'eug/ginteractive-multiply ; S-8 is *
+       "/" #'eug/ginteractive-divide
+       "=" #'eug/ginteractive-summation
+       "-" #'eug/ginteractive-substition
        "c" #'string-inflection-all-cycle
        "t" #'go-translate
        "z" #'zeal-at-point
@@ -1229,10 +1238,9 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
 (load "~/Dropbox/secret.el")
 (use-package! erc
   :commands (erc erc-tls)
-  :bind
+  :config
   (map! :leader
         :desc "Open irc" "o i" #'erc-switch-to-buffer)
-  :config
   (setq erc-server "irc.libera.chat"
         erc-user-full-name "Emin Umut Gerçek")
 
@@ -1297,4 +1305,15 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
    :port 6697
    :nick irc-nick
    :password irc-password))
+#+end_src
+* =vc-gutter=
+#+begin_src emacs-lisp
+(defun eug/after-far (&rest args)
+  "Things to do after going far away from point."
+  (recenter nil t)
+  (+fold/open))
+
+(advice-add #'git-gutter:next-hunk
+              :after
+              #'eug/after-far)
 #+end_src
