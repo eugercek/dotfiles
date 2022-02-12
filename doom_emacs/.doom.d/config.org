@@ -41,13 +41,11 @@ Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
   (setq calendar-latitude 39.928410)
   (setq calendar-longitude 32.834960)
   (setq circadian-themes '((:sunrise . doom-one-light)
-                           (:sunset . doom-solarized-dark-high-contrast)
-                           ("24:00" . doom-acario-dark)))
+                           (:sunset  . doom-solarized-dark-high-contrast)
+                           ("24:00"  . doom-acario-dark)))
+  (add-hook 'doom-init-ui-hook #'circadian-setup))
 
-  (add-hook 'circadian-after-load-theme-hook #'solaire-mode-reset)
-  (circadian-setup))
 #+end_src
-
 ** Font
 Check if all wanted fonts are installed on the system.
 #+begin_src emacs-lisp
@@ -1000,8 +998,8 @@ Can enter new value with mouse-2 or RET
 * Keybindings
 #+begin_src emacs-lisp
 (map!
- :n "g [" #'+workspace:switch-previous
- :n "g ]" #'+workspace:switch-next)
+ :n "[ g" #'+workspace:switch-previous
+ :n "] g" #'+workspace:switch-next)
 #+end_src
 
 ** Doom Core :to_doom:
@@ -1307,13 +1305,19 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
    :password irc-password))
 #+end_src
 * =vc-gutter=
+* =git-gutter=
 #+begin_src emacs-lisp
 (defun eug/after-far (&rest args)
-  "Things to do after going far away from point."
+  "Things to do after going far away from hunk."
   (recenter nil t)
+  (backward-char 1)
   (+fold/open))
 
 (advice-add #'git-gutter:next-hunk
-              :after
-              #'eug/after-far)
+            :after
+            #'eug/after-far)
+
+(map! :leader
+      (:prefix ("g" . "git")
+       :desc"Diff of hunk""d" #'git-gutter:popup-hunk))
 #+end_src
