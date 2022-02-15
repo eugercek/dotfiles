@@ -116,6 +116,11 @@ Check if all wanted fonts are installed on the system.
 
 (setq org-indirect-buffer-display 'other-window)
 #+end_src
+*** Org modules
+#+begin_src emacs-lisp
+(add-to-list 'org-modules 'ol-info)
+#+end_src
+
 ** Org clock
 #+begin_src emacs-lisp
 (after! org-clock
@@ -371,10 +376,10 @@ Probably [[https://imagemagick.org/index.php][ImageMagick]] needs to be installe
 ** PROJ Org Roam
 =SPC n r= it top level binding for Org Roam
 
-| ~org-roam-node-find~     | Create node                   | =SPC n r f= |
-| ~org-roam-node-insert~   | Link node (Also could create) | =SPC n r i= |
-| ~org-id-create~          | Make current heading a node   | =SPC m i=   |
-| ~org-roam-buffer-toogle~ | Show reated buffers           | =SPC n r r= |
+#+begin_src emacs-lisp
+(setq org-roam-graph-viewer "/usr/bin/google-chrome")
+#+end_src
+
 * Translation
 ** Go translate
 #+begin_src emacs-lisp
@@ -618,10 +623,28 @@ Add +treemacs-git-mode
 (doom-themes-treemacs-config)
 #+end_src
 *** modeline
+#+begin_src emacs-lisp
+(setq doom-modeline-height 20)
+#+end_src
+
 **** GitHub
 #+begin_src emacs-lisp
 (setq doom-modeline-github t)
 (setq doom-modeline-github-interval (* 30 60))
+#+end_src
+*** =git-gutter=
+#+begin_src emacs-lisp
+(defun eug/after-far (&rest args)
+  "Things to do after going far away from hunk."
+  (recenter nil t))
+
+(advice-add #'git-gutter:next-hunk
+            :after
+            #'eug/after-far)
+
+(map! :leader
+      (:prefix ("g" . "git")
+       :desc"Diff of hunk""d" #'git-gutter:popup-hunk))
 #+end_src
 ** editor
 *** evil
@@ -647,12 +670,10 @@ Add +treemacs-git-mode
 *** Dired
 **** Continuous Preview
 #+begin_src emacs-lisp
-(map!
- (:after dired
-  (:map dired-mode-map
-   :n "RET" #'dired-find-alternate-file ;;Open in same bufer
-   :n "-"   #'find-alternate-file)
-  "C-x i" #'peep-dired))
+(map! :map dired-mode-map
+      :after dired
+      :n "RET" #'dired-find-alternate-file
+      :n "p" #'peep-dired)
 
 (evil-define-key #'normal peep-dired-mode-map
   (kbd "j") #'peep-dired-next-file
@@ -754,13 +775,13 @@ Search through entire project(in headers too).
 *** Pdf
 **** Dark Mode
 #+begin_src emacs-lisp
-(add-hook 'pdf-tools-enabled-hook #'pdf-view-midnight-minor-mode) ;Dark mode
+;; (add-hook 'pdf-tools-enabled-hook #'pdf-view-midnight-minor-mode) ;Dark mode
+;; (remove-hook 'pdf-tools-enabled-hook #'pdf-view-midnight-minor-mode)
 #+end_src
 **** Latex Viewer
 #+begin_src emacs-lisp
 (setq +latex-viewers '(pdf-tools))
 #+end_src
-
 * Personal Packages
 ** Personal Packages
 *** Zeal
@@ -1218,8 +1239,10 @@ Use ~info-noter/setup~ for to start session
   (setq info-noter/notes-dir "~/Dropbox/org/Notes/")
   (map! :mode Info-mode
         :n "H" #'info-noter/copy-heading
-        :n "T" #'info-noter/copy-text))
+        :n "T" #'info-noter/copy-text
+        :n "I" #'info-noter/copy-info-id))
 #+end_src
+
 ** Pomodoro Setup
 You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in order to use =org-pomodoro-default-args=.
 
@@ -1242,26 +1265,34 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
   (setq erc-server "irc.libera.chat"
         erc-user-full-name "Emin Umut Gerçek")
 
-  (setq erc-autojoin-channels-alist '(("libera.chat" "#test"))
-        erc-autojoin-timing 'ident)
+  (setq erc-autojoin-channels-alist
+        `(("libera.chat" ,@libera-channel-list))
+        erc-autojoin-timing 'ident0)
 
   (setq erc-fill-column 100
         erc-fill-function 'erc-fill-static ;; How 2nd line of message will be shown
-        erc-fill-static-center 0)           ;; Prefix space before username)
+        erc-fill-static-center 5)           ;; Prefix space before username)
 
   (add-to-list 'erc-modules
                'capab-identify)
 
   ;; Hide IRC actions in messages
   (setq erc-hide-list
-        '("JOIN" "NICK" "PART" "QUIT" "MODE" "AWAY"))
+        '("JOIN" "NICK" "PART" "QUIT" "MODE" "AWAY"
+          "324" ;; Modes
+          "329" ;; Was created on
+          "332" ;; Topic
+          "333" ;; Set by
+          "353")) ;; User list
 
   ;; Track & Modeline
   (setq erc-track-shorten-start 8
         erc-track-exclude nil ;;  TODO
         erc-track-visibility nil ;; Multiple Frames
         erc-track-exclude-server-buffer t
-        erc-track-exclude-types '("JOIN" "NICK" "QUIT" "MODE" "AWAY"))
+        erc-track-exclude-types
+        '("JOIN" "NICK" "QUIT" "MODE" "AWAY")
+        erc-track-showcount t)
 
   ;; Track/Untrack People
   (setq erc-pals nil ;; Track, highlight username
