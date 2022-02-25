@@ -195,3 +195,32 @@ settings.theme = `
 }
 }
 `;
+
+api.mapkey("gH", "tmp", () => {
+  location.href = `
+  org-protocol://roam-ref?template=r&ref=
+  ${encodeURIComponent(location.href)}
+  &title=
+  ${encodeURIComponent(document.title)}
+  &body=
+  ${encodeURIComponent(window.getSelection())}
+`;
+});
+
+api.Hints.style(
+  "padding: 1px; color:#efe1eb; background: none; background-color: #b16286; font-size: 14px;"
+);
+
+api.Hints.style(
+  "div{color:#efe1eb; background: none; background-color: #e78a4e;} div.begin{color:#ea6962;}",
+  "text"
+);
+
+function swapKeys(key1, key2) {
+  api.map("temp", key1);
+  api.map(key1, key2);
+  api.map(key2, key1);
+  api.unmap("temp");
+}
+
+swapKeys(";u", ";U");
