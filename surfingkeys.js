@@ -1,9 +1,9 @@
 settings.hintAlign = "left";
 //Hints.characters = 'yuiophjklnm'; // for right hand
-api.Hints.characters = "fjdkrueisl"; // Home row without pinky
+api.Hints.characters = 'fjdkrueisl'; // Home row without pinky
 
-api.cmap("<Ctrl-j>", "<Tab>");
-api.cmap("<Ctrl-k>", "<Shift-Tab>");
+api.cmap('<Ctrl-j>', '<Tab>');
+api.cmap('<Ctrl-k>', '<Shift-Tab>');
 
 settings.hintAlign = "left";
 //Hints.characters = 'yuiophjklnm'; // for right hand
@@ -32,6 +32,14 @@ const key = (newKey, oldKey, domain) => {
   api.unmap(oldKey);
 };
 
+
+function swapKeys(key1, key2, mode="map", mode_remove="unmap") {
+  api[mode]("temp", key1);
+  api[mode](key1, key2);
+  api[mode](key2, key1);
+  api[mode_remove]("temp");
+}
+
 let videoBlockedKeys = new RegExp(blockSites.join("|"), "i");
 let youtubeBlockedKeys = new RegExp(blockSites.join("|"), "i");
 
@@ -50,41 +58,46 @@ key("F", "gf");
 
 api.unmap("<Ctrl-j>");
 api.unmap("<Ctrl-h>");
-api.unmap(";m");
-api.unmap(";m");
+api.unmap(";m")
+api.unmap(";m")
 
-//
-api.unmap("e");
 
-api.unmap("C");
-api.unmap("<Ctrl-i>");
+// Mine!
+api.unmap("e")
 
-api.mapkey("ye", "Copy src URL of an image", function () {
-  Hints.create("img[src]", (element, event) => {
-    api.Clipboard.write(element.src);
-  });
+api.unmap("P");
+
+api.unmap("C")
+api.unmap("<Ctrl-i>")
+
+swapKeys(";u", ";U");
+
+swapKeys("P", "p");
+api.vunmap("p");
+
+api.mapkey('ye', 'Copy src URL of an image', function() {
+    Hints.create('img[src]',(element, event) =>  {
+        api.Clipboard.write(element.src);
+    });
 });
 
-api.mapkey("yme", "Copy multiple link URLs to the clipboard", function () {
-  let linksToYank = [];
-  Hints.create(
-    "img[src]",
-    function (element) {
-      linksToYank.push(element.src);
-      api.Clipboard.write(linksToYank.join("\n"));
-    },
-    { multipleHits: true }
-  );
+api.mapkey('yme', 'Copy multiple link URLs to the clipboard', function() {
+    let linksToYank = [];
+    Hints.create('img[src]', function(element) {
+        linksToYank.push(element.src);
+        api.Clipboard.write(linksToYank.join('\n'));
+    }, {multipleHits: true});
 });
 
-api.mapkey(";n", "Go to next episode", function next_episode() {
-  base_url = window.location.href;
-  ep_no = base_url.match(/(\d+)(?!.*\d)/)[0];
-  new_ep = parseInt(ep_no, 10) + 1;
-  n = base_url.lastIndexOf(ep_no);
-  new_url = base_url.slice(0, n) + base_url.slice(n).replace(ep_no, new_ep);
-  window.location = new_url;
-});
+api.mapkey(';n', 'Go to next episode',
+       function next_episode(){
+           base_url = window.location.href
+           ep_no = base_url.match(/(\d+)(?!.*\d)/)[0];
+           new_ep = parseInt(ep_no, 10) + 1;
+           n = base_url.lastIndexOf(ep_no);
+           new_url = base_url.slice(0, n) + base_url.slice(n).replace(ep_no, new_ep);
+           window.location = new_url;
+       });
 
 api.mapkey(";c", "Copy title and url for org mode", () => {
   let url = document.URL;
@@ -93,21 +106,16 @@ api.mapkey(";c", "Copy title and url for org mode", () => {
 });
 
 const showCurrentTrainingBindings = () => {
-  const messages = [...mouse, ...tabs]
-    .map((row) => ({
-      binding: row[0].slice(1, -1),
-      description: row[1],
-    }))
-    .map((obj) => `${obj.binding}\t\t\t\t${obj.description}`);
+    const messages = [...mouse, ...tabs].map(row => ( {
+            binding: row[0].slice(1, -1),
+            description: row[1]
+        }))
+        .map(obj => `${obj.binding}\t\t\t\t${obj.description}`)
 
-  Front.showPopup(`<h1>${messages.join("<br>")} </h1>`);
-};
+    Front.showPopup(`<h1>${messages.join('<br>')} </h1>`);
+}
 
-api.mapkey(
-  ";?",
-  "Show currently training keybindings",
-  showCurrentTrainingBindings
-);
+api.mapkey(";?", "Show currently training keybindings", showCurrentTrainingBindings);
 
 api.mapkey(
   "ec",
@@ -120,39 +128,7 @@ api.mapkey(
   { domain: /github.com/i }
 );
 
-solarizedDark = `
-.sk_theme {
-	background: #100a14dd;
-	color: #4f97d7;
-}
-.sk_theme tbody {
-	color: #292d;
-}
-.sk_theme input {
-	color: #d9dce0;
-}
-.sk_theme .url {
-	color: #2d9574;
-}
-.sk_theme .annotation {
-	color: #a31db1;
-}
-.sk_theme .omnibar_highlight {
-	color: #333;
-	background: #ffff00aa;
-}
-.sk_theme #sk_omnibarSearchResult ul li:nth-child(odd) {
-	background: #5d4d7a55;
-}
-.sk_theme #sk_omnibarSearchResult ul li.focused {
-	background: #5d4d7aaa;
-}
-.sk_theme #sk_omnibarSearchResult .omnibar_folder {
-	color: #a31db1;
-}
-`;
-
-zenbonse = `
+const zenbonse = `
 .sk_theme {
   font-family: SauceCodePro Nerd Font, Consolas, Menlo, monospace;
   font-size: 10pt;
@@ -186,6 +162,38 @@ zenbonse = `
 }
 `;
 
+const solarizedDark = `
+.sk_theme {
+	background: #100a14dd;
+	color: #4f97d7;
+}
+.sk_theme tbody {
+	color: #292d;
+}
+.sk_theme input {
+	color: #d9dce0;
+}
+.sk_theme .url {
+	color: #2d9574;
+}
+.sk_theme .annotation {
+	color: #a31db1;
+}
+.sk_theme .omnibar_highlight {
+	color: #333;
+	background: #ffff00aa;
+}
+.sk_theme #sk_omnibarSearchResult ul li:nth-child(odd) {
+	background: #5d4d7a55;
+}
+.sk_theme #sk_omnibarSearchResult ul li.focused {
+	background: #5d4d7aaa;
+}
+.sk_theme #sk_omnibarSearchResult .omnibar_folder {
+	color: #a31db1;
+}
+`;
+
 settings.theme = `
   @media (prefers-color-scheme: dark) {
   ${solarizedDark}
@@ -193,8 +201,7 @@ settings.theme = `
   @media (prefers-color-scheme: light) {
   ${zenbonse}
 }
-}
-`;
+}`;
 
 api.mapkey("gH", "tmp", () => {
   location.href = `
@@ -212,15 +219,6 @@ api.Hints.style(
 );
 
 api.Hints.style(
-  "div{color:#efe1eb; background: none; background-color: #e78a4e;} div.begin{color:#ea6962;}",
+  "div{color:#efe1eb; background: none; background-color: #a73a1e;} div.begin{color:#ea6962; font-size: 0.9em;}",
   "text"
 );
-
-function swapKeys(key1, key2) {
-  api.map("temp", key1);
-  api.map(key1, key2);
-  api.map(key2, key1);
-  api.unmap("temp");
-}
-
-swapKeys(";u", ";U");
