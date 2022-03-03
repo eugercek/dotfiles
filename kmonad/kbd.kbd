@@ -31,7 +31,8 @@
 (defalias
   ;; Command Leader
   lea (tap-next caps (around (layer-toggle vim)
-                      (layer-toggle temp))))
+                             (layer-toggle temp)))
+  mspc (tap-macro spc spc spc spc))
 
 ;;; Layers
 
@@ -53,7 +54,7 @@
 (deflayer temp
 ;;grv  1    2    3    4    5    6     7    8     9    0    -    =    bspc
    _   _    _    _    _    _    _     _    _     _    _    _    _    _
-   _   _    _    _    _    _    _     _    _     _    _    _    _    _
+@mspc   _    _    _    _    _    _     _    _     _    _    _    _    _
    _   _    _    _    home end  left  down  up   right  _    _    _
    _   _    _    _    _    _    _     _    _     _    _    _
    _   _    _              _               _     _    _    _ )
