@@ -776,7 +776,6 @@ Search through entire project(in headers too).
 **** Dark Mode
 #+begin_src emacs-lisp
 ;; (add-hook 'pdf-tools-enabled-hook #'pdf-view-midnight-minor-mode) ;Dark mode
-;; (remove-hook 'pdf-tools-enabled-hook #'pdf-view-midnight-minor-mode)
 #+end_src
 **** Latex Viewer
 #+begin_src emacs-lisp
@@ -919,6 +918,9 @@ https://github.com/andreasjansson/language-detection.el#eww-syntax-highlighting
 (use-package! kbd-mode
   :commands (kbd-mode-start-demo kbd-mode-stop-demo)
   :config
+  (setq kbd-mode-kill-kmonad "systemctl --user stop kmonad"
+        kbd-mode-start-kmonad "systemctl --user start kmonad"
+        kbd-mode-magic-focus t)
   (map! :map kbd-mode-map
         :localleader
         :desc "Start kmonad demo" "s" 'kbd-mode-start-demo
@@ -1253,7 +1255,7 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
     (setq org-pomodoro-audio-player "/usr/bin/ffplay")
     (setq org-pomodoro-default-args "-volume 70 -autoexit -nodisp")))
 #+end_src
-* IRC
+* COMMENT IRC
 ** Core ERC
 #+begin_src emacs-lisp
 (load "~/Dropbox/secret.el")
@@ -1271,7 +1273,7 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
 
   (setq erc-fill-column 100
         erc-fill-function 'erc-fill-static ;; How 2nd line of message will be shown
-        erc-fill-static-center 5)           ;; Prefix space before username)
+        erc-fill-static-center 30)           ;; Prefix space before username)
 
   (add-to-list 'erc-modules
                'capab-identify)

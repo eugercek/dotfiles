@@ -32,7 +32,7 @@
   ;; Command Leader
   lea (tap-next caps (around (layer-toggle vim)
                              (layer-toggle temp)))
-  mspc (tap-macro spc spc spc spc))
+  mspc (tap-macro spc spc))
 
 ;;; Layers
 
