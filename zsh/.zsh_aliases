@@ -273,6 +273,8 @@ function open_webcam(){
 alias setclip="xclip -r -selection c"
 alias getclip="xclip -selection c -o"
 
-function cpwd(){
-	pwd | setclip
-}
+# npm
+alias ns="npm run start"
+alias nt="npm run test"
+alias nd="npm run dev"
+alias nb="npm run build"

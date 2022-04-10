@@ -83,6 +83,11 @@ plugins=(
 	colorize
 	docker
 	docker-compose
+	aws
+	copypath #run copypath
+	copyfile #run copyfile
+	sudo # Escape Escape
+	dirhistory # Alt + up = go to parent, Alt + down = go to child ...
 )
 
 source $ZSH/oh-my-zsh.sh
