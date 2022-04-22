@@ -88,6 +88,9 @@ plugins=(
 	copyfile #run copyfile
 	sudo # Escape Escape
 	dirhistory # Alt + up = go to parent, Alt + down = go to child ...
+	kubectl
+	web-search
+	terraform
 )
 
 source $ZSH/oh-my-zsh.sh
