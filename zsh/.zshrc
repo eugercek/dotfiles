@@ -91,6 +91,8 @@ plugins=(
 	kubectl
 	web-search
 	terraform
+	golang
+
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -155,3 +157,13 @@ export PATH="$HOME/.poetry/bin:$PATH"
 # export EDITOR="emacsclient -t"
 # export VISUAL="emacsclient -t"
 export SYSTEMD_COLORS="1"
+
+#eval "$(starship init zsh)"
+#
+
+[ -f "/home/umut/.ghcup/env" ] && source "/home/umut/.ghcup/env" # ghcup-env
+
+
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH="$(go env GOPATH)"
+export PATH="${PATH}:${GOPATH}/bin"

@@ -606,8 +606,8 @@ I don't need 80 column restriction.
 CLOSED: [2021-07-06 Sal 14:32]
 #+begin_src emacs-lisp :tangle no
 (setq writeroom-mode-hook
-      '(writeroom-mode-set-explicitly
-        +zen-enable-mixed-pitch-mode-h))
+      '(writeroom-mode-set-explicitly))
+        ;+zen-enable-mixed-pitch-mode-h
 #+end_src
 **** Org mode hook
 #+begin_src emacs-lisp

@@ -710,6 +710,7 @@ aspell
 aspell-en
 translate-shell
 ascii
+entr
 #+end_src
 
 ***** Other
@@ -808,7 +809,6 @@ xkill
 #+begin_src text
 pgFormatter
 #+end_src
-
 
 *** flatpak
 :PROPERTIES:

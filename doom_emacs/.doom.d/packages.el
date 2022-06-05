@@ -81,3 +81,7 @@
 (package! erc-image
   :recipe (:local-repo "~/git/erc-image.el"
            :build (:not compile)))
+
+(package! emojify
+  :recipe (:local-repo "~/git/emacs-emojify"
+           :build (:not compile)))

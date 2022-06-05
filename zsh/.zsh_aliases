@@ -95,8 +95,11 @@ function wallp(){
 
 # Only audio
 function dowmus(){
-	url=$(xclip -selection c -o)
-	youtube-dl -ciw -o '%(title)s.%(ext)s'  --extract-audio --yes-playlist  --audio-format mp3 $url
+  url=$(xclip -selection c -o)
+  youtube-dl --continue  --ignore-errors --no-overwrites \
+    -o '%(title)s.%(ext)s' \
+    --format bestaudio --audio-quality 160K \
+    --extract-audio --yes-playlist  --audio-format mp3 $url
 
 }
 
@@ -219,6 +222,7 @@ alias pharo="~/pharolauncher/pharo-launcher"
 alias emacs="emacsclient -c"
 alias emacst="emacsclient -t"
 alias magit='emacsclient -c  -e \(magit-status\) &'
+alias relemacs="systemctl stop --user emacs && systemctl start --user emacs"
 
 # C#
 alias d="dotnet"
