@@ -12,6 +12,9 @@ xclip
 cronie
 aspell
 aspell-en
+translate-shell
+ascii
+entr
 
 htop
 cmatrix
@@ -36,11 +39,13 @@ libvterm
 plantuml
 pandoc
 texlive-scheme-full
+fd-find
 
 qbittorrent
 okular
 flameshot
 kruler
+hexchat
 
 bpython
 
@@ -66,3 +71,7 @@ git-instaweb
 overpass-fonts
 
 gnome-tweaks
+
+xkill
+
+pgFormatter

@@ -77,11 +77,3 @@
 (package! info-noter
   :recipe (:local-repo "~/src/info-noter"
            :build  (:not compile)))
-
-(package! erc-image
-  :recipe (:local-repo "~/git/erc-image.el"
-           :build (:not compile)))
-
-(package! emojify
-  :recipe (:local-repo "~/git/emacs-emojify"
-           :build (:not compile)))

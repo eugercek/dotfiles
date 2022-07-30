@@ -28,10 +28,11 @@ Copy Pasted
 (when (file-exists-p custom-file)
   (load custom-file))
 #+end_src
-** Maximize on boot
+** COMMENT Maximize on boot
 Don't use ~toggle-frame-fullscreen~ in emacs daemon. For obvious reasons :D
 #+begin_src emacs-lisp
-(add-to-list 'default-frame-alist '(fullscreen . fullboth))
+(add-to-list 'default-frame-alist
+             '(fullscreen . fullboth))
 #+end_src
 * Doom
 ** Theme
@@ -91,6 +92,8 @@ Check if all wanted fonts are installed on the system.
 #+begin_src emacs-lisp
 (after! persp-mode
   (setq persp-emacsclient-init-frame-behaviour-override "main"))
+
+(add-hook 'server-switch-hook #'raise-frame)
 #+end_src
 ** Fix
 *** Info-mode
@@ -127,10 +130,13 @@ Check if all wanted fonts are installed on the system.
   (setq org-clock-persist t))  ;; Doom emacs sets to 'history
 (org-clock-persistence-insinuate)
 (setq org-clock-persist-query-resume nil)
+(add-hook 'org-clock-in-hook #'save-buffer)
+(add-hook 'org-clock-out-hook #'save-buffer)
 #+end_src
-** TODO Agenda
+** Agenda
 #+begin_src emacs-lisp
-(setq org-agenda-files (directory-files-recursively "~/Dropbox/org/gtd/" "\\.org$"))
+(setq org-agenda-files
+      (directory-files-recursively "~/Dropbox/org/gtd/" "\\.org$"))
 
 (use-package! org-super-agenda
   :commands (org-super-agenda-mode))
@@ -141,7 +147,9 @@ Check if all wanted fonts are installed on the system.
       org-agenda-skip-deadline-if-done t
       org-agenda-include-deadlines t
       org-agenda-block-separator nil org-agenda-tags-column 100)
-
+#+end_src
+** Mine
+#+begin_src emacs-lisp
 (setq org-agenda-custom-commands
       '(("o" "Overview"
          ((agenda "" ((org-agenda-span 'day)
@@ -154,54 +162,39 @@ Check if all wanted fonts are installed on the system.
                           :order 1)))))
           (alltodo "" ((org-agenda-overriding-header "")
                        (org-super-agenda-groups
-                        '((:name "Next to do"
-                           :todo "NEXT"
-                           :order 1)
-                          (:name "Important"
-                           :tag "Important"
-                           :priority "A"
-                           :order 6)
-                          (:name "Due Today"
+                        '(;; Each group has an implicit boolean OR operator between its selectors.
+                          (:name "Today"
                            :deadline today
-                           :order 2)
-                          (:name "Due Soon"
-                           :deadline future
-                           :order 8)
-                          (:name "Overdue"
-                           :deadline past
-                           :face error
-                           :order 7)
-                          (:name "Assignments"
-                           :tag "Assignment"
-                           :order 10)
-                          (:name "Issues"
-                           :tag "Issue"
-                           :order 12)
-                          (:name "Emacs"
-                           :tag "Emacs"
-                           :order 13)
-                          (:name "Projects"
-                           :tag "Project"
-                           :order 14)
-                          (:name "Research"
-                           :tag "Research"
-                           :order 15)
-                          (:name "To read"
-                           :tag "Read"
-                           :order 30)
+                           :face (:background "black"))
+                          (:name "Passed deadline"
+                           :and (:deadline past :todo ("TODO" "WAITING" "HOLD" "NEXT"))
+                           :face (:background "#7f1b19"))
+                          (:name "Work important"
+                           :and (:priority>= "B" :category "Work" :todo ("TODO" "NEXT")))
+                          (:name "Work other"
+                           :and (:category "Work" :todo ("TODO" "NEXT")))
+                          (:name "Important"
+                           :priority "A")
+                          (:priority<= "B"
+                           ;; Show this section after "Today" and "Important", because
+                           ;; their order is unspecified, defaulting to 0. Sections
+                           ;; are displayed lowest-number-first.
+                           :order 1)
+                          (:name "Papers"
+                           :file-path "org/roam/notes")
                           (:name "Waiting"
                            :todo "WAITING"
-                           :order 20)
-                          (:name "University"
-                           :tag "uni"
-                           :order 32)
-                          (:name "Trivial"
-                           :priority<= "E"
-                           :tag ("Trivial" "Unimportant")
-                           :todo ("SOMEDAY" )
-                           :order 90)
-                          (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
+                           :order 9)
+                          (:name "On hold"
+                           :todo "HOLD"
+                           :order 10)))))))))
+(add-hook 'org-agenda-mode-hook 'org-super-agenda-mode)
+
+
 #+end_src
+
+#+RESULTS:
+
 ** TODO Capture
 #+begin_src emacs-lisp
 (setq org-capture-templates
@@ -318,6 +311,8 @@ Snippet is [[https://stackoverflow.com/questions/21005885/export-org-mode-code-b
       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+(setq org-latex-minted-options '(("breaklines" "true")
+                                 ("breakanywhere" "true")))
 #+end_src
 ** Export
 *** TeX-like syntax
@@ -560,7 +555,28 @@ Run =(lsp-ui-flycheck-list)=
 (setq org-babel-default-header-args:racket
       '((:lang . "racket")))
 #+end_src
-
+** Haskell
+*** Repl
+**** Error Screen
+***** Always quit when =q=
+#+begin_src emacs-lisp
+(map! :map haskell-error-mode-map
+      :n "q" #'+popup/quit-window)
+#+end_src
+*** Keybindings
+#+begin_src emacs-lisp
+(map! :map haskell-mode-map
+      :localleader
+      "i" #'haskell-navigate-imports)
+#+end_src
+** Go
+#+begin_src emacs-lisp
+(after! go-mode
+  (setq gofmt-command "goimports")
+  (add-hook 'go-mode-hook
+            (lambda ()
+              (add-hook 'after-save-hook 'gofmt nil 'make-it-local))))
+#+end_src
 * Doom Modules
 ** completion
 *** company
@@ -593,7 +609,12 @@ Run =(lsp-ui-flycheck-list)=
 | =C-h=   | Display documentation (if available) |
 | =C-s=   | Filter candidates                    |
 | =C-S-s= | Search candidates with helm/ivy      |
-** UI
+** ui
+*** deft
+#+begin_src emacs-lisp
+(setq deft-directory "~/Dropbox/org/Notes")
+#+end_src
+
 *** zen
 **** KILL Writeroom width limit
 CLOSED: [2021-07-06 Sal 14:32]
@@ -1061,6 +1082,9 @@ Can enter new value with mouse-2 or RET
 (map!
  :n "M-k" #'drag-stuff-up
  :n "M-j" #'drag-stuff-down)
+
+(map! :n "gk" #'evil-previous-visual-line)
+(map! :n "gj" #'evil-next-visual-line)
 #+end_src
 ** Actions
 #+begin_src emacs-lisp
@@ -1082,12 +1106,12 @@ These are better places for frequently used keybindings.
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix ("j" . "JIH") ; Just In Home row
-       "j" (lambda! (call-interactively (key-binding (kbd "C-c C-c"))))
+       ;; "j" (lambda! (call-interactively (key-binding (kbd "C-c C-c"))))
        "e" #'eros-eval-last-sexp
        "o" #'org-clock-out ; clock Out
        "r" #'+popup/raise ; Raise
        "t" #'go-translate-popup-current
-       "p" #'evil-switch-to-windows-last-buffer))
+       :desc "Popup toggle" "p" #'+popup/toggle))
 #+end_src
 * RSS
 ** Keybindings
@@ -1323,11 +1347,6 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
   (setq erc-image-inline-rescale 300)
   (add-to-list 'erc-modules 'image))
 #+end_src
-** Emojis
-#+begin_src emacs-lisp
-(use-package! emojify
-  :hook (erc-mode . emojify-mode))
-#+end_src
 ** Connect to IRC
 #+begin_src emacs-lisp
 (when (daemonp)
@@ -1346,9 +1365,6 @@ You need to install [[https://github.com/eugercek/org-pomodoro][my fork]] in ord
   (backward-char 1)
   (+fold/open))
 
-(advice-add #'git-gutter:next-hunk
-            :after
-            #'eug/after-far)
 
 (map! :leader
       (:prefix ("g" . "git")
