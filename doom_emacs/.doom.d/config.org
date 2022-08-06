@@ -723,9 +723,12 @@ Add +treemacs-git-mode
 ** term
 *** vterm
 #+begin_src emacs-lisp
-(after! vterm
-  (set-evil-initial-state! 'vterm-mode 'insert)
-  (add-hook! vterm-mode #'goto-address-mode))
+(use-package! vterm
+  :config
+  (advice-add #'vterm--redraw :around
+              (lambda (fun &rest args)
+                (let ((cursor-type cursor-type))
+                  (apply fun args)))))
 #+end_src
 
 ** checkers
