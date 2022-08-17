@@ -167,3 +167,6 @@ export SYSTEMD_COLORS="1"
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH="$(go env GOPATH)"
 export PATH="${PATH}:${GOPATH}/bin"
+
+eval "$(direnv hook zsh)"
+
