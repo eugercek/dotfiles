@@ -284,3 +284,10 @@ alias nd="npm run dev"
 alias nb="npm run build"
 
 alias o="xdg-open"
+
+function diskb() {
+	echo "$(date): Disabled keyboard" > /tmp/disable-kb
+	# TODO
+	xinput --disable $(xinput list | grep "AT Translated" | cut -d "=" -f 2 | cut -d "[" -f 1|  sed 's/ //g')
+	systemctl restart --user kmonad
+}

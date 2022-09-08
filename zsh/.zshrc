@@ -170,3 +170,4 @@ export PATH="${PATH}:${GOPATH}/bin"
 
 eval "$(direnv hook zsh)"
 
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
