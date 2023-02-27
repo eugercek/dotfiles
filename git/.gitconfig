@@ -1,6 +1,6 @@
 [user]
 	name = Emin Umut Gerçek
-	email = umutgercek1999@gmail.com
+	email = eumutgercek@gmail.com
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
@@ -8,5 +8,7 @@
 	required = true
 [init]
 	defaultBranch = main
+[push]
+	autoSetupRemote = true
 [diff]
 	colorMoved = zebra
