@@ -299,3 +299,10 @@ function diskb() {
 function comdif() {
 	git diff "${1}~" "${1}"
 }
+
+# I only use HDD for boot (/boot/efi) because of the spin sound :(
+function stopspin() {
+	sudo umount /boot/efi
+	sudo hdparm -y /dev/sda
+}
+
