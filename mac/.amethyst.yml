@@ -1,0 +1,17 @@
+mod1:
+  - control
+  - option
+  - command
+
+mod2:
+  - control
+  - option
+  - command
+  - shift
+
+#window-margins: true
+#window-margin-size: 10
+
+layouts:
+  - fullscreen
+  - two-pane

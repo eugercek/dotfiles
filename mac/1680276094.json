@@ -1,0 +1,33 @@
+{
+	"title": "Caps Lock → Hyper Key (-shift) (⌃⌥⌘) (ESC if alone)",
+	"rules": [
+		{
+			"description": "Caps Lock → Hyper Key (-shift)  (⌃⌥⌘) (ESC if alone)",
+			"manipulators": [
+				{
+					"from": {
+						"key_code": "caps_lock",
+						"modifiers": {
+							"optional": ["left_shift"]
+						}
+					},
+					"to": [
+						{
+							"key_code": "left_command",
+							"modifiers": [
+								"left_control",
+								"left_option"
+							]
+						}
+					],
+					"to_if_alone": [
+						{
+							"key_code": "escape"
+						}
+					],
+					"type": "basic"
+				}
+			]
+		}
+	]
+}
