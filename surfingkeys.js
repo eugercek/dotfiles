@@ -18,6 +18,7 @@ let blockSites = [
   ".*film.*",
   ".*anime.*",
   "udemy.com",
+    ".*cantrill.*",
 ];
 
 const leaderKey = ",";
@@ -101,8 +102,8 @@ api.mapkey(';n', 'Go to next episode',
 
 api.mapkey(";c", "Copy title and url for org mode", () => {
   let url = document.URL;
-  let title = document.title;
-  api.Clipboard.write(`[[${url}][${title}]]`);
+  let title = document.title.replace(' - YouTube', '');
+  api.Clipboard.write(`[${title}](${url})`);
 });
 
 const showCurrentTrainingBindings = () => {
@@ -222,3 +223,23 @@ api.Hints.style(
   "div{color:#efe1eb; background: none; background-color: #a73a1e;} div.begin{color:#ea6962; font-size: 0.9em;}",
   "text"
 );
+
+api.mapkey("t", "toggle fullscreen on cantril site ", () => {
+    const toggle = e => {
+        if (e.style.display === "") {
+            e.style.display = 'none'
+            document.querySelector("body > section > div.course-mainbar.lecture-content.full-width-content").style.padding="0 0 0 0"
+        } else {
+            e.style.display = ''
+            document.querySelector("body > section > div.course-mainbar.lecture-content.full-width-content").style.padding="16 40 16 40"
+        }
+    }
+
+    let elements = [
+        document.querySelector('div[role="navigation"]'),
+        document.querySelector('header'),
+        document.querySelector('h2[id="lecture_heading"]'),
+    ]
+
+    elements.forEach(toggle)
+})
