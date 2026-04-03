@@ -4,6 +4,25 @@
 ;; Package Management
 ;; ──────────────────────────────────────────────────────────────
 
+(defun eug/focus-or-create-frame ()
+  (let ((frames (cl-remove-if-not (lambda (f) (eq (framep f) 'ns)) (frame-list))))
+    (if frames
+        (select-frame-set-input-focus (car frames))
+      (select-frame-set-input-focus
+       (make-frame '((window-system . ns)))))))
+
+
+(when (daemonp)
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (select-frame-set-input-focus frame)
+              (raise-frame frame)
+              (x-focus-frame frame))))
+
+(setq debug-on-error t)
+;; todo umut
+(setq dashboard-footer-messages '(""))
+
 
 (load-theme 'modus-operandi)
 (require 'package)
@@ -56,7 +75,7 @@
       `(("." . ,(expand-file-name "backups" user-emacs-directory))))
 
 ;; Maximize frame after init (avoids macOS sizing bugs)
-(add-hook 'emacs-startup-hook #'toggle-frame-maximized)
+;;(add-hook 'emacs-startup-hook #'toggle-frame-maximized)
 
 ;; Clean UI
 (tool-bar-mode -1)
@@ -71,11 +90,9 @@
   :config
   (setq dashboard-center-content t
         dashboard-banner-logo-title nil
-        ;; dashboard-startup-banner (expand-file-name "GnuLove.png" user-emacs-directory)
-        dashboard-startup-banner 'ascii
+        dashboard-startup-banner (expand-file-name "GnuLove.png" user-emacs-directory)
         dashboard-items '((recents  . 5)
                           (projects . 5))
-        dashboard-footer-messages nil
         initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
   (dashboard-setup-startup-hook))
 
@@ -333,7 +350,8 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
 
     ;; Quit
     "q"  '(:ignore t :wk "Quit")
-    "qq" '(save-buffers-kill-terminal :wk "Quit")))
+    "qq" '(delete-frame :wk "Close frame")
+    "qQ" '(save-buffers-kill-emacs :wk "Kill Emacs")))
 
 (use-package which-key
   :init (which-key-mode)
@@ -366,7 +384,11 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
 
 (use-package consult
   :config
-  (setq consult-narrow-key "<"))
+  (setq consult-narrow-key "<"
+        consult-preview-key "M-."
+        consult-preview-throttle 0)
+  ;; Disable heavy hooks during preview to avoid lag
+  (setq consult-preview-allowed-hooks nil))
 
 (use-package embark
   :bind (("C-." . embark-act)
@@ -539,19 +561,21 @@ If no project is known, prompt to add one via `project-remember-project'."
          (vterm-buf (get-buffer buf-name))
          (vterm-win (when vterm-buf (get-buffer-window vterm-buf))))
     (cond
-     ;; Vterm visible: close it
+     ;; Vterm visible: hide it
      (vterm-win
       (delete-window vterm-win))
-     ;; Vterm buffer exists but not visible: show it
+     ;; Vterm buffer exists but not visible: show and focus it
      (vterm-buf
       (let ((display-buffer-overriding-action
              (if (eq eug/vterm-side 'bottom)
                  '(display-buffer-in-side-window (side . bottom) (slot . 0) (window-height . 0.33))
                '(display-buffer-in-side-window (side . right) (slot . 0) (window-width . 0.4)))))
-        (display-buffer vterm-buf)))
+        (select-window (display-buffer vterm-buf))
+        (evil-insert-state)))
      ;; No vterm: create one
      (t (let ((default-directory (project-root proj)))
-          (vterm buf-name))))))
+          (vterm buf-name)
+          (evil-insert-state))))))
 
 (defun eug/vterm-toggle-side ()
   "Toggle vterm window between bottom and right side."
@@ -698,6 +722,10 @@ If no project is known, prompt to add one via `project-remember-project'."
         pulsar-delay 0.05
         pulsar-iterations 10)
   (pulsar-global-mode 1))
+
+;; Outline folding in code buffers (Evil za/zc/zo/zM/zR)
+(add-hook 'prog-mode-hook #'outline-minor-mode)
+(add-hook 'prog-mode-hook #'hs-minor-mode)
 
 ;; Don't clutter minibuffer with eldoc in prog modes
 (setq eldoc-echo-area-use-multiline-p nil)
