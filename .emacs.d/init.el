@@ -13,6 +13,7 @@
         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 (package-initialize)
 
+
 (unless package-archive-contents
   (package-refresh-contents))
 (require 'use-package)
@@ -54,12 +55,29 @@
 (setq backup-directory-alist
       `(("." . ,(expand-file-name "backups" user-emacs-directory))))
 
+;; Maximize frame after init (avoids macOS sizing bugs)
+(add-hook 'emacs-startup-hook #'toggle-frame-maximized)
+
 ;; Clean UI
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (menu-bar-mode -1)
 (tooltip-mode -1)
 (set-fringe-mode 10)
+
+;; Dashboard
+(use-package dashboard
+  :demand t
+  :config
+  (setq dashboard-center-content t
+        dashboard-banner-logo-title nil
+        ;; dashboard-startup-banner (expand-file-name "GnuLove.png" user-emacs-directory)
+        dashboard-startup-banner 'ascii
+        dashboard-items '((recents  . 5)
+                          (projects . 5))
+        dashboard-footer-messages nil
+        initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
+  (dashboard-setup-startup-hook))
 
 ;; Relative line numbers in code
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
@@ -75,7 +93,6 @@
 (show-paren-mode 1)
 (global-hl-line-mode 1)
 (pixel-scroll-precision-mode 1)
-(desktop-save-mode 1)
 (winner-mode 1)
 
 ;; Short answers, no dialogs
@@ -111,7 +128,7 @@
 (use-package circadian
   :config
   (setq circadian-themes '((:sunrise . modus-operandi)
-                            (:sunset  . modus-vivendi)))
+                           (:sunset  . modus-vivendi)))
   (circadian-setup))
 
 ;; ──────────────────────────────────────────────────────────────
@@ -125,6 +142,7 @@
   :config
   (setq doom-modeline-height 25
         doom-modeline-bar-width 4
+        doom-modeline-project-name t
         doom-modeline-buffer-encoding nil))
 
 ;; ──────────────────────────────────────────────────────────────
@@ -153,10 +171,11 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
     (cond
      ((and (bound-and-true-p eglot--managed-mode)
            (eglot-hover-info (thing-at-point 'symbol)))
-      (eldoc-doc-buffer))
+      (eldoc-doc-buffer t))
      ((derived-mode-p 'emacs-lisp-mode)
-      (describe-symbol (symbol-at-point)))
-     ((eldoc-doc-buffer))
+      (describe-symbol (symbol-at-point))
+      (pop-to-buffer "*Help*"))
+     ((eldoc-doc-buffer t))
      (t (message "No documentation found for: %s" (thing-at-point 'symbol)))))
 
   (setq evil-lookup-func #'eug/lookup-documentation)
@@ -186,8 +205,26 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
   (evil-commentary-mode))
 
 ;; ──────────────────────────────────────────────────────────────
-;; Keybindings (SPC leader, Doom-style)
+;; Keybindings
 ;; ──────────────────────────────────────────────────────────────
+
+
+;; By settings these we lose some keybinding but we have evil alternatives
+;; These makes terminal operations file tree ops very easy
+;; M-h: mark-paragraph -> evil vip
+;; M-k: kill-sentence  -> evil D
+;; M-l: downcase-word  -> evil uw
+;; M-hjkl for window navigation (all states)
+(define-key evil-normal-state-map (kbd "M-h") #'evil-window-left)
+(define-key evil-normal-state-map (kbd "M-j") #'evil-window-down)
+(define-key evil-normal-state-map (kbd "M-k") #'evil-window-up)
+(define-key evil-normal-state-map (kbd "M-l") #'evil-window-right)
+(define-key evil-insert-state-map (kbd "M-h") #'evil-window-left)
+(define-key evil-insert-state-map (kbd "M-j") #'evil-window-down)
+(define-key evil-insert-state-map (kbd "M-k") #'evil-window-up)
+(define-key evil-insert-state-map (kbd "M-l") #'evil-window-right)
+
+;; SPC leader (Doom-style)
 
 (use-package general
   :config
@@ -207,7 +244,7 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
   (eug/leader
     "SPC" '(execute-extended-command :wk "M-x")
     "u"   '(universal-argument :wk "Universal argument")
-    "."   '(find-file :wk "Find file")
+    "."   '(eug/vterm-toggle :wk "Terminal")
     ","   '(consult-buffer :wk "Switch buffer")
 
     ;; Buffer
@@ -246,8 +283,7 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
 
     ;; Open
     "o"  '(:ignore t :wk "Open")
-    "ot" '(vterm :wk "Terminal")
-    "of" '(treemacs :wk "File explorer")
+    "of" '(eug/treemacs-open :wk "File explorer")
     "od" '(dired-jump :wk "Dired")
 
     ;; Project
@@ -278,7 +314,8 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
 
     ;; Toggle
     "t"  '(:ignore t :wk "Toggle")
-    "tt" '(consult-theme :wk "Theme")
+    "tT" '(consult-theme :wk "Theme")
+    "tt" '(eug/vterm-toggle-side :wk "Terminal side")
     "tl" '(display-line-numbers-mode :wk "Line numbers")
     "tz" '(writeroom-mode :wk "Zen")
 
@@ -301,7 +338,12 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
 (use-package which-key
   :init (which-key-mode)
   :config
-  (setq which-key-idle-delay 0.3))
+  (setq which-key-idle-delay 0.3
+        which-key-popup-type 'side-window
+        which-key-side-window-location 'bottom
+        which-key-side-window-max-height 0.33
+        which-key-min-display-lines 6
+        which-key-sort-order 'which-key-key-order-alpha))
 
 ;; ──────────────────────────────────────────────────────────────
 ;; Completion: Vertico + Orderless + Consult + Marginalia
@@ -360,20 +402,46 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
 ;; File Explorer: Treemacs
 ;; ──────────────────────────────────────────────────────────────
 
+(defun eug/treemacs-open ()
+  "Toggle treemacs. When opening fresh, root at the current project.
+If no project is known, prompt to add one via `project-remember-project'."
+  (interactive)
+  (if (treemacs-get-local-window)
+      (treemacs)
+    (let ((proj (project-current nil)))
+      (unless proj
+        (let* ((root (read-directory-name "Add project root: "))
+               (new-proj (cons 'transient root)))
+          (project-remember-project new-proj)
+          (setq proj new-proj)))
+      (treemacs--init (project-root proj)))))
+
+(defun eug/treemacs-sync-on-buffer-switch ()
+  "Refresh treemacs to follow the current buffer's project."
+  (when (and (treemacs-get-local-window)
+             (buffer-file-name))
+    (treemacs--follow)))
+
 (use-package treemacs
   :config
   (setq treemacs-width 30
         treemacs-is-never-other-window nil
         treemacs-show-hidden-files t)
   (treemacs-follow-mode t)
+  (treemacs-project-follow-mode t)
   (treemacs-filewatch-mode t)
   (treemacs-fringe-indicator-mode 'always)
-  )
+  (add-hook 'window-selection-change-functions
+            (lambda (_frame) (eug/treemacs-sync-on-buffer-switch))))
 
 (use-package treemacs-evil
   :after (treemacs evil)
   :config
-  (define-key evil-treemacs-state-map (kbd "SPC") nil))
+  (define-key evil-treemacs-state-map (kbd "SPC") nil)
+  (define-key evil-treemacs-state-map (kbd "M-h") #'evil-window-left)
+  (define-key evil-treemacs-state-map (kbd "M-j") #'evil-window-down)
+  (define-key evil-treemacs-state-map (kbd "M-k") #'evil-window-up)
+  (define-key evil-treemacs-state-map (kbd "M-l") #'evil-window-right))
 
 (use-package treemacs-magit
   :after (treemacs magit))
@@ -458,6 +526,47 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
   (interactive)
   (let ((default-directory (project-root (project-current t))))
     (vterm (format "*vterm<%s>*" (project-name (project-current))))))
+
+(defvar eug/vterm-side 'bottom
+  "Current side for vterm window: `bottom' or `right'.")
+
+(defun eug/vterm-toggle ()
+  "Toggle project-specific vterm: open if not visible, close if visible."
+  (interactive)
+  (let* ((proj (project-current t))
+         (proj-name (project-name proj))
+         (buf-name (format "*vterm<%s>*" proj-name))
+         (vterm-buf (get-buffer buf-name))
+         (vterm-win (when vterm-buf (get-buffer-window vterm-buf))))
+    (cond
+     ;; Vterm visible: close it
+     (vterm-win
+      (delete-window vterm-win))
+     ;; Vterm buffer exists but not visible: show it
+     (vterm-buf
+      (let ((display-buffer-overriding-action
+             (if (eq eug/vterm-side 'bottom)
+                 '(display-buffer-in-side-window (side . bottom) (slot . 0) (window-height . 0.33))
+               '(display-buffer-in-side-window (side . right) (slot . 0) (window-width . 0.4)))))
+        (display-buffer vterm-buf)))
+     ;; No vterm: create one
+     (t (let ((default-directory (project-root proj)))
+          (vterm buf-name))))))
+
+(defun eug/vterm-toggle-side ()
+  "Toggle vterm window between bottom and right side."
+  (interactive)
+  (let* ((buf-name (format "*vterm<%s>*" (project-name (project-current t))))
+         (vterm-buf (get-buffer buf-name))
+         (vterm-win (when vterm-buf (get-buffer-window vterm-buf))))
+    (when vterm-win
+      (setq eug/vterm-side (if (eq eug/vterm-side 'bottom) 'right 'bottom))
+      (delete-window vterm-win)
+      (let ((display-buffer-overriding-action
+             (if (eq eug/vterm-side 'bottom)
+                 '(display-buffer-in-side-window (side . bottom) (slot . 0) (window-height . 0.33))
+               '(display-buffer-in-side-window (side . right) (slot . 0) (window-width . 0.4)))))
+        (display-buffer vterm-buf)))))
 
 (use-package vterm
   :hook
@@ -555,7 +664,10 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
          (side . bottom) (slot . 0) (window-height . 0.25))
         ("\\*compilation\\*"
          (display-buffer-reuse-window display-buffer-in-side-window)
-         (side . bottom) (slot . 0) (window-height . 0.3))))
+         (side . bottom) (slot . 0) (window-height . 0.3))
+        ("\\*vterm"
+         (display-buffer-reuse-window display-buffer-in-side-window)
+         (side . bottom) (slot . 0) (window-height . 0.33))))
 
 ;; ──────────────────────────────────────────────────────────────
 ;; Quality of Life
