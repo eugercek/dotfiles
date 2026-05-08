@@ -1,0 +1,12 @@
+- I prefer builtin packages over plugins unless there's very good feature from the plugin.
+- Nvim evolves very fast always look at latest changes from the latest releases
+- Don't manually touch `nvim-pack-lock.json`
+- Use `vim.pack` for package management
+- The config structure is like this: 
+    - `lua/config` for builtin things
+    - `lua/plugins` for plugins:
+        - Start with `vim.pack.add`
+        - Every plugin should have different file
+- Never remove existing comments
+- I also use tmux + ghostty with custom bindings on Command key. Read ~/.tmux.conf for keybinding collisions
+- Never write too much lines of code for simple things. Always think what I can use from Neovim library. Never just shit 100s of liens for a simple things.

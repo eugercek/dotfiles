@@ -1,0 +1,47 @@
+{
+  "Code Fence": {
+    "prefix": "<s",
+    "body": [
+      "```$1",
+      "$0",
+      "```"
+    ],
+    "description": "Markdown code fence"
+  },
+  "Link": {
+    "prefix": "<l",
+    "body": [
+      "[${1:text}](${2:url})$0"
+    ],
+    "description": "Markdown link"
+  },
+  "Task Item": {
+    "prefix": "<t",
+    "body": [
+      "- [ ] ${1:task}$0"
+    ],
+    "description": "Markdown task list item"
+  },
+  "Frontmatter": {
+    "prefix": "<front",
+    "body": [
+      "---",
+      "title: ${1:title}",
+      "date: ${2:$CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE}",
+      "tags: [${3:tag}]",
+      "---",
+      "",
+      "$0"
+    ],
+    "description": "YAML frontmatter block"
+  },
+  "Callout": {
+    "prefix": "<note",
+    "body": [
+      "> [!NOTE]",
+      "> ${1:content}",
+      "> $0"
+    ],
+    "description": "Markdown note callout"
+  }
+}

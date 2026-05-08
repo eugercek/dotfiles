@@ -1,0 +1,15 @@
+- [ ] Study `[` and `]` keybindings
+- [ ] Spell check bindings
+- [ ] Have a workflow on todos
+- [ ] Understand lsp, and go though keybinding
+- [ ] Understand tree sitter
+- [ ] Project level errors
+- [x] Find theme: Choose retrobox for dark mode. It's like gruvbox
+- [ ] Find a way to deal with command mode Enter to auto complete
+- [x] Enable tree-sitter syntax highlighting
+    - While looking at themes I found that I didn't enabled tree-sitter in syntax mode
+    - `nvim-treesitter` is archived I will change this in future when candidates have developed. But currently works.
+- [x] Find a way to deal with git commit:
+    - Currently it's awesome I do `git commit --verbose` in shell. It opens nvim and starts with folded :) then write the commit msg via lurking around with `zj zj zj`
+- [x] Find a way to delete unused vim.pack plugins:
+    - Use `:lua vim.pack.update(nil, { offline = true })` and use `gra` to code actions for deletions
