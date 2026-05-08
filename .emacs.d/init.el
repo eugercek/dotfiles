@@ -1,7 +1,30 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
+;; NOTE There are some manual steps should be done regularly, search MANUAL for these
+
 ;; ──────────────────────────────────────────────────────────────
 ;; Package Management
+;; ──────────────────────────────────────────────────────────────
+
+(require 'package)
+(setq package-archives
+      '(("melpa"  . "https://melpa.org/packages/")
+        ("gnu"    . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+(package-initialize)
+
+( unless package-archive-contents
+  (package-refresh-contents))
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+;; Inherit shell PATH so tools (gopls, goimports, etc.) are found
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
+
+;; ──────────────────────────────────────────────────────────────
+;; Daemon / Frame
 ;; ──────────────────────────────────────────────────────────────
 
 (defun eug/focus-or-create-frame ()
@@ -11,7 +34,6 @@
       (select-frame-set-input-focus
        (make-frame '((window-system . ns)))))))
 
-
 (when (daemonp)
   (add-hook 'after-make-frame-functions
             (lambda (frame)
@@ -19,28 +41,11 @@
               (raise-frame frame)
               (x-focus-frame frame))))
 
-(setq debug-on-error t)
-;; todo umut
-(setq dashboard-footer-messages '(""))
-
-
-(load-theme 'modus-operandi)
-(require 'package)
-(setq package-archives
-      '(("melpa"  . "https://melpa.org/packages/")
-        ("gnu"    . "https://elpa.gnu.org/packages/")
-        ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
-(package-initialize)
-
-
-(unless package-archive-contents
-  (package-refresh-contents))
-(require 'use-package)
-(setq use-package-always-ensure t)
-
 ;; ──────────────────────────────────────────────────────────────
 ;; Sane Defaults
 ;; ──────────────────────────────────────────────────────────────
+
+;; (setq debug-on-error t)
 
 (setq-default
  delete-by-moving-to-trash t
@@ -57,11 +62,12 @@
  auto-save-default t
  inhibit-compacting-font-caches t
  truncate-string-ellipsis "…"
- scroll-margin 2
- scroll-conservatively 101
+ scroll-margin 0
+ scroll-conservatively 3
  scroll-preserve-screen-position t
  auto-window-vscroll nil
- fast-but-imprecise-scrolling t
+ fast-but-imprecise-scrolling nil
+
  ring-bell-function 'ignore
  create-lockfiles nil
  make-backup-files nil
@@ -70,47 +76,12 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+(setq auto-save-visited-interval 1)
+(auto-save-visited-mode 1)
+
 ;; Backups in one place
 (setq backup-directory-alist
       `(("." . ,(expand-file-name "backups" user-emacs-directory))))
-
-;; Maximize frame after init (avoids macOS sizing bugs)
-;;(add-hook 'emacs-startup-hook #'toggle-frame-maximized)
-
-;; Clean UI
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(menu-bar-mode -1)
-(tooltip-mode -1)
-(set-fringe-mode 10)
-
-;; Dashboard
-(use-package dashboard
-  :demand t
-  :config
-  (setq dashboard-center-content t
-        dashboard-banner-logo-title nil
-        dashboard-startup-banner (expand-file-name "GnuLove.png" user-emacs-directory)
-        dashboard-items '((recents  . 5)
-                          (projects . 5))
-        initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
-  (dashboard-setup-startup-hook))
-
-;; Relative line numbers in code
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-(setq display-line-numbers-type 'relative)
-
-;; Built-in quality of life
-(recentf-mode 1)
-(setq recentf-max-saved-items 100)
-(save-place-mode 1)
-(savehist-mode 1)
-(global-auto-revert-mode 1)
-(electric-pair-mode 1)
-(show-paren-mode 1)
-(global-hl-line-mode 1)
-(pixel-scroll-precision-mode 1)
-(winner-mode 1)
 
 ;; Short answers, no dialogs
 (setq use-short-answers t)
@@ -120,12 +91,72 @@
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 
+;; Built-in quality of life
+(recentf-mode 1)
+(setq recentf-max-saved-items 100)
+(save-place-mode 1)
+(savehist-mode 1)
+(global-auto-revert-mode 1)
+(electric-pair-mode 1)
+(show-paren-mode 1)
+(winner-mode 1)
+
+(defun eug/toggle-maximize-buffer ()
+  "Maximize current buffer; restore previous window layout on second call.
+Works for side windows (treemacs, vterm) too."
+  (interactive)
+  (if (and (= 1 (length (window-list)))
+           (assoc ?_ register-alist))
+      (jump-to-register ?_)
+    (window-configuration-to-register ?_)
+    (let ((ignore-window-parameters t))
+      (delete-other-windows))))
+
+;; Smooth scrolling (VS Code-like)
+(use-package ultra-scroll
+  :config
+  (setq ultra-scroll-hide-functions
+        (list #'global-hl-line-mode))
+  (ultra-scroll-mode 1))
+
+;; Enable after ultra-scroll so it knows to hide the global variant
+(global-hl-line-mode 1)
+
+;; Don't clutter minibuffer with eldoc in prog modes
+(setq eldoc-echo-area-use-multiline-p nil)
+
+;; Relative line numbers in code
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+;; (setq display-line-numbers-type 't)
+
 ;; macOS
 (when (eq system-type 'darwin)
   (setq mac-option-modifier 'super
         mac-command-modifier 'meta
-        ns-use-proxy-icon nil
-        ns-pop-up-frames nil))
+        ns-pop-up-frames nil) ;; in finder file opening use existing frame)
+
+  ;; Remove title bar etc
+  (add-to-list 'default-frame-alist '(undecorated-round . t)))
+
+
+;; ──────────────────────────────────────────────────────────────
+;; Clean UI
+;; ──────────────────────────────────────────────────────────────
+
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(menu-bar-mode -1)
+(tooltip-mode -1)
+(set-fringe-mode 10)
+
+;; Breathing room between lines
+(setq-default line-spacing 0.15)
+
+;; Clean window dividers instead of vertical bar characters
+(setq window-divider-default-places t
+      window-divider-default-bottom-width 1
+      window-divider-default-right-width 1)
+(window-divider-mode 1)
 
 ;; ──────────────────────────────────────────────────────────────
 ;; Fonts
@@ -134,19 +165,59 @@
 (set-face-attribute 'default nil
                     :family "JetBrainsMono Nerd Font Mono"
                     :height 150)
+(set-face-attribute 'variable-pitch nil
+                    :family "SF Pro Text"
+                    :height 150)
 
 ;; ──────────────────────────────────────────────────────────────
 ;; Theme (auto sunrise/sunset switching)
 ;; ──────────────────────────────────────────────────────────────
+
+(use-package ef-themes)
 
 (setq calendar-latitude 39.9
       calendar-longitude 32.9)
 
 (use-package circadian
   :config
-  (setq circadian-themes '((:sunrise . modus-operandi)
-                           (:sunset  . modus-vivendi)))
+  (setq circadian-themes '((:sunrise . doom-nord) ;; ef-light
+                           (:sunset  . doom-nord)))
   (circadian-setup))
+
+;; Window padding + floating modeline for a modern, spacious look
+;; TOOD
+;; (use-package spacious-padding
+;;   :config
+;;   (setq spacious-padding-widths
+;;         '(:internal-border-width 16
+;;                                  :header-line-width 4
+;;                                  :mode-line-width 4
+;;                                  :tab-width 4
+;;                                  :right-divider-width 24
+;;                                  :scroll-bar-width 8
+;;                                  :fringe-width 12))
+;;   (setq spacious-padding-subtle-mode-line
+;;         '(:mode-line-active default :mode-line-inactive vertical-border))
+;;   (spacious-padding-mode 1))
+
+;; (use-package spacious-padding
+;;   :config
+;;   (setq spacious-padding-widths
+;;         '(:internal-border-width 16
+;;                                  :header-line-width 4
+;;                                  :mode-line-width 4
+;;                                  :tab-width 4
+;;                                  :right-divider-width 24
+;;                                  :scroll-bar-width 8
+;;                                  :fringe-width 12))
+;;   (setq spacious-padding-subtle-mode-line
+;;         '(:mode-line-active default :mode-line-inactive vertical-border))
+;;   (spacious-padding-mode 1))
+
+;; Dim popups/sidebars (treemacs, vterm, help) so real buffers stand out
+(use-package solaire-mode
+  :config
+  (solaire-global-mode 1))
 
 ;; ──────────────────────────────────────────────────────────────
 ;; Modeline & Icons
@@ -157,10 +228,34 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :config
-  (setq doom-modeline-height 25
-        doom-modeline-bar-width 4
+  (setq doom-modeline-height 32
+        doom-modeline-bar-width 0
         doom-modeline-project-name t
-        doom-modeline-buffer-encoding nil))
+        doom-modeline-buffer-encoding nil
+        doom-modeline-icon t
+        doom-modeline-major-mode-icon t
+        doom-modeline-major-mode-color-icon t
+        doom-modeline-buffer-state-icon t
+        doom-modeline-buffer-modification-icon t
+        doom-modeline-modal-icon nil
+        doom-modeline-vcs-max-length 20))
+
+;; ──────────────────────────────────────────────────────────────
+;; Dashboard
+;; ──────────────────────────────────────────────────────────────
+
+(setq dashboard-footer-messages '(""))
+
+(use-package dashboard
+  :demand t
+  :config
+  (setq dashboard-center-content t
+        dashboard-banner-logo-title nil
+        dashboard-startup-banner (expand-file-name "GnuLove.png" user-emacs-directory)
+        dashboard-items '((recents  . 5)
+                          (projects . 5))
+        initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
+  (dashboard-setup-startup-hook))
 
 ;; ──────────────────────────────────────────────────────────────
 ;; Evil
@@ -222,9 +317,18 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
   (evil-commentary-mode))
 
 ;; ──────────────────────────────────────────────────────────────
-;; Keybindings
+;; Jump / Motion
 ;; ──────────────────────────────────────────────────────────────
 
+(use-package avy
+  :config
+  (setq avy-timeout-seconds 0.2
+        avy-style 'at-full
+        avy-all-windows t))
+
+;; ──────────────────────────────────────────────────────────────
+;; Keybindings
+;; ──────────────────────────────────────────────────────────────
 
 ;; By settings these we lose some keybinding but we have evil alternatives
 ;; These makes terminal operations file tree ops very easy
@@ -243,9 +347,30 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
 
 ;; SPC leader (Doom-style)
 
+(use-package which-key
+  :init (which-key-mode)
+  :config
+  (setq which-key-idle-delay 0.3
+        which-key-popup-type 'side-window
+        which-key-side-window-location 'bottom
+        which-key-side-window-max-height 0.33
+        which-key-min-display-lines 6
+        which-key-sort-order 'which-key-key-order-alpha))
+
+;; ──────────────────────────────────────────────────────────────
+;; Completion: Vertico + Orderless + Consult + Marginalia
+;; ──────────────────────────────────────────────────────────────
+
 (use-package general
   :config
   (general-evil-setup)
+
+  (defun eug/copy-file-path-from-project-root ()
+    "Copy the current file's path relative to the project root."
+    (interactive)
+    (let ((path (file-relative-name buffer-file-name (project-root (project-current)))))
+      (kill-new path)
+      (message "Copied: %s" path)))
 
   (general-create-definer eug/leader
     :keymaps 'override
@@ -280,6 +405,7 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
     "fs" '(save-buffer :wk "Save")
     "fS" '(write-file :wk "Save as")
     "fd" '(dired-jump :wk "Dired here")
+    "fp" '(eug/copy-file-path-from-project-root :wk "Copy path")
 
     ;; Git
     "g"  '(:ignore t :wk "Git")
@@ -287,6 +413,7 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
     "gb" '(magit-blame :wk "Blame")
     "gl" '(magit-log-current :wk "Log")
     "gd" '(diff-hl-show-hunk :wk "Diff hunk")
+    "ge" '(magit-ediff-dwim :wk "Ediff (editable diff)")
     "gn" '(diff-hl-next-hunk :wk "Next hunk")
     "gp" '(diff-hl-previous-hunk :wk "Prev hunk")
 
@@ -298,6 +425,12 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
     "hm" '(describe-mode :wk "Mode")
     "hi" '(info :wk "Info")
 
+    ;; Jump
+    "j"  '(:ignore t :wk "Jump")
+    "jj" '(avy-goto-char-timer :wk "Char")
+    "jw" '(avy-goto-word-1 :wk "Word")
+    "jl" '(avy-goto-line :wk "Line")
+
     ;; Open
     "o"  '(:ignore t :wk "Open")
     "of" '(eug/treemacs-open :wk "File explorer")
@@ -305,15 +438,25 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
 
     ;; Project
     "p"  '(:ignore t :wk "Project")
-    "pp" '(project-switch-project :wk "Switch")
+    "pp" '(tabspaces-open-or-create-project-and-workspace :wk "Switch / open")
     "pf" '(project-find-file :wk "Find file")
-    "pb" '(consult-project-buffer :wk "Buffer")
+    "pb" '(tabspaces-switch-to-buffer :wk "Buffer (this tab)")
     "pd" '(project-dired :wk "Dired")
     "pk" '(project-kill-buffers :wk "Kill buffers")
     "pc" '(project-compile :wk "Compile")
     "ps" '(project-shell-command :wk "Shell cmd")
-    "pt" '(project-vterm :wk "Terminal")
     "pF" '(eug/find-file-in-repo :wk "Find file (repo root)")
+
+    ;; Workspace / Tab
+    "TAB"  '(:ignore t :wk "Workspace")
+    "TAB TAB" '(tabspaces-switch-or-create-workspace :wk "Switch / create")
+    "TAB n" '(tab-next :wk "Next")
+    "TAB p" '(tab-previous :wk "Prev")
+    "TAB r" '(tab-rename :wk "Rename")
+    "TAB d" '(tabspaces-close-workspace :wk "Close workspace")
+    "TAB k" '(tabspaces-kill-buffers-close-workspace :wk "Kill bufs + close")
+    "TAB b" '(tabspaces-switch-buffer-and-tab :wk "Buffer (any tab)")
+    "TAB x" '(tabspaces-remove-current-buffer :wk "Remove buf from ws")
 
     ;; Search
     "s"  '(:ignore t :wk "Search")
@@ -328,6 +471,9 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
     "cr" '(eglot-rename :wk "Rename")
     "cf" '(eglot-format :wk "Format")
     "cd" '(flymake-show-buffer-diagnostics :wk "Diagnostics")
+    "cD" '(flymake-show-project-diagnostics :wk "Project diagnostics")
+    "cn" '(flymake-goto-next-error :wk "Next diagnostic")
+    "cp" '(flymake-goto-prev-error :wk "Prev diagnostic")
 
     ;; Toggle
     "t"  '(:ignore t :wk "Toggle")
@@ -338,6 +484,8 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
 
     ;; Window
     "w"  '(:ignore t :wk "Window")
+    "wm" '(eug/toggle-maximize-buffer :wk "Maximize buffer")
+    "wM" '(toggle-frame-maximized :wk "Maximize frame")
     "wv" '(evil-window-vsplit :wk "V-split")
     "ws" '(evil-window-split :wk "H-split")
     "wd" '(evil-window-delete :wk "Delete")
@@ -351,21 +499,8 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
     ;; Quit
     "q"  '(:ignore t :wk "Quit")
     "qq" '(delete-frame :wk "Close frame")
-    "qQ" '(save-buffers-kill-emacs :wk "Kill Emacs")))
-
-(use-package which-key
-  :init (which-key-mode)
-  :config
-  (setq which-key-idle-delay 0.3
-        which-key-popup-type 'side-window
-        which-key-side-window-location 'bottom
-        which-key-side-window-max-height 0.33
-        which-key-min-display-lines 6
-        which-key-sort-order 'which-key-key-order-alpha))
-
-;; ──────────────────────────────────────────────────────────────
-;; Completion: Vertico + Orderless + Consult + Marginalia
-;; ──────────────────────────────────────────────────────────────
+    "qQ" '(save-buffers-kill-emacs :wk "Kill Emacs")
+    "qr" '(restart-emacs :wk "Restart Emacs")))
 
 (use-package vertico
   :init (vertico-mode)
@@ -385,30 +520,40 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
 (use-package consult
   :config
   (setq consult-narrow-key "<"
-        consult-preview-key "M-."
-        consult-preview-throttle 0)
-  ;; Disable heavy hooks during preview to avoid lag
-  (setq consult-preview-allowed-hooks nil))
+        consult-preview-throttle 0))
 
 (use-package embark
   :bind (("C-." . embark-act)
          ("C-;" . embark-dwim)))
 
+(use-package embark-consult
+  :after (embark consult))
+
+(use-package wgrep)
 
 ;; In-buffer completion
 (use-package corfu
   :init (global-corfu-mode)
+  :bind (:map corfu-map
+              ("TAB" . corfu-insert)
+              ([tab] . corfu-insert)
+              ("RET" . corfu-insert)
+              ([return] . corfu-insert))
   :config
   (setq corfu-auto t
         corfu-auto-delay 0.2
         corfu-auto-prefix 2
         corfu-cycle t
         corfu-preselect 'first)
-  :bind (:map corfu-map
-              ("TAB" . corfu-insert)
-              ([tab] . corfu-insert)
-              ("RET" . corfu-insert)
-              ([return] . corfu-insert)))
+  ;; Hide corfu popup when frame loses focus (fixes stale empty child-frame)
+  ;; TODO Test if this hack is working
+  (add-function :after after-focus-change-function
+                (lambda ()
+                  (unless (frame-focus-state)
+                    (dolist (frame (frame-list))
+                      (when (frame-parent frame)
+                        (make-frame-invisible frame)))
+                    (when (fboundp 'corfu-quit) (corfu-quit))))))
 
 (use-package nerd-icons-corfu
   :after corfu
@@ -421,16 +566,47 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
   (add-to-list 'completion-at-point-functions #'cape-file))
 
 ;; ──────────────────────────────────────────────────────────────
+;; Workspaces: Tabspaces (tab-bar + per-tab buffer lists)
+;; ──────────────────────────────────────────────────────────────
+
+(use-package tabspaces
+  :hook (after-init . tabspaces-mode)
+  :custom
+  (tabspaces-use-filtered-buffers-as-default t)
+  (tabspaces-default-tab "Default")
+  (tabspaces-remove-to-default t)
+  (tabspaces-include-buffers '("*scratch*" "*Messages*"))
+  (tabspaces-session t)
+  (tabspaces-session-auto-restore t)
+  (tabspaces-project-switch-commands 'project-find-file)
+  :config
+  (setq tab-bar-show 1
+        tab-bar-new-tab-choice "*scratch*"
+        tab-bar-close-button-show nil))
+
+;; ──────────────────────────────────────────────────────────────
 ;; File Explorer: Treemacs
 ;; ──────────────────────────────────────────────────────────────
 
+(defun eug/current-project ()
+  "Best guess at the current tab's project.
+Tries the current buffer first, then any file-backed buffer in this
+tabspace. Returns nil if nothing is found."
+  (or (project-current nil)
+      (seq-some (lambda (b)
+                  (when (buffer-file-name b)
+                    (with-current-buffer b (project-current nil))))
+                (if (fboundp 'tabspaces--buffer-list)
+                    (tabspaces--buffer-list)
+                  (buffer-list)))))
+
 (defun eug/treemacs-open ()
-  "Toggle treemacs. When opening fresh, root at the current project.
+  "Toggle treemacs. When opening fresh, root at the current tab's project.
 If no project is known, prompt to add one via `project-remember-project'."
   (interactive)
   (if (treemacs-get-local-window)
       (treemacs)
-    (let ((proj (project-current nil)))
+    (let ((proj (eug/current-project)))
       (unless proj
         (let* ((root (read-directory-name "Add project root: "))
                (new-proj (cons 'transient root)))
@@ -449,6 +625,7 @@ If no project is known, prompt to add one via `project-remember-project'."
   (setq treemacs-width 30
         treemacs-is-never-other-window nil
         treemacs-show-hidden-files t)
+  (treemacs-resize-icons 16)
   (treemacs-follow-mode t)
   (treemacs-project-follow-mode t)
   (treemacs-filewatch-mode t)
@@ -468,29 +645,63 @@ If no project is known, prompt to add one via `project-remember-project'."
 (use-package treemacs-magit
   :after (treemacs magit))
 
-(use-package treemacs-nerd-icons
-  :after (treemacs nerd-icons)
+(use-package all-the-icons)
+
+(use-package treemacs-all-the-icons
+  :after (treemacs all-the-icons)
   :config
-  (treemacs-load-theme "nerd-icons"))
+  (treemacs-load-theme "all-the-icons")
+  (treemacs-create-icon :icon "○ " :extensions (root-open)
+                        :fallback 'same-as-icon)
+  (treemacs-create-icon :icon "● " :extensions (root-closed)
+                        :fallback 'same-as-icon))
 
 ;; ──────────────────────────────────────────────────────────────
-;; Tree-sitter (built-in to Emacs 30)
+;; Tree-sitter
 ;; ──────────────────────────────────────────────────────────────
 
-;; treesit-auto handles grammar installation and mode remapping
-;; NOTE: First run will compile grammars (needs a C compiler).
-;; If CrowdStrike kills this, install grammars manually or on
-;; a personal machine and copy ~/.emacs.d/tree-sitter/ over.
-(use-package treesit-auto
-  :config
-  (setq treesit-auto-install 'prompt)
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+;; Grammar sources
+;; Previously I've used treesitter, but it caused performance issues
+;; Decided to manually manage these
+;; MANUAL look at this URL https://github.com/renzmann/treesit-auto/blob/main/treesit-auto.el
+(setq treesit-language-source-alist
+      '((go         "https://github.com/tree-sitter/tree-sitter-go")
+        (gomod      "https://github.com/camdencheek/tree-sitter-go-mod")
+        (python     "https://github.com/tree-sitter/tree-sitter-python")
+        (c          "https://github.com/tree-sitter/tree-sitter-c")
+        (bash       "https://github.com/tree-sitter/tree-sitter-bash")
+        (json       "https://github.com/tree-sitter/tree-sitter-json")
+        (yaml       "https://github.com/tree-sitter-grammars/tree-sitter-yaml")
+        (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
+        (toml       "https://github.com/tree-sitter/tree-sitter-toml")
+        (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
+        (typescript "https://github.com/tree-sitter/tree-sitter-typescript"
+                    nil "typescript/src")
+        (tsx        "https://github.com/tree-sitter/tree-sitter-typescript"
+                    nil "tsx/src")))
+
+;; Install all grammars that are missing
+(dolist (grammar treesit-language-source-alist)
+  (unless (treesit-language-available-p (car grammar))
+    (treesit-install-language-grammar (car grammar))))
+
+;; Remap old modes to tree-sitter modes
+(setq major-mode-remap-alist
+      '((go-mode         . go-ts-mode)
+        (python-mode     . python-ts-mode)
+        (c-mode          . c-ts-mode)
+        (bash-mode       . bash-ts-mode)
+        (sh-mode         . bash-ts-mode)
+        (javascript-mode . js-ts-mode)
+        (js-mode         . js-ts-mode)
+        (json-mode       . json-ts-mode)
+        (yaml-mode       . yaml-ts-mode)
+        (dockerfile-mode . dockerfile-ts-mode)
+        (conf-toml-mode  . toml-ts-mode)))
 
 ;; ──────────────────────────────────────────────────────────────
 ;; LSP: Eglot (built-in to Emacs 30)
 ;; ──────────────────────────────────────────────────────────────
-
 
 ;; in .zshrc
 ;; export PATH="$HOME/go/bin:$PATH"
@@ -527,92 +738,68 @@ If no project is known, prompt to add one via `project-remember-project'."
 ;; Git
 ;; ──────────────────────────────────────────────────────────────
 
+;; Ediff: side-by-side, no floating control window
+(setq ediff-split-window-function #'split-window-horizontally
+      ediff-window-setup-function #'ediff-setup-windows-plain)
+
 (use-package magit
   :config
   (setq magit-display-buffer-function
-        #'magit-display-buffer-same-window-except-diff-v1))
+        #'magit-display-buffer-same-window-except-diff-v1
+        magit-diff-refine-hunk 'all))
 
 ;; Diff indicators in the fringe (replaces git-gutter)
 (use-package diff-hl
   :init (global-diff-hl-mode)
   :hook
   ((magit-pre-refresh  . diff-hl-magit-pre-refresh)
-   (magit-post-refresh . diff-hl-magit-post-refresh)))
+   (magit-post-refresh . diff-hl-magit-post-refresh)
+   (org-mode      . (lambda () (diff-hl-mode -1)))
+   (markdown-mode . (lambda () (diff-hl-mode -1)))))
 
 ;; ──────────────────────────────────────────────────────────────
 ;; Terminal
 ;; ──────────────────────────────────────────────────────────────
 
-(defun project-vterm ()
-  "Open vterm at the project root."
-  (interactive)
-  (let ((default-directory (project-root (project-current t))))
-    (vterm (format "*vterm<%s>*" (project-name (project-current))))))
 
-(defvar eug/vterm-side 'bottom
-  "Current side for vterm window: `bottom' or `right'.")
 
-(defun eug/vterm-toggle ()
-  "Toggle project-specific vterm: open if not visible, close if visible."
-  (interactive)
-  (let* ((proj (project-current t))
-         (proj-name (project-name proj))
-         (buf-name (format "*vterm<%s>*" proj-name))
-         (vterm-buf (get-buffer buf-name))
-         (vterm-win (when vterm-buf (get-buffer-window vterm-buf))))
-    (cond
-     ;; Vterm visible: hide it
-     (vterm-win
-      (delete-window vterm-win))
-     ;; Vterm buffer exists but not visible: show and focus it
-     (vterm-buf
-      (let ((display-buffer-overriding-action
-             (if (eq eug/vterm-side 'bottom)
-                 '(display-buffer-in-side-window (side . bottom) (slot . 0) (window-height . 0.33))
-               '(display-buffer-in-side-window (side . right) (slot . 0) (window-width . 0.4)))))
-        (select-window (display-buffer vterm-buf))
-        (evil-insert-state)))
-     ;; No vterm: create one
-     (t (let ((default-directory (project-root proj)))
-          (vterm buf-name)
-          (evil-insert-state))))))
+(defvar-local eug/vterm-label nil
+  "Optional label for a vterm buffer; shown in tab-line if set.")
 
-(defun eug/vterm-toggle-side ()
-  "Toggle vterm window between bottom and right side."
-  (interactive)
-  (let* ((buf-name (format "*vterm<%s>*" (project-name (project-current t))))
-         (vterm-buf (get-buffer buf-name))
-         (vterm-win (when vterm-buf (get-buffer-window vterm-buf))))
-    (when vterm-win
-      (setq eug/vterm-side (if (eq eug/vterm-side 'bottom) 'right 'bottom))
-      (delete-window vterm-win)
-      (let ((display-buffer-overriding-action
-             (if (eq eug/vterm-side 'bottom)
-                 '(display-buffer-in-side-window (side . bottom) (slot . 0) (window-height . 0.33))
-               '(display-buffer-in-side-window (side . right) (slot . 0) (window-width . 0.4)))))
-        (display-buffer vterm-buf)))))
+
 
 (use-package vterm
   :hook
-  (vterm-mode . (lambda () (setq-local global-hl-line-mode nil)))
+  ((vterm-mode . (lambda () (setq-local global-hl-line-mode nil)))
+   (vterm-mode . eug/vterm-setup-tab-line))
   :config
+  ;; Let Emacs handle these instead of sending them to the terminal
+  ;; (customize-set-variable triggers vterm's keymap rebuild)
+  (customize-set-variable 'vterm-keymap-exceptions
+                          (append vterm-keymap-exceptions '("M-[" "M-]")))
   (setq vterm-max-scrollback 10000
-        vterm-timer-delay 0.01)
+        vterm-timer-delay 0.05)
   (setq vterm-environment
         (list (if (eq (frame-parameter nil 'background-mode) 'light)
                   "COLORFGBG=0;15"
-                "COLORFGBG=15;0"))))
+                "COLORFGBG=15;0")))
+  ;; Cycle project vterms from both normal and insert state
+  (evil-define-key '(normal insert) vterm-mode-map
+    (kbd "M-[") #'eug/vterm-prev
+    (kbd "M-]") #'eug/vterm-next)
+  ;; Local leader (,) inside vterm buffers
+  (eug/local-leader
+    :keymaps 'vterm-mode-map
+    "t" '(eug/vterm-new :wk "New terminal")
+    "r" '(eug/vterm-rename :wk "Rename terminal")
+    "d" '(eug/vterm-kill :wk "Kill terminal")))
 
 ;; ──────────────────────────────────────────────────────────────
 ;; Extra Language Modes
 ;; ──────────────────────────────────────────────────────────────
 
 (use-package terraform-mode)
-(use-package yaml-mode)
 (use-package markdown-mode)
-(use-package json-mode)
-(use-package dockerfile-mode)
-(use-package go-mode)  ; fallback if treesit grammars aren't available
 
 ;; Go indentation: use tabs, prevent extra indent on o/O
 (add-hook 'go-ts-mode-hook
@@ -625,35 +812,35 @@ If no project is known, prompt to add one via `project-remember-project'."
 ;; Org Mode (minimal start -- expand later)
 ;; ──────────────────────────────────────────────────────────────
 
-(use-package org
-  :ensure nil
-  :config
-  (setq org-directory "~/Desktop/org"
-        org-log-done 'time
-        org-pretty-entities t
-        org-hide-emphasis-markers t
-        org-image-actual-width 500
-        org-use-sub-superscripts nil
-        org-startup-indented t
-        org-return-follows-link t)
+;; (use-package org
+;;   :ensure nil
+;;   :config
+;;   (setq org-directory "~/Desktop/org"
+;;         org-log-done 'time
+;;         org-pretty-entities t
+;;         org-hide-emphasis-markers t
+;;         org-image-actual-width 500
+;;         org-use-sub-superscripts nil
+;;         org-startup-indented t
+;;         org-return-follows-link t)
 
-  ;; Agenda
-  (setq org-agenda-files
-        (directory-files-recursively "~/Desktop/org/" "\\.org$"))
-  (setq org-agenda-skip-scheduled-if-done t
-        org-agenda-skip-deadline-if-done t
-        org-agenda-include-deadlines t)
+;;   ;; Agenda
+;;   (setq org-agenda-files
+;;         (directory-files-recursively "~/Desktop/org/" "\\.org$"))
+;;   (setq org-agenda-skip-scheduled-if-done t
+;;         org-agenda-skip-deadline-if-done t
+;;         org-agenda-include-deadlines t)
 
-  ;; Capture
-  (setq org-capture-templates
-        '(("j" "Journal" entry
-           (file+datetree "~/Desktop/org")
-           "* %U %?" :clock-in t :clock-keep t)))
+;;   ;; Capture
+;;   (setq org-capture-templates
+;;         '(("j" "Journal" entry
+;;            (file+datetree "~/Desktop/org")
+;;            "* %U %?" :clock-in t :clock-keep t)))
 
-  ;; Clock
-  (setq org-clock-persist t
-        org-clock-persist-query-resume nil)
-  (org-clock-persistence-insinuate))
+;;   ;; Clock
+;;   (setq org-clock-persist t
+;;         org-clock-persist-query-resume nil)
+;;   (org-clock-persistence-insinuate))
 
 ;; ──────────────────────────────────────────────────────────────
 ;; Snippets
@@ -705,11 +892,15 @@ If no project is known, prompt to add one via `project-remember-project'."
 ;; Flycheck-style diagnostics (flymake is built-in)
 (use-package flymake
   :ensure nil
-  :hook (prog-mode . flymake-mode))
+  :hook (prog-mode . flymake-mode)
+  :config
+  (setq flymake-show-diagnostics-at-end-of-line 'nil))
 
-;; Highlight TODO/FIXME/NOTE in code
+;; Highlight TODO/FIXME/NOTE/MANUAL in code
 (use-package hl-todo
-  :hook (prog-mode . hl-todo-mode))
+  :hook (prog-mode . hl-todo-mode)
+  :config
+  (add-to-list 'hl-todo-keyword-faces '("MANUAL" . "#cc9393")))
 
 ;; Rainbow delimiters for lisp editing
 (use-package rainbow-delimiters
@@ -727,12 +918,9 @@ If no project is known, prompt to add one via `project-remember-project'."
 (add-hook 'prog-mode-hook #'outline-minor-mode)
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 
-;; Don't clutter minibuffer with eldoc in prog modes
-(setq eldoc-echo-area-use-multiline-p nil)
-
-(provide 'init)
-
+;; ──────────────────────────────────────────────────────────────
 ;; LLM
+;; ──────────────────────────────────────────────────────────────
 
 ;;  npm install -g @zed-industries/claude-agent-acp
 (use-package agent-shell
@@ -742,9 +930,28 @@ If no project is known, prompt to add one via `project-remember-project'."
   (agent-shell-highlight-blocks t)
   (agent-shell-preferred-agent-config (agent-shell-anthropic-make-claude-code-config)))
 
-
-(use-package exec-path-from-shell
+(use-package doom-themes
   :ensure t
+  :custom
+  (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
+  (doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;; for treemacs users
+  ;; (doom-themes-treemacs-theme "doom-colors") ; use "doom-colors" for less minimal icon theme
   :config
-  (exec-path-from-shell-initialize))
+  ;; Theme loading handled by circadian
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (nerd-icons must be installed!)
+  ;; (doom-themes-neotree-config)
+  ;; treemacs theming handled by treemacs-nerd-icons
+  ;; (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+
+;; MAYBE 
+;; (use-package ghostel
+;;   :vc (:url "https://github.com/dakra/ghostel" :rev :newest))
+
+(provide 'init)
 ;;; init.el ends here
