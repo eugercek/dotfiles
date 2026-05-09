@@ -1,0 +1,79 @@
+# Appereance
+font-family = JetBrainsMono Nerd Font
+font-size = 18
+macos-option-as-alt = true
+cursor-invert-fg-bg = true
+clipboard-paste-protection = false
+ # Dont show pixel sizes while changing size of panes
+resize-overlay = never
+
+scrollback-limit = 1000000
+focus-follows-mouse = true
+minimum-contrast = 3
+
+unfocused-split-opacity = 0.90
+
+##### Keybindings #####
+
+# TODO: Implement jump_to_prompt
+# Built-in ones
+# super + backspace: mac delete line
+# super + shift + ,: reload_config
+# super + shift + f: end_search
+# super + shift + p: toggle_command_palette
+# super + 0: reset_font_size
+# super + enter: toggle_full_screen
+
+keybind = global:option+space=toggle_quick_terminal
+
+## Split ##
+# super+d = split_right
+keybind = super+s=new_split:down
+keybind = super+z=toggle_split_zoom
+keybind = super+e=equalize_splits
+
+# Split navigation: super+hjkl (was Alt+hjkl / prefix+hjkl in tmux)
+keybind = super+h=goto_split:left
+keybind = super+j=goto_split:bottom
+keybind = super+k=goto_split:top
+keybind = super+l=goto_split:right
+
+# Split resize: super+shift+hjkl (was prefix+H/J/K/L)
+keybind = super+shift+h=resize_split:left,10
+keybind = super+shift+j=resize_split:down,10
+keybind = super+shift+k=resize_split:up,10
+keybind = super+shift+l=resize_split:right,10
+
+# Tab movements
+# super + numbers: switch tab
+# super + t: create tab
+keybind = super+p=previous_tab
+keybind = super+n=next_tab
+keybind = super+N=new_window
+
+##### Vim Mode ##### V
+keybind = super+slash=activate_key_table:vim
+
+# Key table definition
+keybind = vim/
+
+# Line movement
+keybind = vim/j=scroll_page_lines:1
+keybind = vim/k=scroll_page_lines:-1
+
+# Page movement
+keybind = vim/ctrl+d=scroll_page_down
+keybind = vim/ctrl+u=scroll_page_up
+keybind = vim/ctrl+f=scroll_page_down
+keybind = vim/ctrl+b=scroll_page_up
+keybind = vim/shift+j=scroll_page_down
+keybind = vim/shift+k=scroll_page_up
+
+# Jump to top/bottom
+keybind = vim/g>g=scroll_to_top
+keybind = vim/shift+g=scroll_to_bottom
+
+# Exit
+keybind = vim/escape=deactivate_key_table
+keybind = vim/q=deactivate_key_table
+keybind = vim/i=deactivate_key_table
