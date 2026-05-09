@@ -1,0 +1,85 @@
+{
+    "global": { "show_additional_menu_items": true },
+    "profiles": [
+        {
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "description": "Caps Lock → Hyper Key (-shift)  (⌃⌥⌘) (ESC if alone)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["left_shift"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_command",
+                                        "modifiers": ["left_control", "left_option"]
+                                    }
+                                ],
+                                "to_if_alone": [{ "key_code": "escape" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper + j → focus or start Terminal",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "j",
+                                    "modifiers": {
+                                        "mandatory": ["left_control", "left_option", "left_command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a Ghostty" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper + k → focus or start Brave",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "k",
+                                    "modifiers": {
+                                        "mandatory": ["left_control", "left_option", "left_command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a 'Brave Browser'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper + ; → focus or start Slack",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": ";",
+                                    "modifiers": {
+                                        "mandatory": ["left_control", "left_option", "left_command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a Slack" }],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "name": "Default profile",
+            "selected": true,
+            "virtual_hid_keyboard": {
+                "country_code": 0,
+                "keyboard_type_v2": "iso"
+            }
+        }
+    ]
+}
+
