@@ -44,3 +44,9 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "TermClose", "TermLeave
 		end
 	end,
 })
+
+-- Restore cursor to its last position when reopening a file.
+vim.api.nvim_create_autocmd("BufReadPost", {
+	group = group,
+	command = [[silent! normal! g`"zv]],
+})

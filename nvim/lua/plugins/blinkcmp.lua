@@ -3,10 +3,15 @@ vim.pack.add({
 })
 
 require("blink.cmp").setup({
+	enabled = function()
+		return not vim.g.cmp_disabled
+	end,
 	keymap = {
 		preset = "enter",
 		["<Tab>"] = { "snippet_forward", "select_and_accept", "fallback" },
 		["<S-Tab>"] = { "snippet_backward", "fallback" },
+		["<C-j>"] = { "select_next", "fallback" },
+		["<C-k>"] = { "select_prev", "fallback" },
 	},
 	appearance = {
 		nerd_font_variant = "mono",
@@ -16,7 +21,7 @@ require("blink.cmp").setup({
 			auto_show = function()
 				return vim.bo.filetype ~= "markdown"
 			end,
-			auto_show_delay_ms = 300,
+			-- auto_show_delay_ms = 300,
 			border = "rounded",
 			draw = {
 				columns = {

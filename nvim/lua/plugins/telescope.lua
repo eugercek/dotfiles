@@ -51,6 +51,7 @@ nmap("<leader>gC", "<cmd>Telescope git_bcommits<cr>", { desc = "Buffer commits" 
 nmap("<leader>gc", "<cmd>Telescope git_commits<cr>", { desc = "Repo commits" })
 nmap("<leader>gf", "<cmd>Telescope git_files<cr>", { desc = "Git files" })
 nmap("<leader>gj", "<cmd>Telescope git_branches<cr>", { desc = "Branches" })
+nmap("<leader>gs", "<cmd>Telescope git_status<cr>", { desc = "Dirty files (git)" })
 
 nmap("<leader>hf", "<cmd>Telescope help_tags<cr>", { desc = "Help tags" })
 nmap("<leader>hk", "<cmd>Telescope keymaps<cr>", { desc = "Describe key" })

@@ -40,7 +40,6 @@ vim.opt.autoindent = true
 vim.opt.breakindent = true
 
 vim.opt.autoread = true -- Reload files changed outside Neovim when safe
-vim.opt.iskeyword:append("-") -- Treat kebab-case as one word object
 vim.opt.cursorline = true
 vim.opt.laststatus = 3
 vim.opt.showtabline = 0

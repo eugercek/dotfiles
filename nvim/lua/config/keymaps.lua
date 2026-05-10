@@ -33,6 +33,10 @@ nmap("<leader>ts", function()
 	end
 end, { desc = "Toggle Spell" })
 nmap("<leader>tu", "<cmd>Undotree<cr>", { desc = "Undotree" })
+nmap("<leader>tc", function()
+	vim.g.cmp_disabled = not vim.g.cmp_disabled
+	vim.notify("Completion " .. (vim.g.cmp_disabled and "off" or "on"))
+end, { desc = "Toggle completion" })
 
 -- File
 local utils = require("config.utils")

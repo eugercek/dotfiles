@@ -7,6 +7,5 @@ local function apply()
 end
 
 vim.api.nvim_create_user_command("ThemeSystem", apply, {})
-vim.api.nvim_create_autocmd({ "FocusGained", "VimResume" }, { callback = apply })
 
 apply()
