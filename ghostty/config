@@ -15,6 +15,8 @@ quick-terminal-position = right
 quick-terminal-size = 40%
 quick-terminal-screen = main
 
+theme = light:Builtin Light,dark:Gruvbox Dark Hard
+
 # Send tmux prefix (C-b) to tmux
 # These are all the keybindings I use in tmux
 # If a keybinding is not here I may still use it via C-b 
