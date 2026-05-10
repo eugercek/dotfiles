@@ -2,10 +2,6 @@
 
 ;; NOTE There are some manual steps should be done regularly, search MANUAL for these
 
-;; ──────────────────────────────────────────────────────────────
-;; Package Management
-;; ──────────────────────────────────────────────────────────────
-
 (require 'package)
 (setq package-archives
       '(("melpa"  . "https://melpa.org/packages/")
@@ -13,7 +9,7 @@
         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 (package-initialize)
 
-( unless package-archive-contents
+(unless package-archive-contents
   (package-refresh-contents))
 (require 'use-package)
 (setq use-package-always-ensure t)
@@ -26,13 +22,6 @@
 ;; ──────────────────────────────────────────────────────────────
 ;; Daemon / Frame
 ;; ──────────────────────────────────────────────────────────────
-
-(defun eug/focus-or-create-frame ()
-  (let ((frames (cl-remove-if-not (lambda (f) (eq (framep f) 'ns)) (frame-list))))
-    (if frames
-        (select-frame-set-input-focus (car frames))
-      (select-frame-set-input-focus
-       (make-frame '((window-system . ns)))))))
 
 (when (daemonp)
   (add-hook 'after-make-frame-functions
@@ -100,17 +89,6 @@
 (electric-pair-mode 1)
 (show-paren-mode 1)
 (winner-mode 1)
-
-(defun eug/toggle-maximize-buffer ()
-  "Maximize current buffer; restore previous window layout on second call.
-Works for side windows (treemacs, vterm) too."
-  (interactive)
-  (if (and (= 1 (length (window-list)))
-           (assoc ?_ register-alist))
-      (jump-to-register ?_)
-    (window-configuration-to-register ?_)
-    (let ((ignore-window-parameters t))
-      (delete-other-windows))))
 
 ;; Smooth scrolling (VS Code-like)
 (use-package ultra-scroll
@@ -274,32 +252,7 @@ Works for side windows (treemacs, vterm) too."
         evil-vsplit-window-right t)
   :config
   (evil-mode 1)
-  (setq evil-insert-state-message nil)
-
-  (defun eug/lookup-documentation ()
-    "Show documentation for symbol at point.
-Tries eglot hover, then eldoc, then falls back to describe-symbol."
-    (interactive)
-    (cond
-     ((and (bound-and-true-p eglot--managed-mode)
-           (eglot-hover-info (thing-at-point 'symbol)))
-      (eldoc-doc-buffer t))
-     ((derived-mode-p 'emacs-lisp-mode)
-      (describe-symbol (symbol-at-point))
-      (pop-to-buffer "*Help*"))
-     ((eldoc-doc-buffer t))
-     (t (message "No documentation found for: %s" (thing-at-point 'symbol)))))
-
-  (setq evil-lookup-func #'eug/lookup-documentation)
-
-  (defun eug/find-file-in-repo ()
-    "Find file from the git repository root, ignoring extra root markers."
-    (interactive)
-    (let ((root (locate-dominating-file default-directory ".git")))
-      (if root
-          (let ((default-directory root))
-            (project-find-file))
-        (user-error "Not inside a git repository")))))
+  (setq evil-insert-state-message nil))
 
 (use-package evil-collection
   :after evil
@@ -365,13 +318,6 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
   :config
   (general-evil-setup)
 
-  (defun eug/copy-file-path-from-project-root ()
-    "Copy the current file's path relative to the project root."
-    (interactive)
-    (let ((path (file-relative-name buffer-file-name (project-root (project-current)))))
-      (kill-new path)
-      (message "Copied: %s" path)))
-
   (general-create-definer eug/leader
     :keymaps 'override
     :states '(normal insert visual emacs treemacs)
@@ -386,7 +332,7 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
   (eug/leader
     "SPC" '(execute-extended-command :wk "M-x")
     "u"   '(universal-argument :wk "Universal argument")
-    "."   '(eug/vterm-toggle :wk "Terminal")
+    "."   '(vterm :wk "Terminal")
     ","   '(consult-buffer :wk "Switch buffer")
 
     ;; Buffer
@@ -405,7 +351,6 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
     "fs" '(save-buffer :wk "Save")
     "fS" '(write-file :wk "Save as")
     "fd" '(dired-jump :wk "Dired here")
-    "fp" '(eug/copy-file-path-from-project-root :wk "Copy path")
 
     ;; Git
     "g"  '(:ignore t :wk "Git")
@@ -433,7 +378,7 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
 
     ;; Open
     "o"  '(:ignore t :wk "Open")
-    "of" '(eug/treemacs-open :wk "File explorer")
+    "of" '(treemacs :wk "File explorer")
     "od" '(dired-jump :wk "Dired")
 
     ;; Project
@@ -445,7 +390,6 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
     "pk" '(project-kill-buffers :wk "Kill buffers")
     "pc" '(project-compile :wk "Compile")
     "ps" '(project-shell-command :wk "Shell cmd")
-    "pF" '(eug/find-file-in-repo :wk "Find file (repo root)")
 
     ;; Workspace / Tab
     "TAB"  '(:ignore t :wk "Workspace")
@@ -478,13 +422,12 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
     ;; Toggle
     "t"  '(:ignore t :wk "Toggle")
     "tT" '(consult-theme :wk "Theme")
-    "tt" '(eug/vterm-toggle-side :wk "Terminal side")
     "tl" '(display-line-numbers-mode :wk "Line numbers")
     "tz" '(writeroom-mode :wk "Zen")
 
     ;; Window
     "w"  '(:ignore t :wk "Window")
-    "wm" '(eug/toggle-maximize-buffer :wk "Maximize buffer")
+    "wm" '(delete-other-windows :wk "Maximize buffer")
     "wM" '(toggle-frame-maximized :wk "Maximize frame")
     "wv" '(evil-window-vsplit :wk "V-split")
     "ws" '(evil-window-split :wk "H-split")
@@ -588,50 +531,21 @@ Tries eglot hover, then eldoc, then falls back to describe-symbol."
 ;; File Explorer: Treemacs
 ;; ──────────────────────────────────────────────────────────────
 
-(defun eug/current-project ()
-  "Best guess at the current tab's project.
-Tries the current buffer first, then any file-backed buffer in this
-tabspace. Returns nil if nothing is found."
-  (or (project-current nil)
-      (seq-some (lambda (b)
-                  (when (buffer-file-name b)
-                    (with-current-buffer b (project-current nil))))
-                (if (fboundp 'tabspaces--buffer-list)
-                    (tabspaces--buffer-list)
-                  (buffer-list)))))
-
-(defun eug/treemacs-open ()
-  "Toggle treemacs. When opening fresh, root at the current tab's project.
-If no project is known, prompt to add one via `project-remember-project'."
-  (interactive)
-  (if (treemacs-get-local-window)
-      (treemacs)
-    (let ((proj (eug/current-project)))
-      (unless proj
-        (let* ((root (read-directory-name "Add project root: "))
-               (new-proj (cons 'transient root)))
-          (project-remember-project new-proj)
-          (setq proj new-proj)))
-      (treemacs--init (project-root proj)))))
-
-(defun eug/treemacs-sync-on-buffer-switch ()
-  "Refresh treemacs to follow the current buffer's project."
-  (when (and (treemacs-get-local-window)
-             (buffer-file-name))
-    (treemacs--follow)))
-
 (use-package treemacs
   :config
   (setq treemacs-width 30
         treemacs-is-never-other-window nil
-        treemacs-show-hidden-files t)
+        treemacs-show-hidden-files t
+        treemacs-space-between-root-nodes nil
+        treemacs-indentation 2
+        treemacs-indent-guide-style 'line)
   (treemacs-resize-icons 16)
   (treemacs-follow-mode t)
   (treemacs-project-follow-mode t)
   (treemacs-filewatch-mode t)
-  (treemacs-fringe-indicator-mode 'always)
-  (add-hook 'window-selection-change-functions
-            (lambda (_frame) (eug/treemacs-sync-on-buffer-switch))))
+  (treemacs-fringe-indicator-mode nil)
+  (treemacs-indent-guide-mode t)
+  (add-hook 'treemacs-mode-hook (lambda () (hl-line-mode 1))))
 
 (use-package treemacs-evil
   :after (treemacs evil)
@@ -645,12 +559,10 @@ If no project is known, prompt to add one via `project-remember-project'."
 (use-package treemacs-magit
   :after (treemacs magit))
 
-(use-package all-the-icons)
-
-(use-package treemacs-all-the-icons
-  :after (treemacs all-the-icons)
+(use-package treemacs-nerd-icons
+  :after (treemacs nerd-icons)
   :config
-  (treemacs-load-theme "all-the-icons")
+  (treemacs-load-theme "nerd-icons")
   (treemacs-create-icon :icon "○ " :extensions (root-open)
                         :fallback 'same-as-icon)
   (treemacs-create-icon :icon "● " :extensions (root-closed)
@@ -763,36 +675,16 @@ If no project is known, prompt to add one via `project-remember-project'."
 
 
 
-(defvar-local eug/vterm-label nil
-  "Optional label for a vterm buffer; shown in tab-line if set.")
-
-
-
 (use-package vterm
   :hook
-  ((vterm-mode . (lambda () (setq-local global-hl-line-mode nil)))
-   (vterm-mode . eug/vterm-setup-tab-line))
+  (vterm-mode . (lambda () (setq-local global-hl-line-mode nil)))
   :config
-  ;; Let Emacs handle these instead of sending them to the terminal
-  ;; (customize-set-variable triggers vterm's keymap rebuild)
-  (customize-set-variable 'vterm-keymap-exceptions
-                          (append vterm-keymap-exceptions '("M-[" "M-]")))
   (setq vterm-max-scrollback 10000
         vterm-timer-delay 0.05)
   (setq vterm-environment
         (list (if (eq (frame-parameter nil 'background-mode) 'light)
                   "COLORFGBG=0;15"
-                "COLORFGBG=15;0")))
-  ;; Cycle project vterms from both normal and insert state
-  (evil-define-key '(normal insert) vterm-mode-map
-    (kbd "M-[") #'eug/vterm-prev
-    (kbd "M-]") #'eug/vterm-next)
-  ;; Local leader (,) inside vterm buffers
-  (eug/local-leader
-    :keymaps 'vterm-mode-map
-    "t" '(eug/vterm-new :wk "New terminal")
-    "r" '(eug/vterm-rename :wk "Rename terminal")
-    "d" '(eug/vterm-kill :wk "Kill terminal")))
+                "COLORFGBG=15;0"))))
 
 ;; ──────────────────────────────────────────────────────────────
 ;; Extra Language Modes
@@ -949,9 +841,10 @@ If no project is known, prompt to add one via `project-remember-project'."
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
-;; MAYBE 
-;; (use-package ghostel
-;;   :vc (:url "https://github.com/dakra/ghostel" :rev :newest))
-
+;; MAYBE
+(unless (package-installed-p 'ghostel)
+  (package-vc-install
+   '(ghostel :url "https://github.com/dakra/ghostel" :lisp-dir "lisp")))
+(require 'ghostel)
 (provide 'init)
 ;;; init.el ends here
