@@ -55,7 +55,7 @@ keybind = super+digit_9=text:\x029
 # zoom
 keybind = super+z=text:\x02z
 # choose session
-keybind = super+f=text:\x02F
+keybind = super+shift+s=text:\x02S
 # enter copy mode
 keybind = super+g=text:\x02[
 
