@@ -41,9 +41,9 @@ vim.opt.breakindent = true
 
 vim.opt.autoread = true -- Reload files changed outside Neovim when safe
 vim.opt.cursorline = true
-vim.opt.laststatus = 3
+vim.opt.laststatus = 3 -- Only last window should have status line
 vim.opt.showtabline = 0
-vim.opt.cmdheight = 0
+vim.opt.cmdheight = 0 -- Don't use 1 line for command area open it on demand
 vim.opt.pumheight = 15
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.fillchars = {
@@ -85,3 +85,7 @@ vim.opt.sessionoptions = {
 }
 
 vim.opt.background = "dark"
+
+-- Clean terminal title so tmux/Ghostty show "nvim filename" instead of nvim's defaults.
+vim.opt.title = true
+vim.opt.titlestring = "nvim %t"

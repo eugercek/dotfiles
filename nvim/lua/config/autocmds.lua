@@ -8,13 +8,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- Writing-oriented buffers should wrap and spellcheck
+-- Writing-oriented buffers should wrap (spell off by default; toggle with <leader>ts)
 vim.api.nvim_create_autocmd("FileType", {
 	group = group,
 	pattern = { "markdown", "text", "gitcommit" },
 	callback = function()
 		vim.opt_local.wrap = true
-		vim.opt_local.spell = true
 		vim.opt_local.spelllang = { "tr", "en_us" }
 		-- Start full folded in git commit
 		if vim.bo.filetype == "gitcommit" then
