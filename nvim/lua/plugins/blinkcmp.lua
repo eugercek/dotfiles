@@ -12,15 +12,14 @@ require("blink.cmp").setup({
 		["<S-Tab>"] = { "snippet_backward", "fallback" },
 		["<C-j>"] = { "select_next", "fallback" },
 		["<C-k>"] = { "select_prev", "fallback" },
+		["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
 	},
 	appearance = {
 		nerd_font_variant = "mono",
 	},
 	completion = {
 		menu = {
-			auto_show = function()
-				return vim.bo.filetype ~= "markdown"
-			end,
+			auto_show = false,
 			-- auto_show_delay_ms = 300,
 			border = "rounded",
 			draw = {

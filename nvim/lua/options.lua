@@ -25,7 +25,7 @@ vim.opt.sidescrolloff = 8
 vim.opt.confirm = true -- Ask me when something sould fail
 
 vim.opt.number = true
-vim.opt.relativenumber = true
+-- vim.opt.relativenumber = true
 
 vim.opt.wrap = false
 vim.opt.linebreak = true
@@ -72,6 +72,10 @@ vim.opt.undofile = true
 vim.opt.foldlevelstart = 99
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+-- vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()" -- TODO: Fix treesitter fold
+
+-- Treat .h as C, not C++ (Neovim's default for ambiguous .h is cpp)
+vim.g.c_syntax_for_h = 1
 vim.opt.sessionoptions = {
 	"buffers",
 	"curdir",
