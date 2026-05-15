@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+export PATH="/opt/homebrew/bin:$HOME/.local/bin:$PATH"
+
+name=$(tmux list-sessions -F '#{session_name}' 2>/dev/null \
+  | fzf --print-query --layout=reverse --prompt='session> ' | tail -1)
+
+[ -z "$name" ] && exit
+tmux has-session -t "=$name" 2>/dev/null || tmux new-session -ds "$name"
+tmux switch-client -t "=$name"

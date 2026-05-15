@@ -64,5 +64,9 @@ keybind = super+enter=text:\x02v
 keybind = super+s=text:\x02s
 keybind = super+shift+t=text:\x02t
 
-keybind = super+a=text:\x02$
 keybind = super+e=text:\x02E
+
+# Session management
+keybind = super+f=text:\x02f
+keybind = super+r=text:\x02R
+keybind = super+d=text:\x02d
