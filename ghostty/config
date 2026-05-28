@@ -39,6 +39,8 @@ keybind = super+t=text:\x02c
 keybind = super+shift+w=text:\x02&
 keybind = super+n=text:\x02n
 keybind = super+p=text:\x02p
+keybind = super+shift+n=text:\x02N
+keybind = super+shift+p=text:\x02P
 keybind = super+,=text:\x02,
 
 # Go to window N
@@ -65,6 +67,10 @@ keybind = super+s=text:\x02s
 keybind = super+shift+t=text:\x02t
 
 keybind = super+e=text:\x02E
+
+# Mac-style word/line delete (Ctrl-W / Ctrl-U work in nvim, zsh, claude, etc.)
+keybind = alt+backspace=text:\x17
+keybind = super+backspace=text:\x15
 
 # Session management
 keybind = super+f=text:\x02f
