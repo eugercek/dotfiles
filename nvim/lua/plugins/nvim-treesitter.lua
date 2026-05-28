@@ -18,6 +18,7 @@ local languages = {
 	"markdown", "markdown_inline",
 	"python",
 	"query",
+	"terraform",
 	"toml",
 	"tmux",
 	"vim",

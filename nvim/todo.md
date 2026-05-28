@@ -13,3 +13,5 @@
     - Currently it's awesome I do `git commit --verbose` in shell. It opens nvim and starts with folded :) then write the commit msg via lurking around with `zj zj zj`
 - [x] Find a way to delete unused vim.pack plugins:
     - Use `:lua vim.pack.update(nil, { offline = true })` and use `gra` to code actions for deletions
+- [ ] Emacs Narrowing alternative
+- [ ] Can I remove blink.cmp?

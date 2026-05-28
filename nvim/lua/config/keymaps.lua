@@ -22,7 +22,6 @@ vim.cmd("packadd nvim.difftool")
 
 nmap("<leader>tl", function()
 	vim.wo.number = not vim.wo.number
-	vim.wo.relativenumber = not vim.wo.relativenumber
 end, { desc = "Line numbers" })
 
 nmap("<leader>tw", "<cmd>set wrap!<cr>", { desc = "Toggle Wrap", silent = true })
@@ -38,11 +37,34 @@ nmap("<leader>tc", function()
 	vim.notify("Completion " .. (vim.g.cmp_disabled and "off" or "on"))
 end, { desc = "Toggle completion" })
 
+nmap("<leader>tL", function()
+	local buf = vim.api.nvim_get_current_buf()
+	local clients = vim.lsp.get_clients({ bufnr = buf })
+	if #clients > 0 then
+		for _, c in ipairs(clients) do
+			vim.lsp.buf_detach_client(buf, c.id)
+		end
+		vim.notify("LSP off")
+	else
+		vim.cmd("edit")
+		vim.notify("LSP on")
+	end
+end, { desc = "Toggle LSP" })
+
 -- File
 local utils = require("config.utils")
 
 nmap("<leader>fn", utils.prompt_new_file, { desc = "New file" })
 nmap("<leader>fs", "<cmd>write<cr>", { desc = "Save file" })
+nmap("<leader>fy", function()
+	local path = vim.fn.expand("%:.")
+	if path == "" then
+		vim.notify("No file", vim.log.levels.WARN)
+		return
+	end
+	vim.fn.setreg("+", path)
+	vim.notify(path)
+end, { desc = "Yank relative path" })
 
 -- Quit
 nmap("<leader>qq", "<cmd>wqa<cr>", { desc = "Close window" })
@@ -87,6 +109,37 @@ nmap("<leader>gc", function()
 		end)
 	end)
 end, { desc = "Git commit" })
+
+-- Compile / run
+local last_cmd = nil
+
+local function run(cmd)
+	vim.cmd("write")
+	vim.cmd("!" .. cmd)
+end
+
+local function compile(prompt)
+	if prompt or not last_cmd then
+		vim.ui.input({
+			prompt = "Compile: ",
+			default = last_cmd or "gcc -Wall -Wextra -g % -o %:r && ./%:r",
+		}, function(input)
+			if input and input ~= "" then
+				last_cmd = input
+				run(last_cmd)
+			end
+		end)
+	else
+		run(last_cmd)
+	end
+end
+
+nmap("<leader>cr", function()
+	compile(false)
+end, { desc = "Run last compile cmd" })
+nmap("<leader>cR", function()
+	compile(true)
+end, { desc = "Set compile cmd" })
 
 -- QoL Improvements
 vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })

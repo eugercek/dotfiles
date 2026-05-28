@@ -13,6 +13,17 @@ require("blink.cmp").setup({
 		["<C-j>"] = { "select_next", "fallback" },
 		["<C-k>"] = { "select_prev", "fallback" },
 		["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
+		["<C-l>"] = {
+			function(cmp)
+				cmp.show({
+					providers = { "snippets" },
+					callback = function()
+						cmp.accept({ index = 1 })
+					end,
+				})
+				return true
+			end,
+		},
 	},
 	appearance = {
 		nerd_font_variant = "mono",
