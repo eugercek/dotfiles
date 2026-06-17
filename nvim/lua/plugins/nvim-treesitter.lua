@@ -18,12 +18,19 @@ local languages = {
 	"markdown", "markdown_inline",
 	"python",
 	"query",
+	"sql",
 	"terraform",
 	"toml",
 	"tmux",
 	"vim",
 	"vimdoc",
-	"yaml",
+	"asm",
+	"regex", "comment", "printf", "luadoc", "luap",
+	"make", "cmake",
+	"yaml", "ini", "xml", "ssh_config", "hcl",
+	"proto", "nginx", "promql", "gotmpl",
+	"csv", "jq",
+	"rust",
 }
 
 local enabled = {}

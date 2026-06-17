@@ -3,7 +3,7 @@ vim.lsp.config("lua_ls", {
 	settings = {
 		Lua = {
 			codeLens = {
-				enable = true,
+				enable = false,
 			},
 			completion = {
 				callSnippet = "Replace",

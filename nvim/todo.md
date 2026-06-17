@@ -15,3 +15,4 @@
     - Use `:lua vim.pack.update(nil, { offline = true })` and use `gra` to code actions for deletions
 - [ ] Emacs Narrowing alternative
 - [ ] Can I remove blink.cmp?
+- [ ] Consider fff.nvim

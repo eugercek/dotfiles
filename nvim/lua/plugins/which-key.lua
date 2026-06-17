@@ -10,6 +10,7 @@ wk.setup({
 })
 
 wk.add({
+	{ "<leader>a", group = "Annotate" },
 	{ "<leader>b", group = "Buffer" },
 	{ "<leader>c", group = "Code" },
 	{ "<leader>f", group = "File" },

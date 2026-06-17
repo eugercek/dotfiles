@@ -57,6 +57,32 @@ nmap("<leader>hf", "<cmd>Telescope help_tags<cr>", { desc = "Help tags" })
 nmap("<leader>hk", "<cmd>Telescope keymaps<cr>", { desc = "Describe key" })
 nmap("<leader>hv", "<cmd>Telescope highlights<cr>", { desc = "Highlight groups" })
 
+-- Browse markdown notes in the Obsidian vault, most-recently-modified first.
+nmap("<leader>nn", function()
+	local vault = vim.fn.expand("$HOME/Desktop/Obsidian Vault")
+	local files = vim.fn.systemlist({ "rg", "--files", "--glob", "*.md", vault })
+	table.sort(files, function(a, b)
+		return vim.fn.getftime(a) > vim.fn.getftime(b)
+	end)
+
+	local pickers = require("telescope.pickers")
+	local finders = require("telescope.finders")
+	local conf = require("telescope.config").values
+	local make_entry = require("telescope.make_entry")
+
+	pickers
+		.new({}, {
+			prompt_title = "Obsidian Notes (recent)",
+			finder = finders.new_table({
+				results = files,
+				entry_maker = make_entry.gen_from_file({ cwd = vault }),
+			}),
+			previewer = conf.file_previewer({}),
+			sorter = conf.file_sorter({}),
+		})
+		:find()
+end, { desc = "Find note" })
+
 nmap("<leader>jl", "<cmd>Telescope current_buffer_fuzzy_find<cr>", { desc = "Jump line" })
 
 nmap("<leader>ss", "<cmd>Telescope current_buffer_fuzzy_find<cr>", { desc = "Search buffer" })
@@ -72,4 +98,5 @@ nmap("<leader>sP", function()
 end, { desc = "Ripgrep no markdown" })
 nmap("<leader>sd", "<cmd>Telescope diagnostics<cr>", { desc = "Search diagnostics" })
 nmap("<leader>si", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Document symbols" })
+nmap("<leader>sI", "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", { desc = "Workspace symbols" })
 nmap("<leader>sf", "<cmd>Telescope find_files<cr>", { desc = "Search files" })

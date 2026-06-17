@@ -11,6 +11,11 @@ require("gitsigns").setup({
 		changedelete = { text = "~" },
 	},
 	on_attach = function(bufnr)
+		-- Don't enable gitsigns in markdown buffers.
+		if vim.bo[bufnr].filetype == "markdown" then
+			return false
+		end
+
 		local gs = require("gitsigns")
 		local function hunk_range()
 			local first = vim.fn.line(".")

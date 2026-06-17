@@ -1,6 +1,6 @@
 {
   "Code Fence": {
-    "prefix": "<s",
+    "prefix": "<c",
     "body": [
       "```$1",
       "$0",
@@ -8,12 +8,23 @@
     ],
     "description": "Markdown code fence"
   },
-  "Link": {
-    "prefix": "<l",
+  "C Code Fence": {
+    "prefix": "<cc",
     "body": [
-      "[${1:text}](${2:url})$0"
+      "```C",
+      "$0",
+      "```"
     ],
-    "description": "Markdown link"
+    "description": "Markdown C code fence"
+  },
+  "SQL Code Fence": {
+    "prefix": "<cs",
+    "body": [
+      "```sql",
+      "$0",
+      "```"
+    ],
+    "description": "Markdown SQL code fence"
   },
   "Task Item": {
     "prefix": "<t",
@@ -27,8 +38,7 @@
     "body": [
       "---",
       "title: ${1:title}",
-      "date: ${2:$CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE}",
-      "tags: [${3:tag}]",
+      "tags: [${2:tag}]",
       "---",
       "",
       "$0"

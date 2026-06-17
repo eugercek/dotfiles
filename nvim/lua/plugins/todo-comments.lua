@@ -4,11 +4,15 @@ vim.pack.add({
 })
 
 require("todo-comments").setup({
+	highlight = {
+		comments_only = false,
+	},
 	keywords = {
 		-- I use these in markdown notes
 		WRONG = { icon = " ", color = "error", alt = { "BAD", "INCORRECT" } },
 		OK = { icon = " ", color = "ok", alt = { "CORRECT", "RIGHT" } },
 		IMPORTANT = { icon = " ", color = "important", alt = { "KEY", "CRITICAL" } },
+		DONE = { icon = " ", color = "ok", alt = { "FINISHED", "COMPLETE" } },
 	},
 	colors = {
 		error = { "DiagnosticError", "ErrorMsg", "#DC2626" },

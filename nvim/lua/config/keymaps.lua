@@ -56,15 +56,35 @@ local utils = require("config.utils")
 
 nmap("<leader>fn", utils.prompt_new_file, { desc = "New file" })
 nmap("<leader>fs", "<cmd>write<cr>", { desc = "Save file" })
-nmap("<leader>fy", function()
+
+-- Swap gf/gF: gf honors a trailing :line, gF just opens the file
+vim.keymap.set({ "n", "x" }, "gf", "gF", { desc = "Goto file (with line)" })
+vim.keymap.set({ "n", "x" }, "gF", "gf", { desc = "Goto file (no line)" })
+local function yank_path(suffix)
 	local path = vim.fn.expand("%:.")
 	if path == "" then
 		vim.notify("No file", vim.log.levels.WARN)
 		return
 	end
+	vim.fn.setreg("+", path .. (suffix or ""))
+	vim.notify(path .. (suffix or ""))
+end
+
+nmap("<leader>fy", yank_path, { desc = "Yank relative path" })
+
+nmap("<leader>fY", function()
+	local path = vim.fn.expand("%:p")
 	vim.fn.setreg("+", path)
 	vim.notify(path)
-end, { desc = "Yank relative path" })
+end, { desc = "Yank absolute path" })
+
+vim.keymap.set("x", "<leader>fy", function()
+	local s, e = vim.fn.line("v"), vim.fn.line(".")
+	if s > e then
+		s, e = e, s
+	end
+	yank_path(s == e and ":" .. s or string.format(":%d-%d", s, e))
+end, { desc = "Yank relative path with line(s)" })
 
 -- Quit
 nmap("<leader>qq", "<cmd>wqa<cr>", { desc = "Close window" })
@@ -152,3 +172,13 @@ vim.keymap.set("v", "p", '"_dP', { desc = "Paste without yanking replaced text" 
 vim.keymap.set("i", ",", ",<C-g>u", { desc = "Comma undo breakpoint" })
 vim.keymap.set("i", ".", ".<C-g>u", { desc = "Period undo breakpoint" })
 vim.keymap.set("i", ";", ";<C-g>u", { desc = "Semicolon undo breakpoint" })
+
+vim.keymap.set("n", "<leader>tz", function()
+	print(vim.wo.statuscolumn)
+	if vim.wo.statuscolumn == "" then
+		local width = vim.api.nvim_win_get_width(0)
+		vim.wo.statuscolumn = string.rep(" ", 15) .. "  "
+	else
+		vim.wo.statuscolumn = "  "
+	end
+end, { desc = "Toggle centered buffer" })
