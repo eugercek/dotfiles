@@ -6,6 +6,12 @@ command = /opt/homebrew/bin/tmux new-session -A -s main
 
 clipboard-paste-protection = false
 
+# Distribute leftover grid padding evenly instead of dumping it on right/bottom,
+# and remove the fixed edge padding entirely.
+window-padding-balance = true
+window-padding-x = 0
+window-padding-y = 0
+
 macos-option-as-alt = true
 macos-titlebar-style = "hidden"
 macos-titlebar-proxy-icon = "hidden"
@@ -68,11 +74,18 @@ keybind = super+shift+t=text:\x02t
 
 keybind = super+e=text:\x02E
 
+# move pane to window (blank target in the prompt breaks it out to a new window)
+keybind = super+m=text:\x02m
+
 # Mac-style word/line delete (Ctrl-W / Ctrl-U work in nvim, zsh, claude, etc.)
 keybind = alt+backspace=text:\x17
 keybind = super+backspace=text:\x15
 
-# Session management
-keybind = super+f=text:\x02f
-keybind = super+r=text:\x02R
-keybind = super+d=text:\x02d
+# Using these in shell:
+# - meta+f: forward word
+# - meta+d: delete word
+keybind = super+f=unbind
+keybind = super+d=unbind
+
+# Session management (super+r picks a session; rename via ctrl-b R)
+keybind = super+r=text:\x02g
