@@ -28,6 +28,16 @@ require("neo-tree").setup({
 	},
 	document_symbols = {
 		follow_cursor = true,
+		renderers = {
+			-- drop the right-aligned "String"/kind label, keep just icon + name
+			symbol = {
+				{ "indent", with_expanders = true },
+				{ "kind_icon", default = "?" },
+				{ "container", content = {
+					{ "name", zindex = 10 },
+				} },
+			},
+		},
 	},
 	filesystem = {
 		hijack_netrw_behavior = "disabled",

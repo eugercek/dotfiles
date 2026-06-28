@@ -83,8 +83,6 @@ nmap("<leader>nn", function()
 		:find()
 end, { desc = "Find note" })
 
-nmap("<leader>jl", "<cmd>Telescope current_buffer_fuzzy_find<cr>", { desc = "Jump line" })
-
 nmap("<leader>ss", "<cmd>Telescope current_buffer_fuzzy_find<cr>", { desc = "Search buffer" })
 nmap("<leader>sp", "<cmd>Telescope live_grep<cr>", { desc = "Ripgrep" })
 

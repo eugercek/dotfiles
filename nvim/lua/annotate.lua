@@ -139,6 +139,59 @@ local function refresh_all_signs()
 end
 
 -- ===========================================================================
+-- navigation
+-- ===========================================================================
+
+-- Move the cursor to the first line of the next (dir > 0) or previous (dir < 0)
+-- annotation in the current file, wrapping around at the ends.
+function M.goto_annotation(dir)
+	local buf = vim.api.nvim_get_current_buf()
+	local abs = vim.api.nvim_buf_get_name(buf)
+	if abs == "" or vim.bo[buf].buftype ~= "" then
+		return
+	end
+	local path, root = note_path(buf)
+	local name = vim.fs.relpath(root, abs)
+	if not name then
+		return
+	end
+
+	local last = vim.api.nvim_buf_line_count(buf)
+	local starts = {}
+	for _, l in ipairs(locations(read_lines(path), name)) do
+		if l.s <= last then -- skip notes whose line is past EOF (same as signs)
+			starts[#starts + 1] = l.s
+		end
+	end
+	if #starts == 0 then
+		return vim.notify("annotate: no annotations in this file", vim.log.levels.INFO)
+	end
+	table.sort(starts)
+
+	local cur = vim.api.nvim_win_get_cursor(0)[1]
+	local target
+	if dir > 0 then
+		for _, s in ipairs(starts) do
+			if s > cur then
+				target = s
+				break
+			end
+		end
+		target = target or starts[1] -- past the last note: wrap to the first
+	else
+		for i = #starts, 1, -1 do
+			if starts[i] < cur then
+				target = starts[i]
+				break
+			end
+		end
+		target = target or starts[#starts] -- before the first note: wrap to the last
+	end
+
+	vim.api.nvim_win_set_cursor(0, { target, 0 })
+end
+
+-- ===========================================================================
 -- side panel
 -- ===========================================================================
 

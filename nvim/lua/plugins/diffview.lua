@@ -1,5 +1,5 @@
 vim.pack.add({
-	{ src = "https://github.com/dlyongemallo/diffview.nvim" },
+	{ src = "https://github.com/dlyongemallo/diffview-plus.nvim" },
 })
 
 require("diffview").setup({

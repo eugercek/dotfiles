@@ -6,3 +6,11 @@ require("annotate").setup()
 -- an: panel stays open until you close it. aN: panel closes when you leave it.
 vim.keymap.set({ "n", "x" }, "<leader>an", ":AnnotateCode<CR>", { silent = true, desc = "Annotate (stays open)" })
 vim.keymap.set({ "n", "x" }, "<leader>aN", ":AnnotateCode!<CR>", { silent = true, desc = "Annotate (auto-close)" })
+
+-- Jump the cursor between annotations in the current file (wraps at the ends).
+vim.keymap.set("n", "<leader>aj", function()
+	require("annotate").goto_annotation(1)
+end, { desc = "Next annotation" })
+vim.keymap.set("n", "<leader>ak", function()
+	require("annotate").goto_annotation(-1)
+end, { desc = "Previous annotation" })

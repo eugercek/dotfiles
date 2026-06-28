@@ -15,9 +15,6 @@ vim.diagnostic.config({
 			[vim.diagnostic.severity.HINT] = "H",
 		},
 	},
-	jump = {
-		float = true,
-	},
 })
 
 nmap("<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostics" })
