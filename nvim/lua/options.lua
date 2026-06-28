@@ -72,7 +72,64 @@ vim.opt.undofile = true
 vim.opt.foldlevelstart = 99
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
--- vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()" -- TODO: Fix treesitter fold
+function _G.HighlightedFoldtext()
+	local pos = vim.v.foldstart
+	local lang = vim.treesitter.language.get_lang(vim.bo.filetype)
+	local ok, parser = pcall(vim.treesitter.get_parser, 0, lang)
+	local query = ok and vim.treesitter.query.get(parser:lang(), "highlights")
+	if pos < 1 or not query then
+		return vim.fn.foldtext()
+	end
+
+	local result = {}
+
+	local function add_line(line_nr)
+		local line = vim.fn.getline(line_nr)
+		local tree = parser:parse({ line_nr - 1, line_nr })[1]
+		local line_pos = 0
+		local captures = {}
+
+		for id, node in query:iter_captures(tree:root(), 0, line_nr - 1, line_nr) do
+			local start_row, start_col, end_row, end_col = node:range()
+			if start_row == line_nr - 1 and end_row == line_nr - 1 then
+				table.insert(
+					captures,
+					{ start_col, end_col, "@" .. query.captures[id], vim.treesitter.get_node_text(node, 0) }
+				)
+			end
+		end
+
+		table.sort(captures, function(a, b)
+			return a[1] == b[1] and a[2] > b[2] or a[1] < b[1]
+		end)
+
+		for _, capture in ipairs(captures) do
+			local start_col, end_col, hl, text = unpack(capture)
+			if start_col >= line_pos then
+				if start_col > line_pos then
+					table.insert(result, { line:sub(line_pos + 1, start_col), "Folded" })
+				end
+				table.insert(result, { text, hl })
+				line_pos = end_col
+			end
+		end
+
+		if line_pos < #line then
+			table.insert(result, { line:sub(line_pos + 1), "Folded" })
+		end
+	end
+
+	add_line(pos)
+	if #vim.trim(vim.fn.getline(pos)) < 20 and pos < vim.v.foldend then
+		table.insert(result, { "  /  ", "Folded" })
+		add_line(pos + 1)
+	end
+
+	table.insert(result, { "  " .. (vim.v.foldend - pos + 1) .. " lines", "FoldedInfo" })
+	return result
+end
+
+vim.opt.foldtext = "v:lua.HighlightedFoldtext()"
 
 -- Treat .h as C, not C++ (Neovim's default for ambiguous .h is cpp)
 vim.g.c_syntax_for_h = 1

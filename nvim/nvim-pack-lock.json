@@ -13,6 +13,10 @@
       "rev": "086a40dc7ed8242c03be9f47fbcee68699cc2395",
       "src": "https://github.com/stevearc/conform.nvim"
     },
+    "diffview-plus.nvim": {
+      "rev": "de8bf7bc1b7382890de7b0623023e322c7a8ce7e",
+      "src": "https://github.com/dlyongemallo/diffview-plus.nvim"
+    },
     "diffview.nvim": {
       "rev": "385f26fd6a50e3b0b11cc9623f1f96cde00ef08c",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
@@ -68,6 +72,10 @@
     "smart-splits.nvim": {
       "rev": "9053ebd394c38fe55fd2f4710daec27411c34fb9",
       "src": "https://github.com/mrjones2014/smart-splits.nvim"
+    },
+    "table-nvim": {
+      "rev": "816d251963bf4c8c3d765dab40ebac3c259c7b6d",
+      "src": "https://github.com/SCJangra/table-nvim"
     },
     "telescope-fzf-native.nvim": {
       "rev": "6fea601bd2b694c6f2ae08a6c6fab14930c60e2c",

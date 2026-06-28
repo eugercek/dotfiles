@@ -16,3 +16,7 @@
 - [ ] Emacs Narrowing alternative
 - [ ] Can I remove blink.cmp?
 - [ ] Consider fff.nvim
+- [ ] annotate.nvim
+    - [x] It'd be cool to have go to next/previous note in this file
+    - [ ] Currently marks are ok at first line but It'd be awesome to see range like * starting note, | continue of the note, - end of note.
+
