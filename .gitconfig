@@ -1,0 +1,23 @@
+[user]
+	name = Emin Umut Gecçek
+	email = eumutgercek@gmail.com
+
+[init]
+	defaultBranch = master
+
+[push]
+  default = current
+
+[alias]
+  pl = pull origin
+  co = checkout 
+  cob = checkout -b
+[sequence]
+	editor = nvim
+
+
+[difftool "nvim_difftool"]
+  cmd = nvim -c \"packadd nvim.difftool\" -d \"$LOCAL\" \"$REMOTE\"
+
+[diff]
+  tool = nvim_difftool
