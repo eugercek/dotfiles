@@ -1,0 +1,61 @@
+add_newline = false
+
+format = """
+$directory\
+$git_branch$git_status\
+$kubernetes\
+$aws\
+$cmd_duration\
+$jobs\
+$status"""
+
+[directory]
+style = "cyan"
+truncation_length = 2
+truncate_to_repo = false
+read_only = " 🔒"
+
+[git_branch]
+format = "[$branch](bold #D0666F)"
+
+[git_status]
+format = "[$all_status$ahead_behind]($style) "
+style = "red"
+ahead = "↑${count} "
+behind = "↓${count} "
+diverged = "↑${ahead_count}↓${behind_count} "
+conflicted = "✘"
+modified = "*"
+staged = "+"
+untracked = ""
+stashed = ""
+
+[cmd_duration]
+min_time = 2_000
+format = "[$duration](yellow) "
+
+# [kubernetes]
+# disabled = false
+# format = "[⛵ $context($namespace)](dimmed cyan) "
+
+[aws]
+format = "[aws:$profile($region)]($style) "
+style = "bold yellow"
+
+[aws.region_aliases]
+us-east-1 = "ue1"
+eu-west-1 = "ew1"
+
+[hostname]
+ssh_only = true
+format = "[$hostname](bold red) "
+
+[status]
+disabled = false
+symbol = "✗"
+format = "[$symbol $status]($style) "
+style = "bold red"
+
+[jobs]
+format = "[&$number](blue) "
+threshold = 1
