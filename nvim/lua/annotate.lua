@@ -27,6 +27,11 @@ local M = {}
 
 local ns = vim.api.nvim_create_namespace("annotate")
 
+-- where notes are stored. dir = nil keeps the original behaviour (one
+-- notes.md per repo root); set it to e.g. an Obsidian vault and each repo's
+-- notes go to <dir>/<repo>.md so they can be cross-linked with [[ ]].
+local config = { dir = nil }
+
 local function is_file(line)
 	return line:match("^# File ")
 end
@@ -37,7 +42,26 @@ end
 
 local function note_path(buf)
 	local root = vim.fs.root(buf, ".git") or vim.uv.cwd()
+	if config.dir then
+		-- relpaths in headings stay relative to root; only storage moves.
+		-- per-repo file so `src/main.lua:10` from two repos can't collide.
+		return vim.fs.joinpath(config.dir, vim.fs.basename(root) .. ".md"), root
+	end
 	return vim.fs.joinpath(root, "notes.md"), root
+end
+
+-- The panel is a scratch buffer, but marksman only offers [[ ]] completion to
+-- documents with a real file:// URI inside the vault. So in vault mode we name
+-- it a hidden, per-loc .md path under config.dir; it is never written to disk
+-- (acwrite + bufhidden=wipe). Without a vault we keep the annotate:// scheme.
+local function panel_name(loc)
+	if not config.dir then
+		return "annotate://" .. loc
+	end
+	local safe = loc:gsub("[^%w%-%.]", function(c)
+		return ("_%02x"):format(c:byte())
+	end)
+	return vim.fs.joinpath(config.dir, "." .. safe .. ".md")
 end
 
 local function read_lines(path)
@@ -196,20 +220,42 @@ end
 -- ===========================================================================
 
 local function open_panel(src_buf, path, name, loc, block, auto_close)
+	local pname = panel_name(loc)
 	-- a panel for this loc may already be open (persistent mode leaves panels
 	-- around); drop it so the new one reads fresh and the name can be reused
-	local prev = vim.fn.bufnr("annotate://" .. loc)
-	if prev ~= -1 then
-		vim.api.nvim_buf_delete(prev, { force = true })
+	for _, b in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.api.nvim_buf_get_name(b) == pname then
+			vim.api.nvim_buf_delete(b, { force = true })
+		end
 	end
 
 	local buf = vim.api.nvim_create_buf(false, true)
-	vim.api.nvim_buf_set_name(buf, "annotate://" .. loc)
+	vim.api.nvim_buf_set_name(buf, pname)
 	vim.bo[buf].filetype = "markdown"
 	vim.bo[buf].buftype = "acwrite" -- no file behind this buffer: :w fires BufWriteCmd instead of writing
 	vim.bo[buf].bufhidden = "wipe" -- discard the scratch buffer once its window is gone
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, block)
 	vim.bo[buf].modified = false -- a panel left untouched must never write notes.md
+
+	-- attach marksman so notes get [[ ]] wikilink completion/navigation; the
+	-- file:// panel name (panel_name in vault mode) is what makes marksman
+	-- treat this buffer as a vault document. reuses an existing client if one
+	-- is already running for the vault.
+	if config.dir then
+		local ok, mcfg = pcall(function()
+			return vim.lsp.config.marksman
+		end)
+		if ok and mcfg and mcfg.cmd then
+			pcall(
+				vim.lsp.start,
+				vim.tbl_extend("force", mcfg, {
+					name = "marksman",
+					root_dir = config.dir,
+				}),
+				{ bufnr = buf }
+			)
+		end
+	end
 
 	local function persist()
 		save(path, name, loc, vim.api.nvim_buf_get_lines(buf, 0, -1, false))
@@ -305,7 +351,21 @@ local function annotate(opts)
 	open_panel(buf_id, path, name, loc, block, opts.bang)
 end
 
-function M.setup()
+-- Open the note file backing the current buffer's repo (the per-repo file in
+-- config.dir, or REPO_ROOT/notes.md). Edits to it are the ssot, same as the
+-- panel; saving re-places signs via the BufWritePost autocmd below.
+function M.open_notes()
+	local path = note_path(vim.api.nvim_get_current_buf())
+	vim.cmd.edit(vim.fn.fnameescape(path))
+end
+
+function M.setup(opts)
+	config = vim.tbl_extend("force", config, opts or {})
+	if config.dir then
+		config.dir = vim.fn.expand(config.dir)
+		vim.fn.mkdir(config.dir, "p") -- create the vault folder if it's missing
+	end
+
 	-- :AnnotateCode persists; :AnnotateCode! closes the panel on leave
 	vim.api.nvim_create_user_command("AnnotateCode", annotate, { range = true, bang = true })
 
@@ -316,10 +376,10 @@ function M.setup()
 			place_signs(ev.buf)
 		end,
 	})
-	-- notes.md edited by hand: re-place signs everywhere
+	-- the notes file edited by hand: re-place signs everywhere
 	vim.api.nvim_create_autocmd("BufWritePost", {
 		group = group,
-		pattern = "notes.md",
+		pattern = config.dir and vim.fs.joinpath(config.dir, "*.md") or "notes.md",
 		callback = refresh_all_signs,
 	})
 

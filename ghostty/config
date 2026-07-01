@@ -1,5 +1,5 @@
-font-family = JetBrainsMono Nerd Font
-font-size = 20
+#font-family = JetBrainsMono Nerd Font
+font-size = 18
 cursor-invert-fg-bg = true
 
 command = /opt/homebrew/bin/tmux new-session -A -s main
