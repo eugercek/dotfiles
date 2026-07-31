@@ -24,7 +24,7 @@ vim.opt.sidescrolloff = 8
 
 vim.opt.confirm = true -- Ask me when something sould fail
 
-vim.opt.number = true
+vim.opt.number = false
 -- vim.opt.relativenumber = true
 
 vim.opt.wrap = false
@@ -42,7 +42,7 @@ vim.opt.breakindent = true
 vim.opt.autoread = true -- Reload files changed outside Neovim when safe
 vim.opt.cursorline = true
 vim.opt.laststatus = 3 -- Only last window should have status line
-vim.opt.showtabline = 0
+vim.opt.showtabline = 1
 vim.opt.cmdheight = 0 -- Don't use 1 line for command area open it on demand
 vim.opt.pumheight = 15
 vim.opt.completeopt = { "menu", "menuone", "noselect" }

@@ -37,7 +37,6 @@
     "prefix": "<front",
     "body": [
       "---",
-      "title: ${1:title}",
       "tags: [${2:tag}]",
       "---",
       "",
