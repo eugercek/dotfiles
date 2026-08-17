@@ -31,6 +31,8 @@ local languages = {
 	"proto", "nginx", "promql", "gotmpl",
 	"csv", "jq",
 	"rust",
+  "html",
+  "latex",
 }
 
 local enabled = {}

@@ -167,6 +167,8 @@ alias pass="LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16; echo"
 alias normalvim='/usr/bin/vim'
 
 alias l="ls"
+alias c="claude"
+alias cr="claude --resume"
 
 # Set terminal title so tmux/Ghostty show useful names instead of stale ones.
 autoload -Uz add-zsh-hook
@@ -176,3 +178,6 @@ add-zsh-hook precmd  _tmux_title_precmd
 add-zsh-hook preexec _tmux_title_preexec
 
 export CLAUDE_CODE_NO_FLICKER=1
+# fzf setup
+source <(fzf --zsh)
+
