@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "NrrwRgn": {
+      "rev": "e6f29bd507903b587229c544d3e1eba3cc0f0a13",
+      "src": "https://github.com/chrisbra/NrrwRgn"
+    },
     "auto-save.nvim": {
       "rev": "9aabcb8396224dcbf8d51c0c1d620d88a46e89d7",
       "src": "https://github.com/okuuva/auto-save.nvim"
@@ -28,6 +32,10 @@
     "gitsigns.nvim": {
       "rev": "6d808f99bd63303646794406e270bd553ad7792e",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
+    },
+    "img-clip.nvim": {
+      "rev": "b6ddfb97b5600d99afe3452d707444afda658aca",
+      "src": "https://github.com/HakonHarnes/img-clip.nvim"
     },
     "mason-lspconfig.nvim": {
       "rev": "0a3b42c3e503df87aef6d6513e13148381495c3a",
@@ -97,6 +105,10 @@
     "smart-splits.nvim": {
       "rev": "9053ebd394c38fe55fd2f4710daec27411c34fb9",
       "src": "https://github.com/mrjones2014/smart-splits.nvim"
+    },
+    "snacks.nvim": {
+      "rev": "882c996cf28183f4d63640de0b4c02ec886d01f2",
+      "src": "https://github.com/folke/snacks.nvim"
     },
     "table-nvim": {
       "rev": "816d251963bf4c8c3d765dab40ebac3c259c7b6d",
