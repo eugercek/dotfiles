@@ -93,11 +93,19 @@ require("neo-tree").setup({
 	},
 })
 
-nmap("<leader>of", "<cmd>Neotree toggle reveal filesystem left<cr>", { desc = "File explorer" })
-nmap(
-	"<leader>oF",
-	"<cmd>Neotree focus reveal filesystem left<cr>H",
-	{ remap = true, desc = "File explorer (toggle hidden)" }
-)
-nmap("<leader>og", "<cmd>Neotree toggle git_status left<cr>", { desc = "Git status tree" })
-nmap("<leader>os", "<cmd>Neotree toggle document_symbols left<cr>", { desc = "LSP symbols tree" })
+-- Does: opened(neo-tree) ? close(neo-tree) : run(open_cmd)
+local function neotree_open(open_cmd)
+	return function()
+		for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+			if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "neo-tree" then
+				vim.cmd("Neotree close")
+				return
+			end
+		end
+		vim.cmd(open_cmd)
+	end
+end
+
+nmap("<leader>of", neotree_open("Neotree reveal filesystem left"), { desc = "File explorer" })
+nmap("<leader>og", neotree_open("Neotree git_status left"), { desc = "Git status tree" })
+nmap("<leader>os", neotree_open("Neotree document_symbols left"), { desc = "LSP symbols tree" })

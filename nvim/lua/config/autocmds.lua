@@ -1,10 +1,10 @@
-local group = vim.api.nvim_create_augroup("umut_config", { clear = true })
+local group = vim.api.nvim_create_augroup("eugercek", { clear = true })
 
 -- Briefly highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = group,
 	callback = function()
-		vim.highlight.on_yank({ timeout = 120 })
+		vim.hl.on_yank({ timeout = 120 })
 	end,
 })
 
@@ -15,10 +15,6 @@ vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
 		vim.opt_local.wrap = true
 		vim.opt_local.spelllang = { "tr", "en_us" }
-		-- Start full folded in git commit
-		if vim.bo.filetype == "gitcommit" then
-			vim.opt_local.foldmethod = "syntax"
-		end
 	end,
 })
 

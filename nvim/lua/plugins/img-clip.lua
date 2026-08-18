@@ -15,7 +15,10 @@ require("img-clip").setup({
 		relative_to_current_file = true,
 		file_name = "%Y-%m-%d-%H-%M-%S",
 		prompt_for_file_name = false,
-		drag_and_drop = { insert_mode = true },
+		-- drag_and_drop, vim.paste'i global override edip her kisa paste'i "image mi"
+		-- diye kontrol ediyordu -> command-line'a text yapistirinca "Content is not an
+		-- image" uyarisi. Kapatildi; goruntu yapistirmayi zaten <leader>ip ile yapiyorum.
+		drag_and_drop = { enabled = false },
 	},
 
 	-- Inside the vault, imitate Obsidian exactly: attachments go to the single

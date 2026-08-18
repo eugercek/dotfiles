@@ -11,6 +11,7 @@ local languages = {
 	"editorconfig",
 	"go", "gomod", "gosum", "gowork",
     -- I use git commit verbose and currently git commit does not have folding so don't install it
+  -- "gitcommit",
 	"git_config", "git_rebase", "gitattributes", "gitignore",
 	"javascript", "tsx", "typescript",
 	"json",
@@ -21,7 +22,6 @@ local languages = {
 	"sql",
 	"terraform",
 	"toml",
-	"tmux",
 	"vim",
 	"vimdoc",
 	"asm",
