@@ -4,6 +4,8 @@ cursor-invert-fg-bg = true
 
 command = /opt/homebrew/bin/tmux new-session -A -s main
 
+adjust-cell-height = 5%
+
 clipboard-paste-protection = false
 
 # Distribute leftover grid padding evenly instead of dumping it on right/bottom,
