@@ -70,6 +70,43 @@
                                 "type": "basic"
                             }
                         ]
+                    },
+                    {
+                        "description": "Option + S → log word and show Look Up popover",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "s",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_option"
+                                        ],
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "c",
+                                        "modifiers": [
+                                            "left_command"
+                                        ]
+                                    },
+                                    {
+                                        "shell_command": "/Users/umut/.config/karabiner/add_word.sh"
+                                    },
+                                    {
+                                        "key_code": "d",
+                                        "modifiers": [
+                                            "left_control",
+                                            "left_command"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             },
