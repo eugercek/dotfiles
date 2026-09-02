@@ -57,7 +57,7 @@ vim.api.nvim_create_autocmd("PackChanged", {
 pcall(telescope.load_extension, "fzf")
 pcall(telescope.load_extension, "ui-select")
 
-nmap("<leader><leader>", "<cmd>Telescope find_files<cr>", { desc = "Find file" })
+nmap("<leader><leader>", "<cmd>Telescope find_files hidden=true<cr>", { desc = "Find file" })
 nmap("<leader>ff", "<cmd>Telescope find_files hidden=true no_ignore=true<cr>", { desc = "Find all files" })
 
 nmap("<leader>,", "<cmd>Telescope buffers<cr>", { desc = "Switch buffer" })
@@ -65,7 +65,7 @@ nmap("<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Recent files" })
 
 nmap("<leader>gC", "<cmd>Telescope git_bcommits<cr>", { desc = "Buffer commits" })
 nmap("<leader>gc", "<cmd>Telescope git_commits<cr>", { desc = "Repo commits" })
-nmap("<leader>gf", "<cmd>Telescope git_files<cr>", { desc = "Git files" })
+nmap("<leader>fg", "<cmd>Telescope git_files<cr>", { desc = "Git files" })
 nmap("<leader>gj", "<cmd>Telescope git_branches<cr>", { desc = "Branches" })
 
 nmap("<leader>hf", "<cmd>Telescope help_tags<cr>", { desc = "Help tags" })
@@ -113,4 +113,3 @@ end, { desc = "Ripgrep no markdown" })
 nmap("<leader>sd", "<cmd>Telescope diagnostics<cr>", { desc = "Search diagnostics" })
 nmap("<leader>si", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Document symbols" })
 nmap("<leader>sI", "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", { desc = "Workspace symbols" })
-nmap("<leader>sf", "<cmd>Telescope find_files<cr>", { desc = "Search files" })

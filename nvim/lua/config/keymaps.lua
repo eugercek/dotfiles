@@ -56,6 +56,8 @@ local utils = require("config.utils")
 
 nmap("<leader>fn", utils.prompt_new_file, { desc = "New file" })
 nmap("<leader>fs", "<cmd>write<cr>", { desc = "Save file" })
+nmap("<leader>fd", utils.delete_file, { desc = "Delete file" })
+nmap("<leader>fR", utils.rename_file, { desc = "Rename file" })
 
 -- Swap gf/gF: gf honors a trailing :line, gF just opens the file
 vim.keymap.set({ "n", "x" }, "gf", "gF", { desc = "Goto file (with line)" })

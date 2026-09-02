@@ -48,26 +48,6 @@ require("conform").setup({
 	},
 })
 
-vim.api.nvim_create_autocmd({ "FocusLost", "BufLeave" }, {
-	callback = function(args)
-		local buf = args.buf or vim.api.nvim_get_current_buf()
-
-		if vim.fn.mode() ~= "n" or vim.bo[buf].buftype ~= "" or vim.api.nvim_buf_get_name(buf) == "" then
-			return
-		end
-
-		if should_skip(buf) then
-			return
-		end
-
-		vim.defer_fn(function()
-			if vim.api.nvim_buf_is_valid(buf) then
-				require("conform").format({ bufnr = buf, lsp_format = "fallback" })
-			end
-		end, 100)
-	end,
-})
-
 nmap("<leader>tf", function()
 	local buf = vim.api.nvim_get_current_buf()
 	vim.b[buf].disable_autoformat = not vim.b[buf].disable_autoformat

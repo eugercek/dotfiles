@@ -131,6 +131,28 @@ end
 
 vim.opt.foldtext = "v:lua.HighlightedFoldtext()"
 
+-- Neovim's ts foldexpr only recomputes folds for the changed range, so editing
+-- leaves neighbouring folds stale (zA swallows the next header, or E490). Force
+-- a full reparse on open + after edits so folds stay correct without a reopen.
+local fold_timer
+vim.api.nvim_create_autocmd({ "BufWinEnter", "TextChanged", "InsertLeave" }, {
+	callback = function(args)
+		if vim.wo.foldmethod ~= "expr" then
+			return
+		end
+		if fold_timer then
+			fold_timer:stop()
+		end
+		fold_timer = vim.defer_fn(function()
+			if vim.api.nvim_buf_is_valid(args.buf) then
+				pcall(function()
+					vim.treesitter.get_parser(args.buf):parse(true)
+				end)
+			end
+		end, 150)
+	end,
+})
+
 -- Treat .h as C, not C++ (Neovim's default for ambiguous .h is cpp)
 vim.g.c_syntax_for_h = 1
 vim.opt.sessionoptions = {
