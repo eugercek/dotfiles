@@ -64,4 +64,71 @@ function M.live_grep_directory(path)
 	})
 end
 
+-- box-drawing table (the kind AI spits out) -> markdown table, on the visual selection
+-- rows that wrap over several lines get joined back into one cell
+function M.box_table_to_markdown()
+	local s, e = vim.fn.line("v"), vim.fn.line(".")
+	if s > e then
+		s, e = e, s
+	end
+	local lines = vim.api.nvim_buf_get_lines(0, s - 1, e, false)
+	vim.api.nvim_feedkeys(vim.keycode("<esc>"), "nx", false)
+
+	local rows, cur = {}, nil
+	for _, line in ipairs(lines) do
+		if line:find("│", 1, true) then
+			local cells = vim.split(line, "│", { plain = true })
+			table.remove(cells, 1) -- junk before the first │
+			table.remove(cells) -- and after the last one
+			cur = cur or {}
+			for i, cell in ipairs(cells) do
+				cell = vim.trim(cell):gsub("|", "\\|")
+				cur[i] = cur[i] and vim.trim(cur[i] .. " " .. cell) or cell
+			end
+		elseif cur then
+			-- any ├──┼──┤ / └──┴──┘ border closes the row we were collecting
+			table.insert(rows, cur)
+			cur = nil
+		end
+	end
+	if cur then
+		table.insert(rows, cur)
+	end
+
+	if #rows == 0 then
+		vim.notify("No box table in selection", vim.log.levels.WARN)
+		return
+	end
+
+	local ncols, width = 0, {}
+	for _, row in ipairs(rows) do
+		ncols = math.max(ncols, #row)
+	end
+	for _, row in ipairs(rows) do
+		for i = 1, ncols do
+			row[i] = row[i] or ""
+			width[i] = math.max(width[i] or 3, vim.fn.strdisplaywidth(row[i]))
+		end
+	end
+
+	local function render(row, fill)
+		local out = {}
+		for i = 1, ncols do
+			out[i] = row[i] .. string.rep(fill or " ", width[i] - vim.fn.strdisplaywidth(row[i]))
+		end
+		return "| " .. table.concat(out, " | ") .. " |"
+	end
+
+	local sep = {}
+	for i = 1, ncols do
+		sep[i] = "---"
+	end
+
+	local out = { render(rows[1]), render(sep, "-") }
+	for i = 2, #rows do
+		table.insert(out, render(rows[i]))
+	end
+	vim.api.nvim_buf_set_lines(0, s - 1, e, false, out)
+end
+
 return M

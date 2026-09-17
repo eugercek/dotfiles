@@ -22,7 +22,7 @@ require("table-nvim").setup({
 		move_column_right = "<localleader>cL", -- move column right
 		delete_column = "<localleader>cd", -- delete column
 
-		insert_table = "<localleader>tt", -- insert table
-		insert_table_alt = "<localleader>tT", -- insert table (alt)
+		insert_table = "<localleader>t", -- insert table
+		insert_table_alt = nil, -- insert table (alt)
 	},
 })

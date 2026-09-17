@@ -51,8 +51,8 @@ require("diffview").setup({
 })
 
 nmap("<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Review changes" })
-nmap("<leader>gD", "<cmd>DiffviewFileHistory %<cr>", { desc = "File history" })
+nmap("<leader>gf", "<cmd>DiffviewFileHistory %<cr>", { desc = "File history" })
 nmap("<leader>gO", "<cmd>DiffviewFileHistory<cr>", { desc = "Repo history" })
-nmap("<leader>gQ", "<cmd>DiffviewClose<cr>", { desc = "Close review" })
+nmap("<leader>gP", "<cmd>DiffviewFileHistory % --pin-local<cr>", { desc = "File history vs working tree" })
 nmap("<leader>gv", "<cmd>DiffviewOpen --staged<cr>", { desc = "Review staged" })
 nmap("<leader>gm", "<cmd>DiffviewOpen origin/master...<cr>", { desc = "Review branch changes" })

@@ -39,7 +39,6 @@ telescope.setup({
 			override_file_sorter = true,
 			case_mode = "smart_case",
 		},
-		["ui-select"] = require("telescope.themes").get_dropdown(),
 	},
 })
 
@@ -63,40 +62,12 @@ nmap("<leader>ff", "<cmd>Telescope find_files hidden=true no_ignore=true<cr>", {
 nmap("<leader>,", "<cmd>Telescope buffers<cr>", { desc = "Switch buffer" })
 nmap("<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Recent files" })
 
-nmap("<leader>gC", "<cmd>Telescope git_bcommits<cr>", { desc = "Buffer commits" })
-nmap("<leader>gc", "<cmd>Telescope git_commits<cr>", { desc = "Repo commits" })
-nmap("<leader>fg", "<cmd>Telescope git_files<cr>", { desc = "Git files" })
+nmap("<leader>fg", "<cmd>Telescope git_status<cr>", { desc = "Git files" })
 nmap("<leader>gj", "<cmd>Telescope git_branches<cr>", { desc = "Branches" })
 
 nmap("<leader>hf", "<cmd>Telescope help_tags<cr>", { desc = "Help tags" })
 nmap("<leader>hk", "<cmd>Telescope keymaps<cr>", { desc = "Describe key" })
 nmap("<leader>hv", "<cmd>Telescope highlights<cr>", { desc = "Highlight groups" })
-
--- Browse markdown notes in the Obsidian vault, most-recently-modified first.
-nmap("<leader>nn", function()
-	local vault = vim.fn.expand("$HOME/Desktop/Obsidian Vault")
-	local files = vim.fn.systemlist({ "rg", "--files", "--glob", "*.md", vault })
-	table.sort(files, function(a, b)
-		return vim.fn.getftime(a) > vim.fn.getftime(b)
-	end)
-
-	local pickers = require("telescope.pickers")
-	local finders = require("telescope.finders")
-	local conf = require("telescope.config").values
-	local make_entry = require("telescope.make_entry")
-
-	pickers
-		.new({}, {
-			prompt_title = "Obsidian Notes (recent)",
-			finder = finders.new_table({
-				results = files,
-				entry_maker = make_entry.gen_from_file({ cwd = vault }),
-			}),
-			previewer = conf.file_previewer({}),
-			sorter = conf.file_sorter({}),
-		})
-		:find()
-end, { desc = "Find note" })
 
 nmap("<leader>ss", "<cmd>Telescope current_buffer_fuzzy_find<cr>", { desc = "Search buffer" })
 nmap("<leader>sp", "<cmd>Telescope live_grep<cr>", { desc = "Ripgrep" })

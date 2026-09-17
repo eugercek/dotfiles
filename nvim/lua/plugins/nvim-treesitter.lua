@@ -32,7 +32,7 @@ local languages = {
 	"csv", "jq",
 	"rust",
   "html",
-  "latex",
+  "latex", "typst"
 }
 
 local enabled = {}

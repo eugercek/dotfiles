@@ -29,7 +29,6 @@ require("gitsigns").setup({
 		end
 
 		nmap("<leader>gb", gs.blame_line, { buffer = bufnr, desc = "Blame line" })
-		nmap("<leader>gB", gs.toggle_current_line_blame, { buffer = bufnr, desc = "Toggle line blame" })
 		nmap("<leader>gh", gs.preview_hunk, { buffer = bufnr, desc = "Preview hunk" })
 		nmap("<leader>gH", gs.diffthis, { buffer = bufnr, desc = "Diff buffer" })
 		nmap("<leader>gl", gs.setloclist, { buffer = bufnr, desc = "Hunks to loclist" })

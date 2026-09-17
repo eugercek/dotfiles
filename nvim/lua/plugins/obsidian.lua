@@ -33,7 +33,9 @@ local function insert_subheading()
 	vim.cmd("startinsert!")
 end
 
--- Notes (<leader>n). nn (find note) lives in telescope.lua, don't touch it.
+-- Notes (<leader>n). nn was a hand-rolled telescope picker; quick_switch
+-- already runs rg --files --sortr=modified, so it does the same job.
+nmap("<leader>nn", "<cmd>Obsidian quick_switch<cr>", { desc = "Find note" })
 nmap("<leader>nc", "<cmd>Obsidian new<cr>", { desc = "New note" })
 nmap("<leader>ns", "<cmd>Obsidian search<cr>", { desc = "Search vault" })
 nmap("<leader>nt", "<cmd>Obsidian tags<cr>", { desc = "Tags" })

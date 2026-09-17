@@ -14,9 +14,6 @@ nmap("<leader>`", "<cmd>e #<cr>", { desc = "Alternate buffer" })
 nmap("<leader>hi", "<cmd>help index<cr>", { desc = "Info" })
 nmap("<leader>hm", "<cmd>checkhealth<cr>", { desc = "health" })
 
--- Quit
-nmap("<leader>qq", "<cmd>wqa<cr>", { desc = "Close window" })
-
 vim.cmd("packadd nvim.undotree")
 vim.cmd("packadd nvim.difftool")
 
@@ -88,49 +85,10 @@ vim.keymap.set("x", "<leader>fy", function()
 	yank_path(s == e and ":" .. s or string.format(":%d-%d", s, e))
 end, { desc = "Yank relative path with line(s)" })
 
+vim.keymap.set("x", "<leader>nm", utils.box_table_to_markdown, { desc = "Box table -> markdown table" })
+
 -- Quit
 nmap("<leader>qq", "<cmd>wqa<cr>", { desc = "Close window" })
-
--- Git
-nmap("<leader>gc", function()
-	local server = vim.v.servername
-	if server == "" then
-		vim.notify("No nvim server running", vim.log.levels.ERROR)
-		return
-	end
-	local sentinel = vim.fn.tempname()
-	local editor = ([[sh -c 'nvim --server %s --remote-tab "$0"; until [ -f %s ]; do sleep 0.1; done']]):format(
-		server,
-		sentinel
-	)
-	local ft_au = vim.api.nvim_create_autocmd("FileType", {
-		pattern = "gitcommit",
-		once = true,
-		callback = function(args)
-			vim.bo[args.buf].bufhidden = "wipe"
-			vim.api.nvim_create_autocmd("BufWipeout", {
-				buffer = args.buf,
-				once = true,
-				callback = function()
-					vim.fn.writefile({}, sentinel)
-				end,
-			})
-		end,
-	})
-	vim.system({ "git", "commit", "-v" }, {
-		env = { GIT_EDITOR = editor },
-	}, function(obj)
-		vim.schedule(function()
-			pcall(vim.api.nvim_del_autocmd, ft_au)
-			vim.fn.delete(sentinel)
-			if obj.code == 0 then
-				vim.notify("Committed", vim.log.levels.INFO)
-			else
-				vim.notify((obj.stderr ~= "" and obj.stderr or obj.stdout) or "commit failed", vim.log.levels.WARN)
-			end
-		end)
-	end)
-end, { desc = "Git commit" })
 
 -- Compile / run
 local last_cmd = nil
@@ -174,13 +132,3 @@ vim.keymap.set("v", "p", '"_dP', { desc = "Paste without yanking replaced text" 
 vim.keymap.set("i", ",", ",<C-g>u", { desc = "Comma undo breakpoint" })
 vim.keymap.set("i", ".", ".<C-g>u", { desc = "Period undo breakpoint" })
 vim.keymap.set("i", ";", ";<C-g>u", { desc = "Semicolon undo breakpoint" })
-
-vim.keymap.set("n", "<leader>tz", function()
-	print(vim.wo.statuscolumn)
-	if vim.wo.statuscolumn == "" then
-		local width = vim.api.nvim_win_get_width(0)
-		vim.wo.statuscolumn = string.rep(" ", 15) .. "  "
-	else
-		vim.wo.statuscolumn = "  "
-	end
-end, { desc = "Toggle centered buffer" })

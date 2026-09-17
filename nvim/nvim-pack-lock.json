@@ -17,6 +17,10 @@
       "rev": "31f3992c24e54578dbe5553bcf60638a91153b3f",
       "src": "https://github.com/dlyongemallo/diffview-plus.nvim"
     },
+    "firenvim": {
+      "rev": "7456b09491337bb53d2146012e8d0c9858f04557",
+      "src": "https://github.com/glacambre/firenvim"
+    },
     "gitlinker.nvim": {
       "rev": "a1b74070bbd5e50128190c85b09f1431ea5fbd83",
       "src": "https://github.com/linrongbin16/gitlinker.nvim"
@@ -28,6 +32,10 @@
     "img-clip.nvim": {
       "rev": "b6ddfb97b5600d99afe3452d707444afda658aca",
       "src": "https://github.com/HakonHarnes/img-clip.nvim"
+    },
+    "markdown-table-wrap.nvim": {
+      "rev": "a5b676360946c7bce48c0b717ab05929761b88c8",
+      "src": "https://github.com/ice345/markdown-table-wrap.nvim"
     },
     "mason-lspconfig.nvim": {
       "rev": "9d28935aa95fa6c1dc7c4d6747f101a72a8a4bec",

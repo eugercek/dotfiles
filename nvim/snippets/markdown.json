@@ -1,6 +1,6 @@
 {
   "Code Fence": {
-    "prefix": "<c",
+    "prefix": ",c",
     "body": [
       "```$1",
       "$0",
@@ -9,7 +9,7 @@
     "description": "Markdown code fence"
   },
   "C Code Fence": {
-    "prefix": "<cc",
+    "prefix": ",cc",
     "body": [
       "```C",
       "$0",
@@ -18,7 +18,7 @@
     "description": "Markdown C code fence"
   },
   "SQL Code Fence": {
-    "prefix": "<cs",
+    "prefix": ",cs",
     "body": [
       "```sql",
       "$0",
@@ -27,14 +27,14 @@
     "description": "Markdown SQL code fence"
   },
   "Task Item": {
-    "prefix": "<t",
+    "prefix": ",t",
     "body": [
       "- [ ] ${1:task}$0"
     ],
     "description": "Markdown task list item"
   },
   "Frontmatter": {
-    "prefix": "<front",
+    "prefix": ",front",
     "body": [
       "---",
       "tags: [${2:tag}]",
@@ -45,7 +45,7 @@
     "description": "YAML frontmatter block"
   },
   "Callout": {
-    "prefix": "<note",
+    "prefix": ",note",
     "body": [
       "> [!NOTE]",
       "> ${1:content}",
