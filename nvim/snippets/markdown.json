@@ -26,6 +26,24 @@
     ],
     "description": "Markdown SQL code fence"
   },
+  "Go Code Fence": {
+    "prefix": ",cg",
+    "body": [
+      "```go",
+      "$0",
+      "```"
+    ],
+    "description": "Markdown C code fence"
+  },
+  "Bash Code Fence": {
+    "prefix": ",cb",
+    "body": [
+      "```bash",
+      "$0",
+      "```"
+    ],
+    "description": "Markdown C code fence"
+  },
   "Task Item": {
     "prefix": ",t",
     "body": [
