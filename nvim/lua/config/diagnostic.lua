@@ -18,11 +18,4 @@ vim.diagnostic.config({
 })
 
 nmap("<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostics" })
-nmap("[d", function()
-	vim.diagnostic.jump({ count = -1 })
-end, { desc = "Previous diagnostic" })
-nmap("]d", function()
-	vim.diagnostic.jump({ count = 1 })
-end, { desc = "Next diagnostic" })
-
 nmap("<leader>cd", vim.diagnostic.setloclist, { desc = "Buffer diagnostics" })
