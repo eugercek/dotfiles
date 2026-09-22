@@ -51,6 +51,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(event)
 		nmap("gd", vim.lsp.buf.definition, { buffer = event.buf, desc = "Goto definition" })
 		nmap("gD", vim.lsp.buf.declaration, { buffer = event.buf, desc = "Goto declaration" })
+		nmap("<leader>cl", vim.lsp.codelens.run, { buffer = event.buf, desc = "Run codelens" })
 	end,
 })
 

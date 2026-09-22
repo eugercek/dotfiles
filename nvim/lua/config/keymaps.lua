@@ -34,6 +34,14 @@ nmap("<leader>tc", function()
 	vim.notify("Completion " .. (vim.g.cmp_disabled and "off" or "on"))
 end, { desc = "Toggle completion" })
 
+nmap("<leader>oj", function()
+	if vim.fn.getqflist({ winid = 0 }).winid ~= 0 then
+		vim.cmd("cclose")
+	else
+		vim.cmd("copen")
+	end
+end, { desc = "Toggle quickfix, (J)ump" })
+
 nmap("<leader>tL", function()
 	local buf = vim.api.nvim_get_current_buf()
 	local clients = vim.lsp.get_clients({ bufnr = buf })
