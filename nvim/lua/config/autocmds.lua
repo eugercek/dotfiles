@@ -34,7 +34,8 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "TermClose", "TermLeave" }, {
 	group = group,
 	callback = function()
-		if vim.bo.buftype ~= "nofile" then
+		-- skip q: window, checktime errors there
+		if vim.bo.buftype ~= "nofile" and vim.fn.getcmdwintype() == "" then
 			vim.cmd("checktime")
 		end
 	end,

@@ -14,7 +14,10 @@ require("obsidian").setup({
 	footer = { enabled = false },
 	-- default zettel_id ignores the title and spits out timestamp+random junk.
 	-- title_id slugs the title instead: "C Pragma" -> c-pragma.md
-	note_id_func = require("obsidian.builtin").title_id,
+	-- keep the title as-is like Obsidian does: "DNS Packet Internals" -> DNS Packet Internals.md
+	note_id_func = function(title)
+		return title or require("obsidian.builtin").zettel_id()
+	end,
 })
 
 -- walk up to the nearest heading, open a new one a level deeper (capped at 6)
