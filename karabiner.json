@@ -12,12 +12,6 @@
                                     "key_code": "caps_lock",
                                     "modifiers": { "optional": ["left_shift"] }
                                 },
-                                "to": [
-                                    {
-                                        "key_code": "left_command",
-                                        "modifiers": ["left_control", "left_option"]
-                                    }
-                                ],
                                 "to_if_alone": [{ "key_code": "escape" }],
                                 "type": "basic"
                             }
@@ -58,11 +52,43 @@
                         ]
                     },
                     {
+                        "description": "Hyper + f → focus or start Terminal",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "f",
+                                    "modifiers": {
+                                        "mandatory": ["left_control", "left_option", "left_command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a Ghostty" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Hyper + k → focus or start Brave",
                         "manipulators": [
                             {
                                 "from": {
                                     "key_code": "k",
+                                    "modifiers": {
+                                        "mandatory": ["left_control", "left_option", "left_command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "shell_command": "open -a 'Brave Browser'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper + d → focus or start Brave",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "d",
                                     "modifiers": {
                                         "mandatory": ["left_control", "left_option", "left_command"],
                                         "optional": ["any"]
