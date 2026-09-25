@@ -1,5 +1,6 @@
 ## Neovim
 - I prefer builtin packages over plugins unless there's very good feature from the plugin.
+- Never add or install a plugin without asking me first. Propose options (builtin vs plugin) and wait for my decision.
 - Nvim evolves very fast always look at latest changes from the latest releases
 - Don't manually touch `nvim-pack-lock.json`
 - Use `vim.pack` for package management

@@ -33,6 +33,13 @@ nmap("<leader>tc", function()
 	vim.g.cmp_disabled = not vim.g.cmp_disabled
 	vim.notify("Completion " .. (vim.g.cmp_disabled and "off" or "on"))
 end, { desc = "Toggle completion" })
+-- diffopt is global-only, so this applies to every diff window (diffview, :diffsplit, nvim -d)
+nmap("<leader>ti", function()
+	local on = vim.o.diffopt:find("iwhiteall") ~= nil
+	vim.opt.diffopt[on and "remove" or "append"](vim.opt.diffopt, "iwhiteall")
+	vim.cmd.diffupdate()
+	vim.notify("Diff ignore whitespace (global) " .. (on and "off" or "on"))
+end, { desc = "Toggle diff ignore whitespace (global)" })
 
 nmap("<leader>oj", function()
 	if vim.fn.getqflist({ winid = 0 }).winid ~= 0 then
