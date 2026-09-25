@@ -68,6 +68,12 @@ vim.opt.backup = false
 vim.opt.writebackup = true
 vim.opt.undofile = true
 
+-- treesitter folds, everything open on start. empty foldtext = first line with syntax hl
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldtext = ""
+vim.opt.foldlevelstart = 99
+
 -- Treat .h as C, not C++ (Neovim's default for ambiguous .h is cpp)
 vim.g.c_syntax_for_h = 1
 vim.opt.sessionoptions = {

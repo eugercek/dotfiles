@@ -137,6 +137,14 @@ vim.keymap.set("n", "gl", "$", { desc = "Go to end of line" })
 vim.keymap.set("v", "<", "<gv", { desc = "Indent left" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right" })
 vim.keymap.set("v", "p", '"_dP', { desc = "Paste without yanking replaced text" })
+vim.keymap.set("i", "jk", "<Esc>", { desc = "Exit insert mode" })
+-- no esc in insert, forcing myself to use jk
+vim.keymap.set("i", "<Esc>", "<Nop>")
 vim.keymap.set("i", ",", ",<C-g>u", { desc = "Comma undo breakpoint" })
 vim.keymap.set("i", ".", ".<C-g>u", { desc = "Period undo breakpoint" })
 vim.keymap.set("i", ";", ";<C-g>u", { desc = "Semicolon undo breakpoint" })
+
+-- Swap ; and :, one less shift for command mode. f/t repeat moves to the shifted
+-- side rather than disappearing, so d: is the old d;
+vim.keymap.set({ "n", "x", "o" }, ";", ":", { desc = "Command mode" })
+vim.keymap.set({ "n", "x", "o" }, ":", ";", { desc = "Repeat f/t" })
