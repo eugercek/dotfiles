@@ -15,19 +15,51 @@ vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
 		vim.opt_local.wrap = true
 		vim.opt_local.spelllang = { "tr", "en_us" }
-		-- ,` wraps word under cursor in backticks, ,u uppercases it. - counts as part of the word
-		local function on_word(keys)
-			return function()
-				local isk = vim.bo.iskeyword
-				vim.bo.iskeyword = isk .. ",-"
-				vim.cmd("normal! " .. keys)
-				vim.bo.iskeyword = isk
-			end
-		end
-		vim.keymap.set("n", "<localleader>`", on_word('ciw`\18"`'), { buffer = true, desc = "Wrap word in backticks" })
-		vim.keymap.set("n", "<localleader>8", on_word('ciw*\18"*'), { buffer = true, desc = "Wrap word in *" })
-		vim.keymap.set("n", "<localleader>*", on_word('ciw**\18"**'), { buffer = true, desc = "Wrap word in **" })
-		vim.keymap.set("n", "<localleader>u", on_word("gUiw"), { buffer = true, desc = "Uppercase word" })
+		-- ,` wraps word under cursor in backticks, ,u uppercases it.
+		-- treats foo-bar as word
+		vim.keymap.set("o", "<Plug>(dash-word)", function()
+			local isk = vim.bo.iskeyword
+			vim.bo.iskeyword = isk .. ",-"
+			vim.cmd("normal! viw")
+			vim.bo.iskeyword = isk
+		end, { buffer = true })
+		vim.keymap.set(
+			"n",
+			"<localleader>`",
+			"sa<Plug>(dash-word)`",
+			{ buffer = true, remap = true, desc = "Wrap word in backticks" }
+		)
+		vim.keymap.set(
+			"x",
+			"<localleader>`",
+			"sa`",
+			{ buffer = true, remap = true, desc = "Wrap selection in backticks" }
+		)
+		vim.keymap.set(
+			"n",
+			"<localleader>u",
+			"gU<Plug>(dash-word)",
+			{ buffer = true, remap = true, desc = "Uppercase word" }
+		)
+		-- mini.surround: 8 is ** (shift-8 twice), so sd8 / sr*8 work too
+		vim.b.minisurround_config = {
+			custom_surroundings = { ["8"] = { input = { "%*%*().-()%*%*" }, output = { left = "**", right = "**" } } },
+		}
+		-- ,b / ,i on word, or on selection in visual
+		vim.keymap.set(
+			"n",
+			"<localleader>b",
+			"sa<Plug>(dash-word)8",
+			{ buffer = true, remap = true, desc = "Bold word" }
+		)
+		vim.keymap.set("x", "<localleader>b", "sa8", { buffer = true, remap = true, desc = "Bold selection" })
+		vim.keymap.set(
+			"n",
+			"<localleader>i",
+			"sa<Plug>(dash-word)*",
+			{ buffer = true, remap = true, desc = "Italic word" }
+		)
+		vim.keymap.set("x", "<localleader>i", "sa*", { buffer = true, remap = true, desc = "Italic selection" })
 	end,
 })
 
