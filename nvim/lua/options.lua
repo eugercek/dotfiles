@@ -54,6 +54,7 @@ vim.opt.fillchars = {
 	diff = "╱",
 	eob = " ",
 }
+vim.opt.diffopt:append("algorithm:histogram") -- Anchor diffs on unique lines, not on `end` / `}` / blanks
 vim.opt.shortmess:append("c")
 vim.opt.hidden = true
 
