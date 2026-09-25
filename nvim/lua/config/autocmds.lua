@@ -25,6 +25,8 @@ vim.api.nvim_create_autocmd("FileType", {
 			end
 		end
 		vim.keymap.set("n", "<localleader>`", on_word('ciw`\18"`'), { buffer = true, desc = "Wrap word in backticks" })
+		vim.keymap.set("n", "<localleader>8", on_word('ciw*\18"*'), { buffer = true, desc = "Wrap word in *" })
+		vim.keymap.set("n", "<localleader>*", on_word('ciw**\18"**'), { buffer = true, desc = "Wrap word in **" })
 		vim.keymap.set("n", "<localleader>u", on_word("gUiw"), { buffer = true, desc = "Uppercase word" })
 	end,
 })

@@ -131,4 +131,20 @@ function M.box_table_to_markdown()
 	vim.api.nvim_buf_set_lines(0, s - 1, e, false, out)
 end
 
+-- walk up to the nearest heading, open a new one below at its level + delta
+-- (0 same, 1 deeper, -1 shallower). Clamped to ##..######, # is the note title.
+function M.insert_heading(delta)
+	local level = 1
+	for l = vim.fn.line("."), 1, -1 do
+		local hashes = vim.fn.getline(l):match("^(#+)%s")
+		if hashes then
+			level = #hashes
+			break
+		end
+	end
+	local prefix = string.rep("#", math.max(2, math.min(level + delta, 6))) .. " "
+	vim.api.nvim_put({ prefix }, "l", true, false) -- new line below, cursor at end
+	vim.cmd("startinsert!")
+end
+
 return M
