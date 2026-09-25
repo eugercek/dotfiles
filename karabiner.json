@@ -24,6 +24,24 @@
                         ]
                     },
                     {
+                        "description": "Right Command → Hyper Key (-shift)  (⌃⌥⌘)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "right_command",
+                                    "modifiers": { "optional": ["left_shift"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_command",
+                                        "modifiers": ["left_control", "left_option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Hyper + j → focus or start Terminal",
                         "manipulators": [
                             {
