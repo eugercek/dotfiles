@@ -37,6 +37,7 @@ require("blink.cmp").setup({
 				columns = {
 					{ "kind_icon" },
 					{ "label", "label_description", gap = 1 },
+					{ "source_name" },
 				},
 			},
 		},

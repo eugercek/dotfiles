@@ -17,3 +17,16 @@ nmap("<leader>wm", function()
 	end
 	maximized = not maximized
 end, { desc = "Maximize window" })
+
+-- tab names: tabline shows t:name if set, else the file name. clear with :unlet t:name
+local fn = vim.fn
+function _G.MyTabline()
+	local s = ""
+	for i = 1, fn.tabpagenr("$") do
+		local file = fn.fnamemodify(fn.bufname(fn.tabpagebuflist(i)[fn.tabpagewinnr(i)]), ":t")
+		s = s .. (i == fn.tabpagenr() and "%#TabLineSel# " or "%#TabLine# ") .. fn.gettabvar(i, "name", file) .. " "
+	end
+	return s .. "%#TabLineFill#"
+end
+vim.o.tabline = "%!v:lua.MyTabline()"
+nmap("<leader>wr", ":let t:name = ''<Left>", { desc = "Rename tab" })
