@@ -1,0 +1,7 @@
+{
+  "runtime.version": "Lua 5.4",
+  "workspace.library": ["Spoons/EmmyLua.spoon/annotations"],
+  "workspace.ignoreDir": ["Spoons"],
+  "diagnostics.disable": ["undefined-field"],
+  "diagnostics.globals": ["notesRetry", "notesSleep"]
+}
