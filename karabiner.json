@@ -27,26 +27,10 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "left_command",
-                                        "modifiers": ["left_control", "left_option"]
+                                        "key_code": "right_command",
+                                        "modifiers": ["right_control", "right_option"]
                                     }
                                 ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Hyper + j → focus or start Terminal",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "j",
-                                    "modifiers": {
-                                        "mandatory": ["left_control", "left_option", "left_command"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "shell_command": "open -a Ghostty" }],
                                 "type": "basic"
                             }
                         ]
@@ -58,27 +42,11 @@
                                 "from": {
                                     "key_code": "f",
                                     "modifiers": {
-                                        "mandatory": ["left_control", "left_option", "left_command"],
+                                        "mandatory": ["control", "option", "command"],
                                         "optional": ["any"]
                                     }
                                 },
                                 "to": [{ "shell_command": "open -a Ghostty" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Hyper + k → focus or start Brave",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "k",
-                                    "modifiers": {
-                                        "mandatory": ["left_control", "left_option", "left_command"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "shell_command": "open -a 'Brave Browser'" }],
                                 "type": "basic"
                             }
                         ]
@@ -90,7 +58,7 @@
                                 "from": {
                                     "key_code": "d",
                                     "modifiers": {
-                                        "mandatory": ["left_control", "left_option", "left_command"],
+                                        "mandatory": ["control", "option", "command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -100,17 +68,33 @@
                         ]
                     },
                     {
-                        "description": "Hyper + ; → focus or start Slack",
+                        "description": "Hyper + s → focus or start Slack",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": ";",
+                                    "key_code": "s",
                                     "modifiers": {
-                                        "mandatory": ["left_control", "left_option", "left_command"],
+                                        "mandatory": ["control", "option", "command"],
                                         "optional": ["any"]
                                     }
                                 },
                                 "to": [{ "shell_command": "open -a Slack" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper + Space → Cmd + Tab",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "spacebar",
+                                    "modifiers": {
+                                        "mandatory": ["control", "option", "command"],
+                                        "optional": ["shift"]
+                                    }
+                                },
+                                "to": [{ "key_code": "tab", "modifiers": ["right_command"] }],
                                 "type": "basic"
                             }
                         ]
@@ -135,7 +119,7 @@
                                     {
                                         "key_code": "c",
                                         "modifiers": [
-                                            "left_command"
+                                            "right_command"
                                         ]
                                     },
                                     {
@@ -144,8 +128,8 @@
                                     {
                                         "key_code": "d",
                                         "modifiers": [
-                                            "left_control",
-                                            "left_command"
+                                            "right_control",
+                                            "right_command"
                                         ]
                                     }
                                 ]
