@@ -3,7 +3,7 @@ vim.pack.add({
 })
 
 require("auto-save").setup({
-	debounce_delay = 2000,
+	debounce_delay = 10000,
 	trigger_events = {
 		immediate_save = { "BufLeave", "FocusLost", "QuitPre", "VimSuspend" },
 		defer_save = { "InsertLeave", "TextChanged" },

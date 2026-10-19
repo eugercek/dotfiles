@@ -19,14 +19,25 @@ local function render_preview()
 		"--metadata", "pagetitle=" .. vim.fn.expand("%:t"),
 		"-c", "https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css",
 		-- base href so relative images resolve from the file's dir, not /tmp
-		"-V", ('header-includes=<base href="file://%s/"><style>.markdown-body{max-width:980px;margin:0 auto;padding:45px}@media(prefers-color-scheme:dark){body{background:#0d1117}}</style>'):format(vim.fn.expand("%:p:h")),
+		"-V", ('header-includes=<base href="file://%s/"><style>html{zoom:1.2}.markdown-body{max-width:980px;margin:0 auto;padding:45px}@media(prefers-color-scheme:dark){body{background:#0d1117}}</style>'):format(vim.fn.expand("%:p:h")),
 		"-V", "include-before=<article class=\"markdown-body\">",
 		"-V", "include-after=</article>",
 	}, { stdin = vim.api.nvim_buf_get_lines(0, 0, -1, false) }):wait()
 end
 vim.keymap.set("n", "<localleader>p", function()
 	render_preview()
-	vim.ui.open(vim.b.preview_html)
+	-- --app = no tabs/address bar, -n so --args reaches an already running Brave
+	vim.system({ "open", "-na", "Brave Browser", "--args", "--app=file://" .. vim.b.preview_html })
+	-- maximize, not ⌘⇧F fullscreen (no new space). poll until the window titled
+	-- after the file shows up, --window-size is ignored by a running Brave
+	vim.system({ "osascript", "-e", ([[
+repeat 100 times
+	try
+		tell application "Brave Browser" to set zoomed of (first window whose title is %q) to true
+		return
+	end try
+	delay 0.02
+end repeat]]):format(vim.fn.expand("%:t")) })
 	vim.api.nvim_create_autocmd("BufWritePost", {
 		buffer = 0,
 		group = vim.api.nvim_create_augroup("md_preview_" .. vim.api.nvim_get_current_buf(), {}),

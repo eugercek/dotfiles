@@ -11,7 +11,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- Writing-oriented buffers should wrap (spell off by default; toggle with <leader>ts)
 vim.api.nvim_create_autocmd("FileType", {
 	group = group,
-	pattern = { "markdown", "text", "gitcommit" },
+	pattern = { "markdown", "text", "gitcommit", "typst" },
 	callback = function()
 		vim.opt_local.wrap = true
 		vim.opt_local.spelllang = { "tr", "en_us" }
@@ -83,6 +83,24 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "TermClose", "TermLeave
 		if vim.bo.buftype ~= "nofile" and vim.fn.getcmdwintype() == "" then
 			vim.cmd("checktime")
 		end
+	end,
+})
+
+-- ts foldexpr sometimes leaves new lines at -1 (new md heading -> E490, zx doesn't help).
+-- Poke foldminlines: its OptionSet makes nvim recompute folds. setlocal on purpose, :set
+-- walks every buffer and blows up on a wiped one (Invalid buffer id)
+local fold_timer = assert(vim.uv.new_timer())
+local function refresh_folds()
+	local parser = vim.treesitter.get_parser(0, nil, { error = false })
+	if parser and vim.wo.foldexpr:find("treesitter") then
+		parser:parse(true)
+		vim.wo[0][0].foldminlines = vim.wo[0][0].foldminlines
+	end
+end
+vim.api.nvim_create_autocmd({ "BufWinEnter", "TextChanged", "InsertLeave" }, {
+	group = group,
+	callback = function()
+		fold_timer:start(150, 0, vim.schedule_wrap(refresh_folds))
 	end,
 })
 

@@ -12,7 +12,6 @@ nmap("<leader>`", "<cmd>e #<cr>", { desc = "Alternate buffer" })
 
 -- Help
 nmap("<leader>hi", "<cmd>help index<cr>", { desc = "Info" })
-nmap("<leader>hm", "<cmd>checkhealth<cr>", { desc = "health" })
 
 vim.cmd("packadd nvim.undotree")
 vim.cmd("packadd nvim.difftool")
@@ -147,6 +146,7 @@ vim.keymap.set("v", "p", '"_dP', { desc = "Paste without yanking replaced text" 
 vim.keymap.set("i", "jk", "<Esc>", { desc = "Exit insert mode" })
 -- no esc in insert, forcing myself to use jk
 vim.keymap.set("i", "<Esc>", "<Nop>")
+vim.keymap.set("t", "jk", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("i", ",", ",<C-g>u", { desc = "Comma undo breakpoint" })
 vim.keymap.set("i", ".", ".<C-g>u", { desc = "Period undo breakpoint" })
 vim.keymap.set("i", ";", ";<C-g>u", { desc = "Semicolon undo breakpoint" })

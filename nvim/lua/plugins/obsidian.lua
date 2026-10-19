@@ -12,11 +12,31 @@ require("obsidian").setup({
 	picker = { name = "telescope.nvim" },
 	-- completion rides on the obsidian LSP; blink already has an lsp source
 	footer = { enabled = false },
+	-- don't use id/aliases/tags, so stop it stuffing frontmatter into every note
+	frontmatter = { enabled = false },
+	-- plain [[note#Heading]] like the app, default adds a |note ❯ Heading label
+	link = {
+		style = function(opts)
+			local a, b = opts.anchor, opts.block
+			local suffix = type(a) == "table" and "#" .. a.header or a or type(b) == "table" and "#" .. b.id or b or ""
+			return ("[[%s%s]]"):format((tostring(opts.path or opts.label):gsub("%.md$", "")), suffix)
+		end,
+	},
 	-- default zettel_id ignores the title and spits out timestamp+random junk.
 	-- title_id slugs the title instead: "C Pragma" -> c-pragma.md
 	-- keep the title as-is like Obsidian does: "DNS Packet Internals" -> DNS Packet Internals.md
 	note_id_func = function(title)
 		return title or require("obsidian.builtin").zettel_id()
+	end,
+})
+
+-- obsidian-ls covers the vault, keep marksman out of it. With both answering,
+-- telescope opens <leader>si twice and each picker feeds an "A" into the prompt
+vim.lsp.config("marksman", {
+	root_dir = function(buf, on_dir)
+		if not vim.fs.relpath(vim.fn.expand("~/Desktop/Obsidian Vault"), vim.api.nvim_buf_get_name(buf)) then
+			on_dir(vim.fs.root(buf, { ".marksman.toml", ".git" }))
+		end
 	end,
 })
 

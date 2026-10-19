@@ -13,7 +13,7 @@ local function toggle_panel_side()
 end
 
 require("diffview").setup({
-	enhanced_diff_hl = true,
+	enhanced_diff_hl = false,
 	clean_up_buffers = true,
 	persist_selections = { enabled = true },
 	use_icons = vim.g.have_nerd_font,
@@ -35,7 +35,7 @@ require("diffview").setup({
 	},
 	view = {
 		one_sided_layout = "raw",
-		inline = { style = "overleaf", fold_unchanged = true },
+		inline = { style = "unified", deletion_highlight = "full_width", fold_unchanged = true },
 		cycle_layouts = {
 			default = { "diff2_horizontal", "diff1_inline", "diff2_vertical" },
 		},
