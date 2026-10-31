@@ -87,9 +87,18 @@ export PAGER=less
 
 alias zs='source ~/.zshrc'
 
-alias vim='nvim'
-alias n='nvim'
-alias v='nvim'
+# pass leader keys like `n gd` -> nvim + <leader>gd
+n() {
+  if [[ $# -eq 1 && ! -e $1 && ${#1} -le 3 ]]; then
+    nvim -c "autocmd VimEnter * ++once call feedkeys(' $1')"
+  else
+    nvim "$@"
+  fi
+}
+alias v=n
+alias vim=n
+alias nvim=n
+alias normalvim='/usr/bin/vim'
 eval "$(zoxide init zsh)"
 
 export EDITOR="nvim"
@@ -157,6 +166,7 @@ alias gs="git status"
 alias gd="git diff"
 alias gds="git diff --staged"
 alias gc="git commit --verbose"
+alias gca="git commit --verbose --amend"
 alias gp="git push"
 alias gpl="git pull origin"
 alias gplm="git pull origin master"
@@ -164,7 +174,6 @@ alias gplm="git pull origin master"
 alias m='make'
 
 alias pass="LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16; echo"
-alias normalvim='/usr/bin/vim'
 
 alias l="ls"
 alias c="claude"
@@ -180,4 +189,9 @@ add-zsh-hook preexec _tmux_title_preexec
 export CLAUDE_CODE_NO_FLICKER=1
 # fzf setup
 source <(fzf --zsh)
+
+autoload -Uz compinit
+compinit
+
+source <(kubectl completion zsh)
 

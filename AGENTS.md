@@ -1,3 +1,5 @@
+- Ask/Discuss before implementation
+
 ## Neovim
 - I prefer builtin packages over plugins unless there's very good feature from the plugin.
 - Never add or install a plugin without asking me first. Propose options (builtin vs plugin) and wait for my decision.
