@@ -1,8 +1,14 @@
 #!/usr/bin/env zsh
 export PATH="/opt/homebrew/bin:$HOME/.local/bin:$PATH"
 
-name=$(tmux list-sessions -F '#{session_name}' 2>/dev/null \
-  | fzf --print-query --layout=reverse --prompt='session> ' | tail -1)
+list='tmux list-sessions -F "#{session_name}"'
+
+name=$(eval "$list" \
+  | fzf --print-query --layout=reverse --prompt='session> ' \
+      --header='C-d delete · C-r rename' \
+      --bind "ctrl-d:execute(read -q \"?kill {}? [y/N] \" && tmux kill-session -t '={}')+reload($list)" \
+      --bind "ctrl-r:execute(printf 'rename %s > ' {}; read new; [ -n \"\$new\" ] && tmux rename-session -t '={}' \"\$new\")+reload($list)" \
+  | tail -1)
 
 [ -z "$name" ] && exit
 tmux has-session -t "=$name" 2>/dev/null || tmux new-session -ds "$name"
