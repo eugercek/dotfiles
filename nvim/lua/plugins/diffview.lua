@@ -14,6 +14,9 @@ end
 
 require("diffview").setup({
 	enhanced_diff_hl = false,
+	-- Remove unnecessary info it's like netrw banner
+	show_help_hints = false,
+	show_root_path = false,
 	clean_up_buffers = true,
 	persist_selections = { enabled = true },
 	use_icons = vim.g.have_nerd_font,
@@ -51,7 +54,7 @@ require("diffview").setup({
 	},
 	file_panel = {
 		listing_style = "tree",
-		show_branch_name = true,
+		show_branch_name = false,
 		tree_options = {
 			flatten_dirs = false,
 			folder_statuses = "only_folded",
