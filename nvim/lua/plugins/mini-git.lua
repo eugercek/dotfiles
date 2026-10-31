@@ -14,26 +14,39 @@ end
 
 nmap("<leader>ge", function()
 	local path = draft_path()
-	if not path then return vim.notify("Not a git repo", vim.log.levels.WARN) end
+	if not path then
+		return vim.notify("Not a git repo", vim.log.levels.WARN)
+	end
 	vim.cmd("botright 10split " .. vim.fn.fnameescape(path))
 	vim.bo.filetype = "gitcommit"
 end, { desc = "Edit commit draft" })
 
-nmap("<leader>gc", function()
+local function commit(flags)
 	local path = draft_path()
 	if path and vim.uv.fs_stat(path) then
-		vim.cmd("Git commit --verbose --edit -F " .. vim.fn.fnameescape(path))
+		vim.cmd("Git commit --verbose --edit -F " .. vim.fn.fnameescape(path) .. flags)
 	else
-		vim.cmd("Git commit --verbose")
+		vim.cmd("Git commit --verbose" .. flags)
 	end
+end
+
+nmap("<leader>gc", function()
+	commit("")
 end, { desc = "Commit" })
+nmap("<leader>gC", function()
+	commit(" --amend")
+end, { desc = "Commit (amend)" })
 
 -- Drop the draft once it's been committed
 vim.api.nvim_create_autocmd("User", {
 	pattern = "MiniGitCommandDone",
 	callback = function(ev)
-		if ev.data.git_subcommand ~= "commit" or ev.data.exit_code ~= 0 then return end
+		if ev.data.git_subcommand ~= "commit" or ev.data.exit_code ~= 0 then
+			return
+		end
 		local path = draft_path()
-		if path then os.remove(path) end
+		if path then
+			os.remove(path)
+		end
 	end,
 })
