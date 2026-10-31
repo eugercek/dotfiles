@@ -30,3 +30,11 @@ function _G.MyTabline()
 end
 vim.o.tabline = "%!v:lua.MyTabline()"
 nmap("<leader>wr", ":let t:name = ''<Left>", { desc = "Rename tab" })
+
+-- terminal resize (tmux split, font change) only shrinks the last window, equalize instead
+vim.api.nvim_create_autocmd("VimResized", {
+	desc = "Balance windows on terminal resize",
+	callback = function()
+		vim.cmd(maximized and "wincmd _ | wincmd |" or "wincmd =")
+	end,
+})
