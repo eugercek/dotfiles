@@ -45,6 +45,7 @@ require("neo-tree").setup({
 			visible = false, -- press H in the tree to reveal hidden items
 			hide_dotfiles = false,
 			hide_gitignored = true,
+			never_show = { ".DS_Store" },
 		},
 		follow_current_file = {
 			enabled = true,
