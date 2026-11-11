@@ -8,7 +8,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- Writing-oriented buffers should wrap (spell off by default; toggle with <leader>ts)
+-- Writing-oriented buffers should wrap (spell off by default except txt; toggle with <leader>ts)
 vim.api.nvim_create_autocmd("FileType", {
 	group = group,
 	pattern = { "markdown", "text", "gitcommit", "typst" },
