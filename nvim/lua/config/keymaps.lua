@@ -138,8 +138,9 @@ end, { desc = "Set compile cmd" })
 -- QoL Improvements
 vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
-vim.keymap.set("n", "gh", "^", { desc = "Go to start of line" })
-vim.keymap.set("n", "gl", "$", { desc = "Go to end of line" })
+-- x, not v: v also covers select mode, where snippet placeholders would eat a typed g
+vim.keymap.set({ "n", "x", "o" }, "gh", "^", { desc = "Go to first non-blank char" })
+vim.keymap.set({ "n", "x", "o" }, "gl", "g_", { desc = "Go to last non-blank char" })
 vim.keymap.set("v", "<", "<gv", { desc = "Indent left" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right" })
 vim.keymap.set("v", "p", '"_dP', { desc = "Paste without yanking replaced text" })
