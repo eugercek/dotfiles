@@ -19,7 +19,9 @@ require("obsidian").setup({
 		style = function(opts)
 			local a, b = opts.anchor, opts.block
 			local suffix = type(a) == "table" and "#" .. a.header or a or type(b) == "table" and "#" .. b.id or b or ""
-			return ("[[%s%s]]"):format((tostring(opts.path or opts.label):gsub("%.md$", "")), suffix)
+			-- completion menu passes path = "", fall back to label or every item reads [[]]
+			local name = opts.path ~= "" and opts.path or opts.label
+			return ("[[%s%s]]"):format((tostring(name):gsub("%.md$", "")), suffix)
 		end,
 	},
 	-- default zettel_id ignores the title and spits out timestamp+random junk.

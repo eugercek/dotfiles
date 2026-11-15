@@ -75,14 +75,16 @@ require("diffview").setup({
 	},
 })
 
--- tmux split narrows nvim: side-by-side + left panel turns into confetti.
--- wide: diff2 + panel left | narrow: inline + panel bottom | tiny or short: inline, panel hidden
+local WIDE_COLS = 140 -- below this: inline diff + panel bottom
+local MIN_COLS, MIN_LINES = 80, 35 -- below either: panel hidden
+
 local function open(args)
 	local cols, lines = vim.o.columns, vim.o.lines
-	require("diffview.config").get_config().view.default.layout = cols < 140 and "diff1_inline" or "diff2_horizontal"
-	panel_bottom = cols < 140
+	require("diffview.config").get_config().view.default.layout = cols < WIDE_COLS and "diff1_inline"
+		or "diff2_horizontal"
+	panel_bottom = cols < WIDE_COLS
 	vim.cmd("DiffviewOpen " .. args)
-	if cols < 80 or lines < 40 then
+	if cols < MIN_COLS or lines < MIN_LINES then
 		actions.toggle_files()
 	end
 end

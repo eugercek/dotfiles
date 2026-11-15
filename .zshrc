@@ -195,3 +195,5 @@ compinit
 
 source <(kubectl completion zsh)
 
+
+alias con=container
