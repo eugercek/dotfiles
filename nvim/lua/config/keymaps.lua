@@ -15,6 +15,7 @@ nmap("<leader>hi", "<cmd>help index<cr>", { desc = "Info" })
 
 vim.cmd("packadd nvim.undotree")
 vim.cmd("packadd nvim.difftool")
+vim.cmd("packadd cfilter")
 
 nmap("<leader>tl", function()
 	vim.wo.number = not vim.wo.number
